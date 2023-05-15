@@ -1,0 +1,77 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap");
+@import "../style/components/animation.css";
+@font-face {
+  font-family: misa-roboto;
+  src: url("../assets/font/Roboto-Regular.ttf");
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+/* :root{
+    primary_color: 
+} */
+
+body {
+  font-family: "Dancing Script", cursive;
+  /*font-family: misa-roboto;*/
+}
+#app {
+  min-height: 100vh;
+}
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+h1,
+h2,
+h3,
+h4,
+span,
+p {
+  user-select: none;
+}
+li {
+  list-style: none;
+  cursor: pointer;
+}
+input,
+button {
+  outline: none;
+  cursor: pointer;
+}
+input::placeholder {
+  font-family: "Dancing Script", cursive;
+}
+i {
+  cursor: pointer;
+}
+label {
+  cursor: pointer;
+  user-select: none;
+}
+.w-50 {
+  width: 50px;
+}
+.w-100 {
+  width: 100px;
+}
+.w-150 {
+  width: 150px;
+}
+.w-200 {
+  width: 200px;
+}
+.w-300 {
+  width: 300px;
+}
+.w-350 {
+  width: 350px;
+}
+.w-250 {
+  width: 250px;
+}

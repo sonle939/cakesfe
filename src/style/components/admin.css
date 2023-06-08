@@ -1,0 +1,10 @@
+.admin_wrapper {
+  display: flex;
+}
+.admin_content {
+  background-color: #f8fafc;
+  width: 100%;
+  height: calc(100vh - 60px);
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+}

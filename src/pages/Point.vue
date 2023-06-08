@@ -1,11 +1,11 @@
 <template>
-  <div class="admin">admin</div>
+  <div class="point">point</div>
 </template>
 
 <script>
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
-  name: "Admin",
+  name: "Point",
 };
 </script>
 

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair:wght@300&display=swap");
 @import "../style/components/animation.css";
 @font-face {
   font-family: misa-roboto;
@@ -14,8 +14,8 @@
 } */
 
 body {
-  font-family: "Dancing Script", cursive;
-  /*font-family: misa-roboto;*/
+  /* font-family: misa-roboto; */
+  font-family: "Playfair", serif;
 }
 #app {
   min-height: 100vh;
@@ -26,6 +26,7 @@ li {
 
 a {
   text-decoration: none;
+  cursor: pointer;
 }
 h1,
 h2,
@@ -45,10 +46,13 @@ button {
   cursor: pointer;
 }
 input::placeholder {
-  font-family: "Dancing Script", cursive;
+  font-family: "Playfair", serif;
 }
 i {
   cursor: pointer;
+}
+button,input{
+  font-family: "Playfair", serif;
 }
 label {
   cursor: pointer;

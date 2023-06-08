@@ -1,38 +1,62 @@
 <template>
   <div class="authuser">
     <div class="circle img_blur"></div>
-    <img src="../assets/circle.png" class="img_blur" style="left: 0" />
+    <img src="../../assets/circle.png" class="img_blur" style="left: 0" />
     <div class="auth_wrapper">
       <div class="auth_text">
-        <img src="../assets/logo_main.png" alt="" />
-        <h1>Sign In to go to the Homepage</h1>
+        <img src="../../assets/logosvg1.svg" alt="" class="logo" />
+        <h1>Khám phá tri thức cùng chúng tôi - Đăng kí ngay để bắt đầu!</h1>
         <p>
-          If you have an account You can <b class="color_signin">Sign In</b>
+          Nếu bạn đã có tài khoản bạn có thể
+          <router-link class="color_signin" to="/">Đăng nhập</router-link>
         </p>
-        <img src="../assets/qr-login-34.png" alt="" />
+        <img src="../../assets/qr-login-34.png" alt="" class="img_qr" />
       </div>
-      <img src="../assets/bg34-1.png" class="hh_icon" />
+      <img src="../../assets/bg34-1.png" class="hh_icon" />
       <form class="form_wrapper">
-        <div class="form_signin">
-          <label
-            >Email:
+        <div class="form_signup">
+          <label>
+            <i class="bx bxs-group"></i>
+            <input
+              type="text"
+              name="input"
+              placeholder="Vui lòng nhập họ và tên..."
+            />
+          </label>
+          <label>
+            <i class="bx bx-envelope"></i>
             <input
               type="text"
               name="input"
               placeholder="Vui lòng nhập Email..."
             />
           </label>
-          <label
-            >Password:
+          <label>
+            <i class="bx bx-lock-alt"></i>
             <input
               type="text"
               name="input"
-              placeholder="Vui lòng nhập Password..."
+              placeholder="Vui lòng nhập mật khẩu..."
+            />
+          </label>
+          <label>
+            <i class="bx bx-current-location"></i>
+            <input
+              type="text"
+              name="input"
+              placeholder="Vui lòng nhập địa chỉ..."
+            />
+          </label>
+          <label>
+            <i class="bx bx-phone-call"></i>
+            <input
+              type="text"
+              name="input"
+              placeholder="Vui lòng nhập số điện thoại..."
             />
           </label>
         </div>
-        <a href="#">Recovery Password</a>
-        <button>Sign In</button>
+        <button>Đăng kí</button>
         <div class="social">
           <div class="social_line">
             <h3>Or Continue with</h3>
@@ -51,15 +75,14 @@
         </div>
       </form>
     </div>
-    <div class="blur_two"></div>
   </div>
 </template>
-
-<script>
+  
+  <script>
 import { ref } from "vue";
 
 export default {
-  name: "AuthUser",
+  name: "SignUp",
   setup() {
     const changeAuth = ref("login");
     const handleAuth = () => {
@@ -76,28 +99,9 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-@import "../style/components/authuser.css";
-.circle {
-  width: 600px;
-  height: 600px;
-  top: 0;
-  left: 20%;
-  border-radius: 50%;
-  overflow: hidden;
-  background: radial-gradient(
-    circle at center,
-    rgba(235, 232, 57, 0.5) 0%,
-    rgba(218, 224, 134, 0) 70%
-  );
-}
-.color_signin {
-  color: #fde68a;
-}
-.hh_icon {
-  margin-left: 40px;
-}
+  
+  <style scoped>
+@import "../../style/components/authuser.css";
 .bxl-google {
   background: conic-gradient(
       from -45deg,

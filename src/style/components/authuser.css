@@ -16,7 +16,7 @@
   overflow: hidden;
   background: radial-gradient(
     circle at center,
-    rgba(235, 232, 57, 0.5) 0%,
+    rgba(93, 109, 158, 0.5) 0%,
     rgba(218, 224, 134, 0) 70%
   );
 }
@@ -27,14 +27,21 @@
   align-items: center;
   justify-content: center;
   z-index: 99;
+  height: 100%;
 }
 .auth_text h1 {
-  font-size: 45px;
+  font-size: 30px;
   font-weight: 700;
+  width: 300px;
   line-height: 48px;
   margin: 0 0 20px;
-  width: 300px;
-  margin-top: 146px;
+  opacity: 0;
+  animation-name: slideSHow;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-delay: 0.25s;
+  color: #041434;
+  margin-top: 225px;
 }
 .auth_text p {
   font-size: 25px;
@@ -42,9 +49,63 @@
   line-height: 34px;
   margin: 0 0 40px;
   width: 300px;
+  opacity: 0;
+  animation-name: slideSHow;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-delay: 0.5s;
 }
-.auth_text img {
-  margin-top: 136px;
+.auth_text .logo {
+  position: fixed;
+  left: 155px;
+  top: -50px;
+  width: 700px;
+}
+.img_qr {
+  opacity: 0;
+  animation-name: slideSHow;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-delay: 0.75s;
+}
+.logo {
+  opacity: 0;
+  animation-name: slideSHow;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-delay: 0s;
+}
+.logo2 {
+  opacity: 0;
+  animation-name: slideSHow;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-delay: 0s;
+}
+.circle {
+  width: 600px;
+  height: 600px;
+  top: 0;
+  left: 20%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at center,
+    rgba(93, 109, 158, 0.5) 0%,
+    rgba(218, 224, 134, 0) 70%
+  );
+}
+.color_signin {
+  color: #041434;
+  font-weight: bold;
+}
+.hh_icon {
+  margin-left: 40px;
+  opacity: 0;
+  animation-name: slideSHow;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-delay: 1s;
 }
 
 .form_wrapper {
@@ -55,51 +116,56 @@
 }
 .form_wrapper label {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   font-weight: 700;
   font-size: 20px;
   line-height: 20px;
   letter-spacing: 3px;
   margin-bottom: 24px;
+  border-radius: 4px;
+  border: 1px solid #dadada;
+  height: 45px;
+  padding: 0 12px;
+}
+.form_wrapper label i {
+  margin-right: 12px;
 }
 .form_wrapper input {
-  width: 416px;
-  height: 60px;
-  padding: 10px 20px;
-  border-radius: 10px;
-  line-height: 20px;
-  border: 1px solid #e6e6e6;
-  margin-top: 9px;
+  height: 100%;
+  border: none;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
 }
-.form_wrapper input::placeholder {
-  color: #999999;
-  font-size: 18px;
-  letter-spacing: 1px;
+.form_wrapper label:hover {
+  background-color: #e6e6e6;
 }
 .form_wrapper input:hover {
-  background-color: #fffbeb;
-  cursor: pointer;
-}
-.form_wrapper input:focus {
-  border: 1px solid #fde68a;
-  outline: none;
+  background-color: #e6e6e6;
 }
 .form_wrapper a {
   color: #b1b1b2;
   font-size: 20px;
   line-height: 23.8px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
+.form_wrapper a:hover {
+  background-color: #1e3155;
+}
+
 .form_wrapper button {
-  height: 60px;
+  height: 50px;
   width: 416px;
   border-radius: 10px;
   font-size: 20px;
   color: #fff;
   padding: 12px 36px;
-  background-color: #fbbf24;
+  background-color: #041434;
   border: none;
   margin-bottom: 35px;
+}
+.form_wrapper button:hover {
+  background-color: #1e3155;
 }
 
 .social {
@@ -115,11 +181,12 @@
 }
 .social_line h3 {
   color: #acacac;
-  width: 140px;
+  width: 200px;
   background-color: #fff;
   padding: 5px 10px;
-  left: 45%;
-  transform: translate(100%, -50%);
+  text-align: center;
+  left: 10%;
+  transform: translate(55%, -50%);
 }
 .social_list {
   display: flex;
@@ -128,8 +195,8 @@
   margin-top: 30px;
 }
 .social_item {
-  height: 60px;
-  width: 80px;
+  height: 55px;
+  width: 75px;
   border-radius: 10px;
   border: 1px solid #acacac;
   display: flex;

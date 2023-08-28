@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair:wght@300&display=swap");
 @import "../style/components/animation.css";
+@import "../style//components/style.css";
+@import "../style/components/table.css";
 @font-face {
   font-family: misa-roboto;
   src: url("../assets/font/Roboto-Regular.ttf");
@@ -51,7 +53,8 @@ input::placeholder {
 i {
   cursor: pointer;
 }
-button,input{
+button,
+input {
   font-family: "Playfair", serif;
 }
 label {
@@ -78,4 +81,15 @@ label {
 }
 .w-250 {
   width: 250px;
+}
+.page_content {
+  background-color: #f8fafc;
+  width: 100%;
+  height: calc(100vh - 60px);
+  border-top-left-radius: 25px;
+  border-bottom-left-radius: 25px;
+  padding: 20px 24px 48px 24px;
+}
+.d-flex {
+  display: flex;
 }

@@ -1,9 +1,9 @@
 <template>
   <div class="admin">
     <Navbar />
-    <div class="admin_wrapper">
+    <div class="d-flex">
       <Sidebar />
-      <div class="admin_content">abcd</div>
+      <div class="page_content">abcd</div>
     </div>
   </div>
 </template>

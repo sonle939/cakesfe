@@ -1,0 +1,53 @@
+.adminpagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.pagination_left {
+  display: flex;
+  align-items: center;
+}
+.pagination_left p,
+.pagination_left b {
+  font-size: 16px;
+  color: #212121;
+  letter-spacing: 0.5px;
+}
+.pagination_right {
+  display: flex;
+  align-items: center;
+}
+.pagination_right p {
+  margin-right: 63px;
+}
+.page_amount {
+  margin-left: 16px;
+  margin-right: 22px;
+}
+.page_amount span {
+  letter-spacing: 0.5px;
+  margin: 0 1px;
+}
+
+.page_control {
+  display: flex;
+  align-items: center;
+}
+.page_control button {
+  height: 24px;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: none;
+}
+
+.page_control button i {
+  font-size: 19px;
+}
+.color_paging {
+  color: #bdbdbd !important;
+  pointer-events: none !important;
+}

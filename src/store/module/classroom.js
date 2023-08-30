@@ -71,7 +71,7 @@ const classroomModule = {
                 console.log(error);
             }
         },
-        async updateItem({ commit, dispatch }, updateChild) {
+        async updateItemclassroom({ commit, dispatch }, updateChild) {
             try {
                 const response =
                     await axios.put(`${API_BASE_URL}ClassRooms/${updateChild.ClassRoomId}`,

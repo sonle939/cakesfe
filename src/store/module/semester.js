@@ -58,7 +58,7 @@ const semestermodule = {
                 console.log(error);
             }
         },
-        async updateItem({ commit, dispatch }, updateChild) {
+        async updateItemsemester({ commit, dispatch }, updateChild) {
             try {
                 const response =
                     await axios.put(`${API_BASE_URL}Semesters/${updateChild.SemesterId}`,

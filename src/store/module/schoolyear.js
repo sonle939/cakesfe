@@ -58,7 +58,7 @@ const schoolyearmodule = {
                 console.log(error);
             }
         },
-        async updateItem({ commit, dispatch }, updateChild) {
+        async updateItemschoolyear({ commit, dispatch }, updateChild) {
             try {
                 const response =
                     await axios.put(`${API_BASE_URL}SchoolYear/${updateChild.SchoolYearId}`,

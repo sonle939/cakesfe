@@ -82,6 +82,9 @@ label {
 .w-250 {
   width: 250px;
 }
+.mg-bot{
+  margin-bottom: 10px;
+}
 .page_content {
   background-color: #f8fafc;
   width: 100%;

@@ -9,17 +9,12 @@
     <div class="pagination_right">
       <p>Số bản ghi/trang:</p>
       <div class="amount_cb">
-        <input
-          type="text"
-          :disabled="showIsHide"
-          :v-model="pageSize"
-          @focus="HIDE"
-          style="color: black !important"
-        />
+        <p @click="HIDE" style="margin-right: 0">{{ pageSize }}</p>
         <i
           :class="
             showIsHide ? 'bx bx-chevron-down active' : 'bx bx-chevron-down'
           "
+          @click="HIDE"
         ></i>
         <ul class="oveylay_amount" v-show="showIsHide">
           <li @click="setSize(15)">15</li>
@@ -122,7 +117,7 @@ export default {
   height: 36px;
   width: 75px;
   border-radius: 4px;
-  background-color: var(--bg_content);
+  background-color: #ffffff;
   border: 1px solid #e0e0e0;
   display: flex;
   align-items: center;
@@ -164,10 +159,10 @@ export default {
   color: #212121;
 }
 .oveylay_amount li:hover {
-  background-color: var(--btn_hover);
+  background-color: #57c841;
   color: #fff;
 }
-.amount_cb input {
+.amount_cb p {
   height: 16px;
   width: 17px;
   border: none;

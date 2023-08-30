@@ -12,11 +12,7 @@
               <input type="text" placeholder="Tìm kiếm trong danh sách" />
             </div>
             <div class="filter_item">
-              <Dropdown
-                text="Chọn điều kiện lọc"
-                :options="dropdownOptions"
-                @option-selected="handleOptionSelected"
-              />
+              <Dropdown text="Chọn điều kiện lọc" :options="subject" />
               <div class="wrapper__i">
                 <div class="excel"></div>
               </div>
@@ -28,7 +24,7 @@
               </div>
             </div>
           </div>
-          <div class="table-wrapper">
+          <div class="table-wrapper mg-bot">
             <table style="width: 100%; height: auto">
               <thead>
                 <tr>
@@ -133,13 +129,13 @@
           </div>
           <AdminPaginnation
             :text="text"
-            :showIsHide="showIsHide"
-            :totalRecords="totalRecords"
-            :pageNumber="pageNumber"
-            :pageSize="pageSize"
-            :totalPages="totalPages"
-            :setPageNumber="setPageNumber"
-            :setSize="setSize"
+            :showIsHide="showIsHideteacher"
+            :totalRecords="totalRecordsteacher"
+            :pageNumber="pageNumberteacher"
+            :pageSize="pageSizeteacher"
+            :totalPages="totalPagesteacher"
+            :setPageNumber="setPageNumberteacher"
+            :setSize="setSizeteacher"
           />
         </div>
       </div>
@@ -169,24 +165,26 @@ export default {
     ...mapGetters([
       "teacher",
       "allTeacher",
-      "showIsHide",
-      "totalRecords",
-      "pageSize",
+      "showIsHideteacher",
+      "totalRecordsteacher",
+      "pageSizeteacher",
       "hasMoreItems",
-      "pageNumber",
-      "totalPages",
+      "pageNumberteacher",
+      "totalPagesteacher",
       "checkAll",
       "checkAmount",
       "trueChecked",
+      "subject",
     ]),
   },
   methods: {
     ...mapMutations(["SET_PAGE", "HIDE", "SELECTCHECKED"]),
     ...mapActions([
-      "setPageNumber",
-      "setSize",
+      "setPageNumberteacher",
+      "setSizeteacher",
       "getteacher",
       "toggleAllSelection",
+      "getsubject",
     ]),
     formattedDate(data) {
       return format(new Date(data), "dd/MM/yyyy");
@@ -201,6 +199,7 @@ export default {
   },
   mounted() {
     this.getteacher();
+    this.getsubject();
   },
 };
 </script>

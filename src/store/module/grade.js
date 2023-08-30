@@ -58,7 +58,7 @@ const grademodule = {
                 console.log(error);
             }
         },
-        async updateItem({ commit, dispatch }, updateChild) {
+        async updateItemgrade({ commit, dispatch }, updateChild) {
             try {
                 const response =
                     await axios.put(`${API_BASE_URL}Grades/${updateChild.GradeId}`,

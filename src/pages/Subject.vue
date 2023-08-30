@@ -87,7 +87,6 @@
               </tbody>
             </table>
           </div>
-          <AdminPaginnation />
         </div>
       </div>
     </div>
@@ -99,7 +98,6 @@ import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import HeaderContent from "@/components/content/Header.vue";
 import Dropdown from "../components/Dropdown/Dropdown.vue";
-import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -127,7 +125,6 @@ export default {
     Sidebar,
     HeaderContent,
     Dropdown,
-    AdminPaginnation,
   },
 };
 </script>

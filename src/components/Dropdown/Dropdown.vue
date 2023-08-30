@@ -17,7 +17,7 @@
           :key="generateKey(option)"
           @click="selectOption(option)"
         >
-          {{ option.GradeName }}
+          {{ option.GradeName }} {{ options.SubjectName }}
         </li>
       </ul>
     </div>
@@ -41,10 +41,11 @@ export default {
     },
     selectOption(option) {
       this.selectedOption = option.GradeName;
+      this.selectedOption = option.SubjectName;
       this.isOpen = false;
     },
     generateKey(option) {
-      return `${option.GradeId}${option.Role}`;
+      return `${option.GradeId} ${option.SubjectId}`;
     },
   },
 };

@@ -42,8 +42,8 @@
                     <input
                       type="checkbox"
                       class="option-input"
-                      v-model="checkAll"
-                      @change="toggleAllSelection"
+                      v-model="checkAllstudent"
+                      @change="toggleAllSelectionstudent"
                     />
                     Mã học sinh
                   </th>
@@ -63,7 +63,7 @@
                       type="checkbox"
                       class="option-input"
                       v-model="data.isChecked"
-                      @click="delItemCheck(data.StudentId)"
+                      @click="SELECTCHECKEDSTUDENT(data.StudentId)"
                     />
                     {{ data.StudentCode }}
                   </td>
@@ -139,6 +139,7 @@
             :totalPages="totalPagesstudent"
             :setPageNumber="setPageNumberstudent"
             :setSize="setSizestudent"
+            :HIDE="HIDESTUDENT"
           />
         </div>
       </div>
@@ -168,13 +169,17 @@ export default {
     AdminPaginnation,
   },
   methods: {
-    ...mapMutations(["SET_PAGE", "HIDE", "SELECTCHECKED"]),
+    ...mapMutations([
+      "SET_PAGE_STUDENT",
+      "HIDESTUDENT",
+      "SELECTCHECKEDSTUDENT",
+    ]),
     ...mapActions([
       "setPageNumberstudent",
       "setSizestudent",
       "getstudent",
-      "toggleAllSelection",
-      "getclassroom",
+      "toggleAllSelectionstudent",
+      "getclassroomstudent",
     ]),
     formattedDate(data) {
       return format(new Date(data), "dd/MM/yyyy");
@@ -187,17 +192,16 @@ export default {
       "showIsHidestudent",
       "totalRecordsstudent",
       "pageSizestudent",
-      "hasMoreItems",
       "pageNumberstudent",
       "totalPagesstudent",
-      "checkAll",
-      "checkAmount",
-      "trueChecked",
-      "classroom",
+      "checkAllstudent",
+      "checkAmountstudent",
+      "trueCheckedstudent",
+      "classroomstudent",
     ]),
   },
   mounted() {
-    this.getclassroom();
+    this.getclassroomstudent();
     this.getstudent();
   },
 };

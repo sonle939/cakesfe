@@ -42,8 +42,8 @@
                     <input
                       type="checkbox"
                       class="option-input"
-                      v-model="checkAll"
-                      @change="toggleAllSelection"
+                      v-model="checkAllsubject"
+                      @change="toggleAllSelectionsubject"
                     />
                     Mã môn học
                   </th>
@@ -58,7 +58,7 @@
                       type="checkbox"
                       class="option-input"
                       v-model="data.isChecked"
-                      @click="delItemCheck(data.SubjectId)"
+                      @click="SELECTCHECKEDSUBJECT(data.SubjectId)"
                     />
                     {{ data.SubjectCode }}
                   </td>
@@ -104,14 +104,19 @@ export default {
   name: "Subject",
   data() {},
   computed: {
-    ...mapGetters(["subject", "checkAll", "checkAmount", "trueChecked"]),
+    ...mapGetters([
+      "subject",
+      "checkAllsubject",
+      "checkAmountsubject",
+      "trueCheckedsubject",
+    ]),
   },
   methods: {
-    ...mapActions(["getsubject", "toggleAllSelection"]),
-    ...mapMutations(["SELECTCHECKED"]),
+    ...mapActions(["getsubject", "toggleAllSelectionsubject"]),
+    ...mapMutations(["SELECTCHECKEDSUBJECT"]),
     delItemCheck(id) {
       try {
-        this.SELECTCHECKED(id);
+        this.SELECTCHECKEDSUBJECT(id);
       } catch (error) {
         console.log(error);
       }

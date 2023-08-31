@@ -42,8 +42,8 @@
                     <input
                       type="checkbox"
                       class="option-input"
-                      v-model="checkAll"
-                      @change="toggleAllSelection"
+                      v-model="checkAllsemester"
+                      @change="toggleAllSelectionsemester"
                     />
                     Mã học kỳ
                   </th>
@@ -58,7 +58,7 @@
                       type="checkbox"
                       class="option-input"
                       v-model="data.isChecked"
-                      @click="delItemCheck(data.SemesterId)"
+                      @click="SELECTCHECKEDSEMESTER(data.SemesterId)"
                     />
                     {{ data.SemesterCode }}
                   </td>
@@ -106,11 +106,16 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters(["semester", "checkAll", "checkAmount", "trueChecked"]),
+    ...mapGetters([
+      "semester",
+      "checkAllsemester",
+      "checkAmountsemester",
+      "trueCheckedsemester",
+    ]),
   },
   methods: {
-    ...mapActions(["getsemester", "toggleAllSelection"]),
-    ...mapMutations(["SELECTCHECKED"]),
+    ...mapActions(["getsemester", "toggleAllSelectionsemester"]),
+    ...mapMutations(["SELECTCHECKEDSEMESTER"]),
     delItemCheck(id) {
       try {
         this.SELECTCHECKED(id);

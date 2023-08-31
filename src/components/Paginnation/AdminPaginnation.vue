@@ -68,7 +68,6 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
 export default {
   name: "AdminPaginnation",
   data() {
@@ -103,9 +102,10 @@ export default {
       type: Function,
       required: true,
     },
-  },
-  methods: {
-    ...mapMutations(["HIDE"]),
+    HIDE: {
+      type: Function,
+      required: true,
+    },
   },
   components: {},
 };

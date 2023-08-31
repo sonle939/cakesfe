@@ -1,25 +1,25 @@
 import axios from "axios";
 const API_BASE_URL = 'https://localhost:7199/api/v2/';
 
-const grademodule = {
+const subjectmodule = {
     state: {
         subject: [],
-        getById: [],
-        loading: false,
-        checkAll: false,
-        selectedItems: [],
+        getByIdsubject: [],
+        loadingsubject: false,
+        checkAllsubject: false,
+        selectedItemssubject: [],
     },
     getters: {
-        getById: state => state.getById,
+        getByIdsubject: state => state.getByIdsubject,
         subject: state => state.subject,
-        loading: state => state.loading,
-        checkAll: state => state.checkAll,
-        isChecked: state => state.subject.isChecked,
+        loadingsubject: state => state.loadingsubject,
+        checkAllsubject: state => state.checkAllsubject,
+        isCheckedsubject: state => state.subject.isChecked,
         //dùng để đển số checkbox đã được chọn 
-        checkAmount: state => state.subject.filter((item) => item.isChecked == true).length,
+        checkAmountsubject: state => state.subject.filter((item) => item.isChecked == true).length,
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
-        trueChecked: state => state.subject.some((item) => item.isChecked == true),
-        selectedItems: state => state.selectedItems,
+        trueCheckedsubject: state => state.subject.some((item) => item.isChecked == true),
+        selectedItemssubject: state => state.selectedItemssubject,
     },
     actions: {
         async addsubject({ commit, dispatch }, newStaff) {
@@ -78,9 +78,18 @@ const grademodule = {
                 console.log(error)
             }
         },
-        toggleAllSelection({ commit }) {
+
+        async getIDsubject({ commit }, object) {
             try {
-                commit('SELECT_ALL')
+                const response = await axios.get(`${API_BASE_URL}Subjects/${object.SubjectId}`)
+                commit('getByIdsubject', response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        toggleAllSelectionsubject({ commit }) {
+            try {
+                commit('SELECT_ALL_SUBJECT')
             } catch (error) {
                 console.log(error);
             }
@@ -88,9 +97,9 @@ const grademodule = {
         },
     },
     mutations: {
-        GETBYID(state, data) {
+        getByIdsubject(state, data) {
             try {
-                state.getById = data
+                state.getByIdsubject = data
             } catch (error) {
                 console.log(error);
             }
@@ -133,12 +142,12 @@ const grademodule = {
                 console.log(error);
             }
         },
-        //SET THỜI GIAN HIỂN THỊ LOADING DỮ LIỆU
-        SET_LOADING(state) {
+        //SET THỜI GIAN HIỂN THỊ loadingsubject DỮ LIỆU
+        SET_LOADING_SUBJECT(state) {
             try {
-                state.loading = true;
+                state.loadingsubject = true;
                 setTimeout(() => {
-                    state.loading = false
+                    state.loadingsubject = false
                 }, 990)
             } catch (error) {
                 console.log(error);
@@ -146,27 +155,24 @@ const grademodule = {
 
         },
         //DÙNG ĐỂ KIỂM TRA CÁC CHECKBOX XEM ĐƯỢC CHỌN HAY CHƯA
-        SELECT_ALL(state) {
+        SELECT_ALL_SUBJECT(state) {
             try {
-                state.subject.map((item) => {
-                    if (item.isChecked == false) {
-                        item.isChecked = true;
-                        state.checkAll = true
-                    }
-                    else {
-                        item.isChecked = false;
-                        state.checkAll = false
-                    }
+                const allChecked = state.subject.every(item => item.isChecked);
+
+                state.subject.forEach(item => {
+                    item.isChecked = !allChecked;
                 });
+
+                state.checkAllclassroom = !allChecked;
             } catch (error) {
                 console.log(error);
             }
 
         },
         //DÙNG ĐỂ TRUYỀN CÁC ID VÀO 1 MẢNG PHỤC VỤ VIỆC XÓA NHIỀU BẢN GHI
-        SELECTCHECKED(state, id) {
+        SELECTCHECKEDSUBJECT(state, id) {
             try {
-                state.selectedItems.push(id);
+                state.selectedItemssubject.push(id);
             } catch (error) {
                 console.log(error);
             }
@@ -174,4 +180,4 @@ const grademodule = {
         },
     }
 }
-export default grademodule;
+export default subjectmodule;

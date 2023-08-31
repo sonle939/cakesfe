@@ -4,22 +4,22 @@ const API_BASE_URL = 'https://localhost:7199/api/v2/';
 const semestermodule = {
     state: {
         semester: [],
-        getById: [],
-        loading: false,
-        checkAll: false,
-        selectedItems: [],
+        getByIdsemester: [],
+        loadingsemester: false,
+        checkAllsemester: false,
+        selectedItemssemester: [],
     },
     getters: {
-        getById: state => state.getById,
+        getByIdsemester: state => state.getByIdsemester,
         semester: state => state.semester,
-        loading: state => state.loading,
-        checkAll: state => state.checkAll,
-        isChecked: state => state.semester.isChecked,
+        loadingsemester: state => state.loadingsemester,
+        checkAllsemester: state => state.checkAllsemester,
+        isCheckedsemester: state => state.semester.isChecked,
         //dùng để đển số checkbox đã được chọn 
-        checkAmount: state => state.semester.filter((item) => item.isChecked == true).length,
+        checkAmountsemester: state => state.semester.filter((item) => item.isChecked == true).length,
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
-        trueChecked: state => state.semester.some((item) => item.isChecked == true),
-        selectedItems: state => state.selectedItems,
+        trueCheckedsemester: state => state.semester.some((item) => item.isChecked == true),
+        selectedItemssemester: state => state.selectedItemssemester,
     },
     actions: {
         async addsemester({ commit, dispatch }, newStaff) {
@@ -78,9 +78,17 @@ const semestermodule = {
                 console.log(error)
             }
         },
-        toggleAllSelection({ commit }) {
+        async getIDsemester({ commit }, object) {
             try {
-                commit('SELECT_ALL')
+                const response = await axios.get(`${API_BASE_URL}Semesters/${object.SemesterId}`)
+                commit('getByIdsemester', response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        toggleAllSelectionsemester({ commit }) {
+            try {
+                commit('SELECT_ALL_SEMESTER')
             } catch (error) {
                 console.log(error);
             }
@@ -88,9 +96,9 @@ const semestermodule = {
         },
     },
     mutations: {
-        GETBYID(state, data) {
+        getByIdsemester(state, data) {
             try {
-                state.getById = data
+                state.getByIdsemester = data
             } catch (error) {
                 console.log(error);
             }
@@ -133,12 +141,12 @@ const semestermodule = {
                 console.log(error);
             }
         },
-        //SET THỜI GIAN HIỂN THỊ LOADING DỮ LIỆU
+        //SET THỜI GIAN HIỂN THỊ loadingsemester DỮ LIỆU
         SET_LOADING(state) {
             try {
-                state.loading = true;
+                state.loadingsemester = true;
                 setTimeout(() => {
-                    state.loading = false
+                    state.loadingsemester = false
                 }, 990)
             } catch (error) {
                 console.log(error);
@@ -146,27 +154,24 @@ const semestermodule = {
 
         },
         //DÙNG ĐỂ KIỂM TRA CÁC CHECKBOX XEM ĐƯỢC CHỌN HAY CHƯA
-        SELECT_ALL(state) {
+        SELECT_ALL_SEMESTER(state) {
             try {
-                state.semester.map((item) => {
-                    if (item.isChecked == false) {
-                        item.isChecked = true;
-                        state.checkAll = true
-                    }
-                    else {
-                        item.isChecked = false;
-                        state.checkAll = false
-                    }
+                const allChecked = state.semester.every(item => item.isChecked);
+
+                state.semester.forEach(item => {
+                    item.isChecked = !allChecked;
                 });
+
+                state.checkAllclassroom = !allChecked;
             } catch (error) {
                 console.log(error);
             }
 
         },
         //DÙNG ĐỂ TRUYỀN CÁC ID VÀO 1 MẢNG PHỤC VỤ VIỆC XÓA NHIỀU BẢN GHI
-        SELECTCHECKED(state, id) {
+        SELECTCHECKEDSEMESTER(state, id) {
             try {
-                state.selectedItems.push(id);
+                state.selectedItemssemester.push(id);
             } catch (error) {
                 console.log(error);
             }

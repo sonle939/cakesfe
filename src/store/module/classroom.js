@@ -5,29 +5,29 @@ const API_BASE_URL = 'https://localhost:7199/api/v2/';
 const classroomModule = {
     state: {
         classroom: [],
-        grade: [],
-        getById: [],
-        loading: false,
-        checkAll: false,
-        selectedItems: [],
+        gradeclassroom: [],
+        getByIdClassroom: [],
+        loadingclassroom: false,
+        checkAllclassroom: false,
+        selectedItemsclassroom: [],
     },
     getters: {
         classroom: state => state.classroom,
-        getById: state => state.getById,
-        grade: state => state.grade,
-        loading: state => state.loading,
-        checkAll: state => state.checkAll,
+        getByIdClassroom: state => state.getByIdClassroom,
+        gradeclassroom: state => state.gradeclass,
+        loadingclassroom: state => state.loadingclassroom,
+        checkAllclassroom: state => state.checkAllclassroom,
         isChecked: state => state.classroom.isChecked,
         //dùng để đển số checkbox đã được chọn 
-        checkAmount: state => state.classroom.filter((item) => item.isChecked == true).length,
+        checkAmountclassroom: state => state.classroom.filter((item) => item.isChecked == true).length,
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
-        trueChecked: state => state.classroom.some((item) => item.isChecked == true),
-        selectedItems: state => state.selectedItems,
+        trueCheckedclassroom: state => state.classroom.some((item) => item.isChecked == true),
+        selectedItemsclassroom: state => state.selectedItemsclassroom,
     },
     actions: {
         async getClassRoom({ commit }) {
             try {
-                commit('SET_LOADING')
+                commit('SET_LOADING_CLASSROOM')
                 const res = await axios.get(`${API_BASE_URL}ClassRooms/`)
                 commit('SET_CLASSROOM', res.data)
             } catch (error) {
@@ -40,7 +40,7 @@ const classroomModule = {
                 //commit('SETTEXTCHECK', res.data.notify)
                 commit('ADD_CLASSROOM', newStaff)
                 dispatch('getClassRoom');
-                dispatch("getGrade");
+                dispatch("getGradeclassroom");
                 console.log('aaa', res.data.notify);
             } catch (error) {
                 console.log(error);
@@ -84,17 +84,32 @@ const classroomModule = {
                 console.log(error);
             }
         },
-        async getGrade({ commit }) {
+        async getGradeclassroom({ commit }) {
             try {
                 const res = await axios.get(`${API_BASE_URL}Grades`)
-                commit('SET_GRADE', res.data)
+                commit('SET_GRADE_CLASSROOM', res.data)
             } catch (error) {
                 console.log(error)
             }
         },
-        toggleAllSelection({ commit }) {
+        //TẠO 1 HÀM ĐỂ LẤY DỮ LIỆU THEO id
+        /**
+         * 
+         * @param {CREATE BY: LXSON-MF1589
+         * CREATE DATE: 17/04/2023} param0 
+         * @param {*} object 
+         */
+        async getIDclassroom({ commit }, object) {
             try {
-                commit('SELECT_ALL')
+                const response = await axios.get(`${API_BASE_URL}ClassRooms/${object.ClassRoomId}`)
+                commit('getByIdClassroom', response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        toggleAllSelectionclassroom({ commit }) {
+            try {
+                commit('SELECT_ALL_CLASSROOM')
             } catch (error) {
                 console.log(error);
             }
@@ -103,9 +118,9 @@ const classroomModule = {
     },
     //MUTATIONS DÙNG ĐỂ THAO TÁC(thay doi trang thai state) VỚI STATE TRONG STORE
     mutations: {
-        GETBYID(state, data) {
+        getByIdClassroom(state, data) {
             try {
-                state.getById = data
+                state.getByIdClassroom = data
             } catch (error) {
                 console.log(error);
             }
@@ -148,47 +163,42 @@ const classroomModule = {
             }
 
         },
-        SET_GRADE(state, grade) {
+        SET_GRADE_CLASSROOM(state, gradeclassroom) {
             try {
-                state.grade = grade;
+                state.gradeclass = gradeclassroom;
             } catch (error) {
                 console.log(error);
             }
         },
-        //SET THỜI GIAN HIỂN THỊ LOADING DỮ LIỆU
-        SET_LOADING(state) {
+        //SET THỜI GIAN HIỂN THỊ loadingclassroom DỮ LIỆU
+        SET_LOADING_CLASSROOM(state) {
             try {
-                state.loading = true;
+                state.loadingclassroom = true;
                 setTimeout(() => {
-                    state.loading = false
+                    state.loadingclassroom = false
                 }, 990)
             } catch (error) {
                 console.log(error);
             }
 
         },
-        //DÙNG ĐỂ KIỂM TRA CÁC CHECKBOX XEM ĐƯỢC CHỌN HAY CHƯA
-        SELECT_ALL(state) {
+        SELECT_ALL_CLASSROOM(state) {
             try {
-                state.classroom.map((item) => {
-                    if (item.isChecked == false) {
-                        item.isChecked = true;
-                        state.checkAll = true
-                    }
-                    else {
-                        item.isChecked = false;
-                        state.checkAll = false
-                    }
+                const allChecked = state.classroom.every(item => item.isChecked);
+
+                state.classroom.forEach(item => {
+                    item.isChecked = !allChecked;
                 });
+
+                state.checkAllclassroom = !allChecked;
             } catch (error) {
                 console.log(error);
             }
-
         },
         //DÙNG ĐỂ TRUYỀN CÁC ID VÀO 1 MẢNG PHỤC VỤ VIỆC XÓA NHIỀU BẢN GHI
-        SELECTCHECKED(state, id) {
+        SELECTCHECKEDCLASSROOM(state, id) {
             try {
-                state.selectedItems.push(id);
+                state.selectedItemsclassroom.push(id);
             } catch (error) {
                 console.log(error);
             }

@@ -4,22 +4,22 @@ const API_BASE_URL = 'https://localhost:7199/api/v2/';
 const grademodule = {
     state: {
         grade: [],
-        getById: [],
-        loading: false,
-        checkAll: false,
-        selectedItems: [],
+        getByIdgrade: [],
+        loadinggrade: false,
+        checkAllgrade: false,
+        selectedItemsgrade: [],
     },
     getters: {
-        getById: state => state.getById,
+        getByIdgrade: state => state.getByIdgrade,
         grade: state => state.grade,
-        loading: state => state.loading,
-        checkAll: state => state.checkAll,
-        isChecked: state => state.grade.isChecked,
+        loadinggrade: state => state.loadinggrade,
+        checkAllgrade: state => state.checkAllgrade,
+        isCheckedgrade: state => state.grade.isChecked,
         //dùng để đển số checkbox đã được chọn 
-        checkAmount: state => state.grade.filter((item) => item.isChecked == true).length,
+        checkAmountgrade: state => state.grade.filter((item) => item.isChecked == true).length,
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
-        trueChecked: state => state.grade.some((item) => item.isChecked == true),
-        selectedItems: state => state.selectedItems,
+        trueCheckedgrade: state => state.grade.some((item) => item.isChecked == true),
+        selectedItemsgrade: state => state.selectedItemsgrade,
     },
     actions: {
         async addGrade({ commit, dispatch }, newStaff) {
@@ -78,9 +78,24 @@ const grademodule = {
                 console.log(error)
             }
         },
-        toggleAllSelection({ commit }) {
+        //TẠO 1 HÀM ĐỂ LẤY DỮ LIỆU THEO id
+        /**
+         * 
+         * @param {CREATE BY: LXSON-MF1589
+         * CREATE DATE: 17/04/2023} param0 
+         * @param {*} object 
+         */
+        async getIDgrade({ commit }, object) {
             try {
-                commit('SELECT_ALL')
+                const response = await axios.get(`${API_BASE_URL}Grades/${object.GradeId}`)
+                commit('GETBYIDGRADE', response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        toggleAllSelectiongrade({ commit }) {
+            try {
+                commit('SELECT_ALL_GRADE')
             } catch (error) {
                 console.log(error);
             }
@@ -88,9 +103,9 @@ const grademodule = {
         },
     },
     mutations: {
-        GETBYID(state, data) {
+        GETBYIDGRADE(state, data) {
             try {
-                state.getById = data
+                state.getByIdgrade = data
             } catch (error) {
                 console.log(error);
             }
@@ -133,12 +148,12 @@ const grademodule = {
                 console.log(error);
             }
         },
-        //SET THỜI GIAN HIỂN THỊ LOADING DỮ LIỆU
-        SET_LOADING(state) {
+        //SET THỜI GIAN HIỂN THỊ loadinggrade DỮ LIỆU
+        SET_LOADING_GRADE(state) {
             try {
-                state.loading = true;
+                state.loadinggrade = true;
                 setTimeout(() => {
-                    state.loading = false
+                    state.loadinggrade = false
                 }, 990)
             } catch (error) {
                 console.log(error);
@@ -146,27 +161,23 @@ const grademodule = {
 
         },
         //DÙNG ĐỂ KIỂM TRA CÁC CHECKBOX XEM ĐƯỢC CHỌN HAY CHƯA
-        SELECT_ALL(state) {
+        SELECT_ALL_GRADE(state) {
             try {
-                state.classroom.map((item) => {
-                    if (item.isChecked == false) {
-                        item.isChecked = true;
-                        state.checkAll = true
-                    }
-                    else {
-                        item.isChecked = false;
-                        state.checkAll = false
-                    }
+                const allChecked = state.grade.every(item => item.isChecked);
+                state.grade.forEach(item => {
+                    item.isChecked = !allChecked;
                 });
+
+                state.checkAllgrade = !allChecked;
             } catch (error) {
                 console.log(error);
             }
 
         },
         //DÙNG ĐỂ TRUYỀN CÁC ID VÀO 1 MẢNG PHỤC VỤ VIỆC XÓA NHIỀU BẢN GHI
-        SELECTCHECKED(state, id) {
+        SELECTCHECKEDGRADE(state, id) {
             try {
-                state.selectedItems.push(id);
+                state.selectedItemsgrade.push(id);
             } catch (error) {
                 console.log(error);
             }

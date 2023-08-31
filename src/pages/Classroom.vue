@@ -12,7 +12,7 @@
               <input type="text" placeholder="Tìm kiếm trong danh sách" />
             </div>
             <div class="filter_item">
-              <Dropdown text="Chọn điều kiện lọc" :options="grade" />
+              <Dropdown text="Chọn điều kiện lọc" :options="gradeclassroom" />
               <div class="wrapper__i">
                 <div class="excel"></div>
               </div>
@@ -38,8 +38,8 @@
                     <input
                       type="checkbox"
                       class="option-input"
-                      v-model="checkAll"
-                      @change="toggleAllSelection"
+                      v-model="checkAllclassroom"
+                      @change="toggleAllSelectionclassroom"
                     />
                     Mã lớp học
                   </th>
@@ -55,7 +55,7 @@
                       type="checkbox"
                       class="option-input"
                       v-model="data.isChecked"
-                      @click="delItemCheck(data.ClassRoomId)"
+                      @click="SELECTCHECKEDCLASSROOM(data.ClassRoomId)"
                     />
                     {{ data.ClassRoomCode }}
                   </td>
@@ -111,18 +111,22 @@ export default {
   computed: {
     ...mapGetters([
       "classroom",
-      "checkAll",
-      "checkAmount",
-      "trueChecked",
-      "grade",
+      "checkAllclassroom",
+      "checkAmountclassroom",
+      "trueCheckedclassroom",
+      "gradeclassroom",
     ]),
   },
   methods: {
-    ...mapActions(["getClassRoom", "toggleAllSelection", "getGrade"]),
-    ...mapMutations(["SELECTCHECKED"]),
+    ...mapActions([
+      "getClassRoom",
+      "toggleAllSelectionclassroom",
+      "getGradeclassroom",
+    ]),
+    ...mapMutations(["SELECTCHECKEDCLASSROOM"]),
     delItemCheck(id) {
       try {
-        this.SELECTCHECKED(id);
+        this.SELECTCHECKEDCLASSROOM(id);
       } catch (error) {
         console.log(error);
       }
@@ -136,7 +140,7 @@ export default {
   },
   mounted() {
     this.getClassRoom();
-    this.getGrade();
+    this.getGradeclassroom();
   },
 };
 </script>

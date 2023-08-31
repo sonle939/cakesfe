@@ -38,8 +38,8 @@
                     <input
                       type="checkbox"
                       class="option-input"
-                      v-model="checkAll"
-                      @change="toggleAllSelection"
+                      v-model="checkAllteacher"
+                      @change="toggleAllSelectionteacher"
                     />
                     Mã giáo viên
                   </th>
@@ -59,7 +59,7 @@
                       type="checkbox"
                       class="option-input"
                       v-model="data.isChecked"
-                      @click="delItemCheck(data.TeacherId)"
+                      @click="SELECTCHECKEDTEACHER(data.TeacherId)"
                     />
                     {{ data.TeacherCode }}
                   </td>
@@ -128,7 +128,7 @@
             </table>
           </div>
           <AdminPaginnation
-            :text="text"
+            :HIDE="HIDETEACHER"
             :showIsHide="showIsHideteacher"
             :totalRecords="totalRecordsteacher"
             :pageNumber="pageNumberteacher"
@@ -168,23 +168,27 @@ export default {
       "showIsHideteacher",
       "totalRecordsteacher",
       "pageSizeteacher",
-      "hasMoreItems",
       "pageNumberteacher",
       "totalPagesteacher",
-      "checkAll",
-      "checkAmount",
-      "trueChecked",
-      "subject",
+      "checkAllteacher",
+      "checkAmountteacher",
+      "trueCheckedteacher",
+      "subjectteacher",
     ]),
   },
   methods: {
-    ...mapMutations(["SET_PAGE", "HIDE", "SELECTCHECKED"]),
+    ...mapMutations([
+      "SET_PAGE_TEACHER",
+      "HIDETEACHER",
+      "SELECTCHECKEDTEACHER",
+      "HIDETEACHER",
+    ]),
     ...mapActions([
       "setPageNumberteacher",
       "setSizeteacher",
       "getteacher",
-      "toggleAllSelection",
-      "getsubject",
+      "toggleAllSelectionteacher",
+      "getsubjectteacher",
     ]),
     formattedDate(data) {
       return format(new Date(data), "dd/MM/yyyy");
@@ -199,7 +203,7 @@ export default {
   },
   mounted() {
     this.getteacher();
-    this.getsubject();
+    this.getsubjectteacher();
   },
 };
 </script>

@@ -42,8 +42,8 @@
                     <input
                       type="checkbox"
                       class="option-input"
-                      v-model="checkAll"
-                      @change="toggleAllSelection"
+                      v-model="checkAllgrade"
+                      @change="toggleAllSelectiongrade"
                     />
                     Mã khối lớp
                   </th>
@@ -58,7 +58,7 @@
                       type="checkbox"
                       class="option-input"
                       v-model="data.isChecked"
-                      @click="delItemCheck(data.GradeId)"
+                      @click="SELECTCHECKEDGRADE(data.GradeId)"
                     />
                     {{ data.GradeCode }}
                   </td>
@@ -104,11 +104,16 @@ export default {
   name: "Grade",
   data() {},
   computed: {
-    ...mapGetters(["checkAll", "checkAmount", "trueChecked", "grade"]),
+    ...mapGetters([
+      "checkAllgrade",
+      "checkAmountgrade",
+      "trueCheckedgrade",
+      "grade",
+    ]),
   },
   methods: {
-    ...mapActions(["toggleAllSelection", "getGrade"]),
-    ...mapMutations(["SELECTCHECKED"]),
+    ...mapActions(["toggleAllSelectiongrade", "getGrade"]),
+    ...mapMutations(["SELECTCHECKEDGRADE"]),
     delItemCheck(id) {
       try {
         this.SELECTCHECKED(id);

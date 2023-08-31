@@ -4,22 +4,22 @@ const API_BASE_URL = 'https://localhost:7199/api/v2/';
 const schoolyearmodule = {
     state: {
         schoolyear: [],
-        getById: [],
-        loading: false,
-        checkAll: false,
-        selectedItems: [],
+        getByIdschoolyear: [],
+        loadingschoolyear: false,
+        checkAllschoolyear: false,
+        selectedItemsschoolyear: [],
     },
     getters: {
-        getById: state => state.getById,
+        getByIdschoolyear: state => state.getByIdschoolyear,
         schoolyear: state => state.schoolyear,
-        loading: state => state.loading,
-        checkAll: state => state.checkAll,
-        isChecked: state => state.schoolyear.isChecked,
+        loadingschoolyear: state => state.loadingschoolyear,
+        checkAllschoolyear: state => state.checkAllschoolyear,
+        isCheckedschoolyear: state => state.schoolyear.isChecked,
         //dùng để đển số checkbox đã được chọn 
-        checkAmount: state => state.schoolyear.filter((item) => item.isChecked == true).length,
+        checkAmountschoolyear: state => state.schoolyear.filter((item) => item.isChecked == true).length,
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
-        trueChecked: state => state.schoolyear.some((item) => item.isChecked == true),
-        selectedItems: state => state.selectedItems,
+        trueCheckedschoolyear: state => state.schoolyear.some((item) => item.isChecked == true),
+        selectedItemsschoolyear: state => state.selectedItemsschoolyear,
     },
     actions: {
         async addschoolyear({ commit, dispatch }, newStaff) {
@@ -78,9 +78,24 @@ const schoolyearmodule = {
                 console.log(error)
             }
         },
-        toggleAllSelection({ commit }) {
+        //TẠO 1 HÀM ĐỂ LẤY DỮ LIỆU THEO id
+        /**
+         * 
+         * @param {CREATE BY: LXSON-MF1589
+         * CREATE DATE: 17/04/2023} param0 
+         * @param {*} object 
+         */
+        async getIDschoolyear({ commit }, object) {
             try {
-                commit('SELECT_ALL')
+                const response = await axios.get(`${API_BASE_URL}SchoolYear/${object.SchoolYearId}`)
+                commit('GETBYIDSCHOOLYEAR', response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        toggleAllSelectionschoolyear({ commit }) {
+            try {
+                commit('SELECT_ALL_SCHOOLYEAR')
             } catch (error) {
                 console.log(error);
             }
@@ -88,9 +103,9 @@ const schoolyearmodule = {
         },
     },
     mutations: {
-        GETBYID(state, data) {
+        GETBYIDSCHOOLYEAR(state, data) {
             try {
-                state.getById = data
+                state.getByIdschoolyear = data
             } catch (error) {
                 console.log(error);
             }
@@ -133,12 +148,12 @@ const schoolyearmodule = {
                 console.log(error);
             }
         },
-        //SET THỜI GIAN HIỂN THỊ LOADING DỮ LIỆU
+        //SET THỜI GIAN HIỂN THỊ loadingschoolyear DỮ LIỆU
         SET_LOADING(state) {
             try {
-                state.loading = true;
+                state.loadingschoolyear = true;
                 setTimeout(() => {
-                    state.loading = false
+                    state.loadingschoolyear = false
                 }, 990)
             } catch (error) {
                 console.log(error);
@@ -146,27 +161,22 @@ const schoolyearmodule = {
 
         },
         //DÙNG ĐỂ KIỂM TRA CÁC CHECKBOX XEM ĐƯỢC CHỌN HAY CHƯA
-        SELECT_ALL(state) {
+        SELECT_ALL_SCHOOLYEAR(state) {
             try {
-                state.schoolyear.map((item) => {
-                    if (item.isChecked == false) {
-                        item.isChecked = true;
-                        state.checkAll = true
-                    }
-                    else {
-                        item.isChecked = false;
-                        state.checkAll = false
-                    }
+                const allChecked = state.schoolyear.every(item => item.isChecked);
+                state.schoolyear.forEach(item => {
+                    item.isChecked = !allChecked;
                 });
+
+                state.checkAllgrade = !allChecked;
             } catch (error) {
                 console.log(error);
             }
-
         },
         //DÙNG ĐỂ TRUYỀN CÁC ID VÀO 1 MẢNG PHỤC VỤ VIỆC XÓA NHIỀU BẢN GHI
-        SELECTCHECKED(state, id) {
+        SELECTCHECKEDSCHOOLYEAR(state, id) {
             try {
-                state.selectedItems.push(id);
+                state.selectedItemsschoolyear.push(id);
             } catch (error) {
                 console.log(error);
             }

@@ -5,12 +5,12 @@ const API_BASE_URL = 'https://localhost:7199/api/v2/';
 const studentModule = {
     state: {
         student: [],
-        classroom: [],
-        getById: [],
-        loading: false,
-        checkAll: false,
-        isHide: false,
-        selectedItems: [],
+        classroomstudent: [],
+        getByIdstudent: [],
+        loadingstudent: false,
+        checkAllstudent: false,
+        isHidestudent: false,
+        selectedItemsstudent: [],
 
         //phan trang
         pageSizestudent: 15, // số lượng item trên một trang
@@ -23,19 +23,19 @@ const studentModule = {
     },
     getters: {
         student: state => state.student,
-        getById: state => state.getById,
-        classroom: state => state.classroom,
-        loading: state => state.loading,
-        checkAll: state => state.checkAll,
-        isChecked: state => state.student.isChecked,
+        getByIdstudent: state => state.getByIdstudent,
+        classroomstudent: state => state.classroomstudent,
+        loadingstudent: state => state.loadingstudent,
+        checkAllstudent: state => state.checkAllstudent,
+        isCheckedstudent: state => state.student.isChecked,
         //dùng để đếm số lượng dữ liệu (phân trang)
         allStudent: state => state.student.length,
-        showIsHidestudent: state => state.isHide,
+        showIsHidestudent: state => state.isHidestudent,
         //dùng để đển số checkbox đã được chọn 
-        checkAmount: state => state.student.filter((item) => item.isChecked == true).length,
+        checkAmountstudent: state => state.student.filter((item) => item.isChecked == true).length,
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
-        trueChecked: state => state.student.some((item) => item.isChecked == true),
-        selectedItems: state => state.selectedItems,
+        trueCheckedstudent: state => state.student.some((item) => item.isChecked == true),
+        selectedItemsstudent: state => state.selectedItemsstudent,
         //khai bao getter phan trang
         totalRecordsstudent: state => state.totalRecordsstudent,
         pageNumberstudent: state => state.pageNumberstudent,
@@ -47,12 +47,20 @@ const studentModule = {
     actions: {
         async getstudent({ commit, state }) {
             try {
-                commit('SET_LOADING')
+                commit('SET_LOADING_STUDENT')
                 const res = await
                     axios.get(`${API_BASE_URL}Students/Paging?pageSize=${state.pageSizestudent}&pageNumber=${state.pageNumberstudent}&recordId=${state.classroomId}&recordCode=${state.studentCode}`)
                 commit('SET_STUDENT', res.data.data)
-                commit('SET_TOTAL_PAGES', res.data.totalRecords)
-                commit('SET_ALLPAGE', res.data.totalPages);
+                commit('SET_TOTAL_PAGES_STUDENT', res.data.totalRecords)
+                commit('SET_ALLPAGE_STUDENT', res.data.totalPages);
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getIDstudent({ commit }, object) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Students/${object.StudentId}`)
+                commit('getByIdstudent', response.data)
             } catch (error) {
                 console.log(error)
             }
@@ -63,7 +71,7 @@ const studentModule = {
                 //commit('SETTEXTCHECK', res.data.notify)
                 commit('ADD_STUDENT', newStaff)
                 dispatch('getstudent');
-                dispatch("getclassroom");
+                dispatch("getclassroomstudent");
                 console.log('aaa', res.data.notify);
             } catch (error) {
                 console.log(error);
@@ -107,17 +115,17 @@ const studentModule = {
                 console.log(error);
             }
         },
-        async getclassroom({ commit }) {
+        async getclassroomstudent({ commit }) {
             try {
                 const res = await axios.get(`${API_BASE_URL}ClassRooms`)
-                commit('SET_CLASSROOM', res.data)
+                commit('SET_CLASSROOM_STUDENT', res.data)
             } catch (error) {
                 console.log(error)
             }
         },
-        toggleAllSelection({ commit }) {
+        toggleAllSelectionstudent({ commit }) {
             try {
-                commit('SELECT_ALL')
+                commit('SELECT_ALL_STUDENT')
             } catch (error) {
                 console.log(error);
             }
@@ -125,7 +133,7 @@ const studentModule = {
         },
         setSizestudent({ commit, dispatch }, name) {
             try {
-                commit('SET_PAGE', name);
+                commit('SET_PAGE_STUDENT', name);
                 dispatch('getstudent')
 
             } catch (error) {
@@ -133,16 +141,16 @@ const studentModule = {
             }
         },
         setPageNumberstudent({ commit, dispatch }, currentPage) {
-            commit('SET_PAGE_NUMBER', currentPage)
+            commit('SET_PAGE_NUMBER_STUDENT', currentPage)
             dispatch('getstudent')
         },
 
     },
     //MUTATIONS DÙNG ĐỂ THAO TÁC(thay doi trang thai state) VỚI STATE TRONG STORE
     mutations: {
-        GETBYID(state, data) {
+        getByIdstudent(state, data) {
             try {
-                state.getById = data
+                state.getByIdstudent = data
             } catch (error) {
                 console.log(error);
             }
@@ -185,19 +193,19 @@ const studentModule = {
             }
 
         },
-        SET_CLASSROOM(state, classroom) {
+        SET_CLASSROOM_STUDENT(state, classroomstudent) {
             try {
-                state.classroom = classroom;
+                state.classroomstudent = classroomstudent;
             } catch (error) {
                 console.log(error);
             }
         },
-        //SET THỜI GIAN HIỂN THỊ LOADING DỮ LIỆU
-        SET_LOADING(state) {
+        //SET THỜI GIAN HIỂN THỊ loadingstudent DỮ LIỆU
+        SET_LOADING_STUDENT(state) {
             try {
-                state.loading = true;
+                state.loadingstudent = true;
                 setTimeout(() => {
-                    state.loading = false
+                    state.loadingstudent = false
                 }, 990)
             } catch (error) {
                 console.log(error);
@@ -205,34 +213,31 @@ const studentModule = {
 
         },
         //DÙNG ĐỂ KIỂM TRA CÁC CHECKBOX XEM ĐƯỢC CHỌN HAY CHƯA
-        SELECT_ALL(state) {
+        SELECT_ALL_STUDENT(state) {
             try {
-                state.student.map((item) => {
-                    if (item.isChecked == false) {
-                        item.isChecked = true;
-                        state.checkAll = true
-                    }
-                    else {
-                        item.isChecked = false;
-                        state.checkAll = false
-                    }
+                const allChecked = state.student.every(item => item.isChecked);
+
+                state.student.forEach(item => {
+                    item.isChecked = !allChecked;
                 });
+
+                state.checkAllclassroom = !allChecked;
             } catch (error) {
                 console.log(error);
             }
 
         },
         //DÙNG ĐỂ TRUYỀN CÁC ID VÀO 1 MẢNG PHỤC VỤ VIỆC XÓA NHIỀU BẢN GHI
-        SELECTCHECKED(state, id) {
+        SELECTCHECKEDSTUDENT(state, id) {
             try {
-                state.selectedItems.push(id);
+                state.selectedItemsstudent.push(id);
             } catch (error) {
                 console.log(error);
             }
 
         },
         //phan trang
-        SET_TOTAL_PAGES(state, totalRecordsstudent) {
+        SET_TOTAL_PAGES_STUDENT(state, totalRecordsstudent) {
             try {
                 state.totalRecordsstudent = totalRecordsstudent
             } catch (error) {
@@ -240,7 +245,7 @@ const studentModule = {
             }
 
         },
-        SET_ALLPAGE(state, total) {
+        SET_ALLPAGE_STUDENT(state, total) {
             try {
                 state.totalPagesstudent = total
             } catch (error) {
@@ -248,7 +253,7 @@ const studentModule = {
             }
 
         },
-        SET_PAGE_NUMBER(state, pageNumberstudent) {
+        SET_PAGE_NUMBER_STUDENT(state, pageNumberstudent) {
             try {
                 state.pageNumberstudent = pageNumberstudent
             } catch (error) {
@@ -256,9 +261,9 @@ const studentModule = {
             }
 
         },
-        SET_PAGE(state, newPage) {
+        SET_PAGE_STUDENT(state, newPage) {
             try {
-                state.isHide = !state.isHide;
+                state.isHidestudent = !state.isHidestudent;
                 state.pageSizestudent = newPage
             } catch (error) {
                 console.log(error);
@@ -266,9 +271,9 @@ const studentModule = {
 
         },
         //DÙNG ĐỂ ĐÓNG MỞ COMPONENTS
-        HIDE(state) {
+        HIDESTUDENT(state) {
             try {
-                state.isHide = !state.isHide
+                state.isHidestudent = !state.isHidestudent
             } catch (error) {
                 console.log(error);
             }

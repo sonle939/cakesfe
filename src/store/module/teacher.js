@@ -5,12 +5,12 @@ const API_BASE_URL = 'https://localhost:7199/api/v2/';
 const teacherModule = {
     state: {
         teacher: [],
-        subject: [],
-        getById: [],
-        loading: false,
-        checkAll: false,
-        isHide: false,
-        selectedItems: [],
+        subjectteacher: [],
+        getByIdteacher: [],
+        loadingteacher: false,
+        checkAllteacher: false,
+        isHideteacher: false,
+        selectedItemsteacher: [],
 
         //phan trang
         pageSizeteacher: 15, // số lượng item trên một trang
@@ -23,19 +23,19 @@ const teacherModule = {
     },
     getters: {
         teacher: state => state.teacher,
-        getById: state => state.getById,
-        subject: state => state.subject,
-        loading: state => state.loading,
-        checkAll: state => state.checkAll,
+        getByIdteacher: state => state.getByIdteacher,
+        subjectteacher: state => state.subject,
+        loadingteacher: state => state.loadingteacher,
+        checkAllteacher: state => state.checkAllteacher,
         isChecked: state => state.teacher.isChecked,
         //dùng để đếm số lượng dữ liệu (phân trang)
         allTeacher: state => state.teacher.length,
-        showIsHideteacher: state => state.isHide,
+        showIsHideteacher: state => state.isHideteacher,
         //dùng để đển số checkbox đã được chọn 
         checkAmount: state => state.teacher.filter((item) => item.isChecked == true).length,
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
         trueChecked: state => state.teacher.some((item) => item.isChecked == true),
-        selectedItems: state => state.selectedItems,
+        selectedItemsteacher: state => state.selectedItemsteacher,
         //khai bao getter phan trang
         totalRecordsteacher: state => state.totalRecordsteacher,
         pageNumberteacher: state => state.pageNumberteacher,
@@ -47,12 +47,20 @@ const teacherModule = {
     actions: {
         async getteacher({ commit, state }) {
             try {
-                commit('SET_LOADING')
+                commit('SET_LOADING_TEACHER')
                 const res = await
                     axios.get(`${API_BASE_URL}Teachers/Paging?pageSize=${state.pageSizeteacher}&pageNumber=${state.pageNumberteacher}&recordId=${state.subjectId}&recordCode=${state.teacherCode}`)
                 commit('SET_TEACHER', res.data.data)
-                commit('SET_TOTAL_PAGES', res.data.totalRecords)
-                commit('SET_ALLPAGE', res.data.totalPages);
+                commit('SET_TOTAL_PAGES_TEACHER', res.data.totalRecords)
+                commit('SET_ALLPAGE_TEACHER', res.data.totalPages);
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getIDteacher({ commit }, object) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Teachers/${object.TeacherId}`)
+                commit('GETBYIDTEACHER', response.data)
             } catch (error) {
                 console.log(error)
             }
@@ -63,7 +71,7 @@ const teacherModule = {
                 //commit('SETTEXTCHECK', res.data.notify)
                 commit('ADD_TEACHER', newStaff)
                 dispatch('getteacher');
-                dispatch("getsubject");
+                dispatch("getsubjectteacher");
                 console.log('aaa', res.data.notify);
             } catch (error) {
                 console.log(error);
@@ -107,17 +115,17 @@ const teacherModule = {
                 console.log(error);
             }
         },
-        async getsubject({ commit }) {
+        async getsubjectteacher({ commit }) {
             try {
                 const res = await axios.get(`${API_BASE_URL}Subjects`)
-                commit('SET_SUBJECT', res.data)
+                commit('SET_SUBJECT_TEACHER', res.data)
             } catch (error) {
                 console.log(error)
             }
         },
-        toggleAllSelection({ commit }) {
+        toggleAllSelectionteacher({ commit }) {
             try {
-                commit('SELECT_ALL')
+                commit('SELECT_ALL_TEACHER')
             } catch (error) {
                 console.log(error);
             }
@@ -125,7 +133,7 @@ const teacherModule = {
         },
         setSizeteacher({ commit, dispatch }, name) {
             try {
-                commit('SET_PAGE', name);
+                commit('SET_PAGE_TEACHER', name);
                 dispatch('getteacher')
 
             } catch (error) {
@@ -133,16 +141,16 @@ const teacherModule = {
             }
         },
         setPageNumberteacher({ commit, dispatch }, currentPage) {
-            commit('SET_PAGE_NUMBER', currentPage)
+            commit('SET_PAGE_NUMBER_TEACHER', currentPage)
             dispatch('getteacher')
         },
 
     },
     //MUTATIONS DÙNG ĐỂ THAO TÁC(thay doi trang thai state) VỚI STATE TRONG STORE
     mutations: {
-        GETBYID(state, data) {
+        GETBYIDTEACHER(state, data) {
             try {
-                state.getById = data
+                state.getByIdteacher = data
             } catch (error) {
                 console.log(error);
             }
@@ -185,19 +193,19 @@ const teacherModule = {
             }
 
         },
-        SET_SUBJECT(state, subject) {
+        SET_SUBJECT_TEACHER(state, subjectteacher) {
             try {
-                state.subject = subject;
+                state.subject = subjectteacher;
             } catch (error) {
                 console.log(error);
             }
         },
-        //SET THỜI GIAN HIỂN THỊ LOADING DỮ LIỆU
-        SET_LOADING(state) {
+        //SET THỜI GIAN HIỂN THỊ loadingteacher DỮ LIỆU
+        SET_LOADING_TEACHER(state) {
             try {
-                state.loading = true;
+                state.loadingteacher = true;
                 setTimeout(() => {
-                    state.loading = false
+                    state.loadingteacher = false
                 }, 990)
             } catch (error) {
                 console.log(error);
@@ -205,34 +213,30 @@ const teacherModule = {
 
         },
         //DÙNG ĐỂ KIỂM TRA CÁC CHECKBOX XEM ĐƯỢC CHỌN HAY CHƯA
-        SELECT_ALL(state) {
+        SELECT_ALL_TEACHER(state) {
             try {
-                state.teacher.map((item) => {
-                    if (item.isChecked == false) {
-                        item.isChecked = true;
-                        state.checkAll = true
-                    }
-                    else {
-                        item.isChecked = false;
-                        state.checkAll = false
-                    }
+                const allChecked = state.teacher.every(item => item.isChecked);
+
+                state.teacher.forEach(item => {
+                    item.isChecked = !allChecked;
                 });
+
+                state.checkAllclassroom = !allChecked;
             } catch (error) {
                 console.log(error);
             }
-
         },
         //DÙNG ĐỂ TRUYỀN CÁC ID VÀO 1 MẢNG PHỤC VỤ VIỆC XÓA NHIỀU BẢN GHI
-        SELECTCHECKED(state, id) {
+        SELECTCHECKEDTEACHER(state, id) {
             try {
-                state.selectedItems.push(id);
+                state.selectedItemsteacher.push(id);
             } catch (error) {
                 console.log(error);
             }
 
         },
         //phan trang
-        SET_TOTAL_PAGES(state, totalRecordsteacher) {
+        SET_TOTAL_PAGES_TEACHER(state, totalRecordsteacher) {
             try {
                 state.totalRecordsteacher = totalRecordsteacher
             } catch (error) {
@@ -240,7 +244,7 @@ const teacherModule = {
             }
 
         },
-        SET_ALLPAGE(state, total) {
+        SET_ALLPAGE_TEACHER(state, total) {
             try {
                 state.totalPagesteacher = total
             } catch (error) {
@@ -248,7 +252,7 @@ const teacherModule = {
             }
 
         },
-        SET_PAGE_NUMBER(state, pageNumberteacher) {
+        SET_PAGE_NUMBER_TEACHER(state, pageNumberteacher) {
             try {
                 state.pageNumberteacher = pageNumberteacher
             } catch (error) {
@@ -256,9 +260,9 @@ const teacherModule = {
             }
 
         },
-        SET_PAGE(state, newPage) {
+        SET_PAGE_TEACHER(state, newPage) {
             try {
-                state.isHide = !state.isHide;
+                state.isHideteacher = !state.isHideteacher;
                 state.pageSizeteacher = newPage
             } catch (error) {
                 console.log(error);
@@ -266,9 +270,9 @@ const teacherModule = {
 
         },
         //DÙNG ĐỂ ĐÓNG MỞ COMPONENTS
-        HIDE(state) {
+        HIDETEACHER(state) {
             try {
-                state.isHide = !state.isHide
+                state.isHideteacher = !state.isHideteacher
             } catch (error) {
                 console.log(error);
             }

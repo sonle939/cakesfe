@@ -5,17 +5,36 @@
       <i class="bx bx-chevron-down"></i>
     </div>
     <div class="header_add">
-      <button><i class="bx bx-plus-medical"></i> Thêm mới</button>
-      <button><i class="bx bx-dots-horizontal-rounded"></i></button>
+      <VButton
+        text="Thêm mới"
+        leftIcon="bx bx-plus leftIcon"
+        @click="showform"
+      />
+      <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" class="mg-left" />
     </div>
   </div>
 </template>
 
 <script>
+import VButton from "../Button/VButton.vue";
+import VButtonicon from "../Button/VButtonicon.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "HeaderContent",
-  props: ["text"],
+  props: {
+    text: {
+      type: String,
+      required: true,
+    },
+    showform: {
+      type: Function,
+      required: true,
+    },
+  },
+  components: {
+    VButtonicon,
+    VButton,
+  },
 };
 </script>
 

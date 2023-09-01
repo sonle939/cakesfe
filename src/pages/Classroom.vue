@@ -4,7 +4,7 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý lớp học" />
+        <HeaderContent text="Quản lý lớp học" :showform="SHOW_FORM_CLASSROOM" />
         <div class="search_table">
           <div class="search_filter">
             <div class="search_list">
@@ -12,7 +12,31 @@
               <input type="text" placeholder="Tìm kiếm trong danh sách" />
             </div>
             <div class="filter_item">
-              <Dropdown text="Chọn điều kiện lọc" :options="gradeclassroom" />
+              <div class="dropdown">
+                <input
+                  type="text"
+                  v-model="selectedOption"
+                  placeholder="Chọn giá trị lọc"
+                  @click="toggleDropdown"
+                />
+                <i
+                  @click="toggleDropdown"
+                  :class="
+                    isOpen ? 'bx bx-chevron-down active' : 'bx bx-chevron-down'
+                  "
+                ></i>
+                <div class="overlaylist" v-show="isOpen">
+                  <ul ref="list">
+                    <li
+                      v-for="data in gradeclassroom"
+                      :key="data.GradeId"
+                      @click="selectOption(data.GradeName)"
+                    >
+                      {{ data.GradeName }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
               <div class="wrapper__i">
                 <div class="excel"></div>
               </div>
@@ -92,6 +116,7 @@
         </div>
       </div>
     </div>
+    <FClassroom />
   </div>
 </template>
 
@@ -99,14 +124,16 @@
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import HeaderContent from "@/components/content/Header.vue";
-import Dropdown from "../components/Dropdown/Dropdown.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
-
+import FClassroom from "../components/Form/FClassroom.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Classroom",
   data() {
-    return {};
+    return {
+      isOpen: false,
+      selectedOption: null,
+    };
   },
   computed: {
     ...mapGetters([
@@ -118,12 +145,19 @@ export default {
     ]),
   },
   methods: {
+    toggleDropdown() {
+      this.isOpen = !this.isOpen;
+    },
+    selectOption(options) {
+      this.selectedOption = options;
+      this.isOpen = false;
+    },
     ...mapActions([
       "getClassRoom",
       "toggleAllSelectionclassroom",
       "getGradeclassroom",
     ]),
-    ...mapMutations(["SELECTCHECKEDCLASSROOM"]),
+    ...mapMutations(["SELECTCHECKEDCLASSROOM", "SHOW_FORM_CLASSROOM"]),
     delItemCheck(id) {
       try {
         this.SELECTCHECKEDCLASSROOM(id);
@@ -136,7 +170,7 @@ export default {
     Navbar,
     Sidebar,
     HeaderContent,
-    Dropdown,
+    FClassroom,
   },
   mounted() {
     this.getClassRoom();
@@ -145,5 +179,5 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 </style>

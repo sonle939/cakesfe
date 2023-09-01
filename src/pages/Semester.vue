@@ -4,7 +4,7 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý học kỳ" />
+        <HeaderContent text="Quản lý học kỳ" :showform="SHOW_FORM_SEMESTER" />
         <div class="search_table">
           <div class="search_filter">
             <div class="search_list">
@@ -12,19 +12,14 @@
               <input type="text" placeholder="Tìm kiếm trong danh sách" />
             </div>
             <div class="filter_item">
-              <Dropdown
-                text="Chọn điều kiện lọc"
-                :options="dropdownOptions"
-                @option-selected="handleOptionSelected"
-              />
               <div class="wrapper__i">
                 <div class="excel"></div>
               </div>
               <div class="wrapper__i">
-                <div class="filter"></div>
+                <div class="filter" style="height: 20px"></div>
               </div>
               <div class="wrapper__i">
-                <div class="setting"></div>
+                <div class="setting" style="height: 24px"></div>
               </div>
             </div>
           </div>
@@ -90,6 +85,7 @@
         </div>
       </div>
     </div>
+    <FSemesterVue />
   </div>
 </template>
 
@@ -97,8 +93,8 @@
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import HeaderContent from "@/components/content/Header.vue";
-import Dropdown from "../components/Dropdown/Dropdown.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import FSemesterVue from "../components/Form/FSemester.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Semester",
@@ -115,7 +111,7 @@ export default {
   },
   methods: {
     ...mapActions(["getsemester", "toggleAllSelectionsemester"]),
-    ...mapMutations(["SELECTCHECKEDSEMESTER"]),
+    ...mapMutations(["SELECTCHECKEDSEMESTER", "SHOW_FORM_SEMESTER"]),
     delItemCheck(id) {
       try {
         this.SELECTCHECKED(id);
@@ -131,7 +127,7 @@ export default {
     Navbar,
     Sidebar,
     HeaderContent,
-    Dropdown,
+    FSemesterVue,
   },
 };
 </script>

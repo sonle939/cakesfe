@@ -18,3 +18,90 @@
     height: 111px;
   }
 }
+@keyframes click-wave {
+  0% {
+    height: 24px;
+    width: 24px;
+    opacity: 0.35;
+    position: relative;
+  }
+  100% {
+    height: 48px;
+    width: 48px;
+    margin-left: -15px;
+    margin-top: -13px;
+    opacity: 0;
+  }
+}
+@keyframes aniOver {
+  from {
+    opacity: 0;
+    transform: translateX(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes aniHeight {
+  from {
+    opacity: 0;
+    height: 16px;
+  }
+  to {
+    opacity: 1;
+    height: 111px;
+  }
+}
+
+@keyframes aniTrans {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes aniDv {
+  from {
+    opacity: 0;
+    height: 16px;
+  }
+  to {
+    opacity: 1;
+    height: 161px;
+  }
+}
+@keyframes aniTrans {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes aniForm {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes aniHeightOver {
+  0% {
+    opacity: 0;
+    height: 0;
+  }
+  100% {
+    opacity: 1;
+    height: 163px;
+  }
+}

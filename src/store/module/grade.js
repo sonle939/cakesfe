@@ -7,10 +7,12 @@ const grademodule = {
         getByIdgrade: [],
         loadinggrade: false,
         checkAllgrade: false,
+        isshowgrade: false,
         selectedItemsgrade: [],
     },
     getters: {
         getByIdgrade: state => state.getByIdgrade,
+        isshowgrade: state => state.isshowgrade,
         grade: state => state.grade,
         loadinggrade: state => state.loadinggrade,
         checkAllgrade: state => state.checkAllgrade,
@@ -183,6 +185,13 @@ const grademodule = {
             }
 
         },
+        SHOW_FORM_GRADE(state) {
+            try {
+                state.isshowgrade = !state.isshowgrade;
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
 }
 export default grademodule;

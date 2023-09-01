@@ -11,6 +11,7 @@ const teacherModule = {
         checkAllteacher: false,
         isHideteacher: false,
         selectedItemsteacher: [],
+        isshowteacher: false,
 
         //phan trang
         pageSizeteacher: 15, // số lượng item trên một trang
@@ -23,6 +24,7 @@ const teacherModule = {
     },
     getters: {
         teacher: state => state.teacher,
+        isshowteacher: state => state.isshowteacher,
         getByIdteacher: state => state.getByIdteacher,
         subjectteacher: state => state.subject,
         loadingteacher: state => state.loadingteacher,
@@ -278,6 +280,13 @@ const teacherModule = {
             }
 
         },
+        SHOW_FORM_TEACHER(state) {
+            try {
+                state.isshowteacher = !state.isshowteacher
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
 }
 export default teacherModule;

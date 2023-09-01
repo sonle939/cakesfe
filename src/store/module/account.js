@@ -6,11 +6,13 @@ const accountModule = {
     state: {
         account: [],
         getById: [],
-        loading: false,
+        loadingaccount: false,
         checkAll: false,
         isHide: false,
+        isshowaccount: false,
         selectedItems: [],
-
+        teacherAll: [],
+        studentAll: [],
         //phan trang
         pageSizeaccount: 15, // số lượng item trên một trang
         pageNumberaccount: 1, // số trang đang hiển thị
@@ -22,10 +24,13 @@ const accountModule = {
     },
     getters: {
         account: state => state.account,
+        studentAll: state => state.studentAll,
+        teacherAll: state => state.teacherAll,
         getById: state => state.getById,
-        loading: state => state.loading,
+        loadingaccount: state => state.loadingaccount,
         checkAll: state => state.checkAll,
         isChecked: state => state.account.isChecked,
+        isshowaccount: state => state.isshowaccount,
         //dùng để đếm số lượng dữ liệu (phân trang)
         allAccount: state => state.account.length,
         showIsHideaccount: state => state.isHide,
@@ -45,12 +50,30 @@ const accountModule = {
     actions: {
         async getaccount({ commit, state }) {
             try {
-                commit('SET_LOADING')
+                commit('SET_LOADING_ACCOUNT')
                 const res = await
                     axios.get(`${API_BASE_URL}Accounts/Paging?pageSize=${state.pageSizeaccount}&pageNumber=${state.pageNumberaccount}&recordRole=${state.role}&recordCode=${state.accountCode}`)
                 commit('SET_ACCOUNT', res.data.data)
                 commit('SET_TOTAL_PAGES', res.data.totalRecords)
                 commit('SET_ALLPAGE', res.data.totalPages);
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getStudentAll({ commit }) {
+            try {
+                commit('SET_LOADING_ACCOUNT')
+                const res = await axios.get(`${API_BASE_URL}Students/`)
+                commit('SET_STUDENT_ALL', res.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getteacherAll({ commit }) {
+            try {
+                commit('SET_LOADING_ACCOUNT')
+                const res = await axios.get(`${API_BASE_URL}Teachers/`)
+                commit('SET_TEACHER_ALL', res.data)
             } catch (error) {
                 console.log(error)
             }
@@ -144,6 +167,20 @@ const accountModule = {
                 console.log(error);
             }
         },
+        SET_STUDENT_ALL(state, studentAll) {
+            try {
+                state.studentAll = studentAll;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        SET_TEACHER_ALL(state, teacherAll) {
+            try {
+                state.teacherAll = teacherAll;
+            } catch (error) {
+                console.log(error);
+            }
+        },
         //DÙNG ĐỂ THAO TÁC CHO CHỨC NĂNG XÓA DỮ LIỆU 
         DELETE_ACCOUNT(state, id) {
             try {
@@ -174,12 +211,12 @@ const accountModule = {
             }
 
         },
-        //SET THỜI GIAN HIỂN THỊ LOADING DỮ LIỆU
-        SET_LOADING(state) {
+        //SET THỜI GIAN HIỂN THỊ loadingaccount DỮ LIỆU
+        SET_LOADING_ACCOUNT(state) {
             try {
-                state.loading = true;
+                state.loadingaccount = true;
                 setTimeout(() => {
-                    state.loading = false
+                    state.loadingaccount = false
                 }, 990)
             } catch (error) {
                 console.log(error);
@@ -256,6 +293,13 @@ const accountModule = {
             }
 
         },
+        SHOW_FORM_ACCOUNT(state) {
+            try {
+                state.isshowaccount = !state.isshowaccount
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
 }
 export default accountModule;

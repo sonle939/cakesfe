@@ -1,0 +1,78 @@
+.info_btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+  margin-top: 15px;
+}
+.btn_wp {
+  display: flex;
+  align-items: center;
+}
+
+.vbutton {
+  height: 36px;
+  border-radius: 4px;
+  background: #50b83c;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  padding: 9px 15px;
+  display: flex;
+  align-items: center;
+}
+.vbutton .leftIcon {
+  margin-right: 8px;
+  font-size: 16px;
+}
+.vbutton i.oneIcon {
+  font-size: 22px;
+  margin-right: 0;
+}
+.btn_phu {
+  background-color: white;
+  border: 1px solid #e6e6e6;
+  color: #1f1f1f;
+}
+.v-btnicon {
+  height: 36px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 1px solid #e6e6e6;
+  color: #1f1f1f;
+}
+.v-btnicon i {
+  font-size: 30px;
+  color: #1f1f1f;
+}
+.mg-left {
+  margin-left: 12px;
+}
+.ml-8 {
+  margin-left: 8px;
+}
+.remove_btn {
+  border: 1px solid #b80000;
+  background-color: white;
+  color: #b80000;
+  margin: 0 12px;
+}
+.del_color {
+  background-color: #de3617;
+}
+.remove_icon {
+  font-size: 24px;
+  margin-right: 8px;
+}
+.btn_info {
+  color: #1f1f1f;
+  border: 1px solid #1f1f1f;
+  background-color: white;
+}

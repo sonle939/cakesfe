@@ -4,7 +4,10 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý năm học" />
+        <HeaderContent
+          text="Quản lý năm học"
+          :showform="SHOW_FORM_SCHOOLYEAR"
+        />
         <div class="search_table">
           <div class="search_filter">
             <div class="search_list">
@@ -12,19 +15,14 @@
               <input type="text" placeholder="Tìm kiếm trong danh sách" />
             </div>
             <div class="filter_item">
-              <Dropdown
-                text="Chọn điều kiện lọc"
-                :options="dropdownOptions"
-                @option-selected="handleOptionSelected"
-              />
               <div class="wrapper__i">
                 <div class="excel"></div>
               </div>
               <div class="wrapper__i">
-                <div class="filter"></div>
+                <div class="filter" style="height: 20px"></div>
               </div>
               <div class="wrapper__i">
-                <div class="setting"></div>
+                <div class="setting" style="height: 24px"></div>
               </div>
             </div>
           </div>
@@ -91,6 +89,7 @@
         </div>
       </div>
     </div>
+    <FSchoolyearVue />
   </div>
 </template>
 
@@ -98,9 +97,9 @@
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import HeaderContent from "@/components/content/Header.vue";
-import Dropdown from "../components/Dropdown/Dropdown.vue";
 import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import FSchoolyearVue from "../components/Form/FSchoolyear.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Schoolyear",
@@ -116,8 +115,12 @@ export default {
     ]),
   },
   methods: {
-    ...mapActions(["getschoolyear", "toggleAllSelectionschoolyear"]),
-    ...mapMutations(["SELECTCHECKEDSCHOOLYEAR"]),
+    ...mapActions([
+      "getschoolyear",
+      "toggleAllSelectionschoolyear",
+      "isshowschoolyear",
+    ]),
+    ...mapMutations(["SELECTCHECKEDSCHOOLYEAR", "SHOW_FORM_SCHOOLYEAR"]),
     delItemCheck(id) {
       try {
         this.SELECTCHECKED(id);
@@ -133,8 +136,8 @@ export default {
     Navbar,
     Sidebar,
     HeaderContent,
-    Dropdown,
     AdminPaginnation,
+    FSchoolyearVue,
   },
 };
 </script>

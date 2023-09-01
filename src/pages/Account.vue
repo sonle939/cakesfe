@@ -4,7 +4,7 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý tài khoản" />
+        <HeaderContent text="Quản lý tài khoản" :showform="SHOW_FORM_ACCOUNT" />
         <div class="search_table">
           <div class="search_filter">
             <div class="search_list">
@@ -12,11 +12,31 @@
               <input type="text" placeholder="Tìm kiếm trong danh sách" />
             </div>
             <div class="filter_item">
-              <Dropdown
-                text="Chọn điều kiện lọc"
-                :options="dropdownOptions"
-                @option-selected="handleOptionSelected"
-              />
+              <div class="dropdown">
+                <input
+                  type="text"
+                  v-model="selectedOption"
+                  placeholder="Chọn giá trị lọc"
+                  @click="toggleDropdown"
+                />
+                <i
+                  @click="toggleDropdown"
+                  :class="
+                    isOpen ? 'bx bx-chevron-down active' : 'bx bx-chevron-down'
+                  "
+                ></i>
+                <div class="overlaylist" v-show="isOpen">
+                  <ul ref="list">
+                    <li
+                      v-for="data in selectedRoles"
+                      :key="data.id"
+                      @click="selectOption(data.name)"
+                    >
+                      {{ data.name }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
               <div class="wrapper__i">
                 <div class="excel"></div>
               </div>
@@ -105,6 +125,7 @@
         </div>
       </div>
     </div>
+    <FAccountVue />
   </div>
 </template>
 
@@ -112,13 +133,24 @@
 import HeaderContent from "@/components/content/Header.vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
-import Dropdown from "../components/Dropdown/Dropdown.vue";
 import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import FAccountVue from "../components/Form/FAccount.vue";
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Account",
-  data() {},
+  data() {
+    return {
+      isOpen: false,
+      selectedOption: null,
+      selectedRoles: [
+        { id: 1, name: "admin" },
+        { id: 2, name: "teacher" },
+        { id: 3, name: "student" },
+      ],
+    };
+  },
   computed: {
     ...mapGetters([
       "account",
@@ -135,11 +167,14 @@ export default {
     ]),
   },
   methods: {
-    handleOptionSelected(optionValue) {
-      console.log("Selected option:", optionValue);
-      // Xử lý sự kiện khi một tùy chọn được chọn
+    toggleDropdown() {
+      this.isOpen = !this.isOpen;
     },
-    ...mapMutations(["SET_PAGE", "HIDE", "SELECTCHECKED"]),
+    selectOption(options) {
+      this.selectedOption = options;
+      this.isOpen = false;
+    },
+    ...mapMutations(["SET_PAGE", "HIDE", "SELECTCHECKED", "SHOW_FORM_ACCOUNT"]),
     ...mapActions([
       "setPageNumberaccount",
       "setSizeaccount",
@@ -151,8 +186,8 @@ export default {
     Navbar,
     Sidebar,
     HeaderContent,
-    Dropdown,
     AdminPaginnation,
+    FAccountVue,
   },
   mounted() {
     this.getaccount();

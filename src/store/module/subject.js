@@ -7,10 +7,12 @@ const subjectmodule = {
         getByIdsubject: [],
         loadingsubject: false,
         checkAllsubject: false,
+        isshowsubject: false,
         selectedItemssubject: [],
     },
     getters: {
         getByIdsubject: state => state.getByIdsubject,
+        isshowsubject: state => state.isshowsubject,
         subject: state => state.subject,
         loadingsubject: state => state.loadingsubject,
         checkAllsubject: state => state.checkAllsubject,
@@ -178,6 +180,13 @@ const subjectmodule = {
             }
 
         },
+        SHOW_FORM_SUBJECT(state) {
+            try {
+                state.isshowsubject = !state.isshowsubject;
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
 }
 export default subjectmodule;

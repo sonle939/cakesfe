@@ -4,7 +4,7 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý giáo viên" />
+        <HeaderContent text="Quản lý giáo viên" :showform="SHOW_FORM_TEACHER" />
         <div class="search_table">
           <div class="search_filter">
             <div class="search_list">
@@ -12,7 +12,31 @@
               <input type="text" placeholder="Tìm kiếm trong danh sách" />
             </div>
             <div class="filter_item">
-              <Dropdown text="Chọn điều kiện lọc" :options="subject" />
+              <div class="dropdown">
+                <input
+                  type="text"
+                  v-model="selectedOption"
+                  placeholder="Chọn giá trị lọc"
+                  @click="toggleDropdown"
+                />
+                <i
+                  @click="toggleDropdown"
+                  :class="
+                    isOpen ? 'bx bx-chevron-down active' : 'bx bx-chevron-down'
+                  "
+                ></i>
+                <div class="overlaylist" v-show="isOpen">
+                  <ul ref="list">
+                    <li
+                      v-for="data in subjectList"
+                      :key="data.id"
+                      @click="selectOption(data.name)"
+                    >
+                      {{ data.name }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
               <div class="wrapper__i">
                 <div class="excel"></div>
               </div>
@@ -140,6 +164,7 @@
         </div>
       </div>
     </div>
+    <FTeacher />
   </div>
 </template>
 
@@ -150,15 +175,25 @@ import HeaderContent from "@/components/content/Header.vue";
 import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 import { format } from "date-fns";
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import { ref } from "vue";
-import Dropdown from "../components/Dropdown/Dropdown.vue";
+import FTeacher from "../components/Form/FTeacher.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Teacher",
   data() {
-    const text = ref("le son");
     return {
-      text,
+      subjectList: [
+        { id: 1, name: "Toán học" },
+        { id: 2, name: "Ngữ Văn" },
+        { id: 3, name: "Sinh học" },
+        { id: 4, name: "Nghệ thuật" },
+        { id: 5, name: "Lịch sử" },
+        { id: 6, name: "Địa Lý" },
+        { id: 7, name: "Hóa học" },
+        { id: 8, name: "Tiếng Anh" },
+        { id: 9, name: "Vật lý" },
+      ],
+      isOpen: false,
+      selectedOption: null,
     };
   },
   computed: {
@@ -177,11 +212,19 @@ export default {
     ]),
   },
   methods: {
+    toggleDropdown() {
+      this.isOpen = !this.isOpen;
+    },
+    selectOption(options) {
+      this.selectedOption = options;
+      this.isOpen = false;
+    },
     ...mapMutations([
       "SET_PAGE_TEACHER",
       "HIDETEACHER",
       "SELECTCHECKEDTEACHER",
       "HIDETEACHER",
+      "SHOW_FORM_TEACHER",
     ]),
     ...mapActions([
       "setPageNumberteacher",
@@ -198,8 +241,8 @@ export default {
     Navbar,
     Sidebar,
     HeaderContent,
-    Dropdown,
     AdminPaginnation,
+    FTeacher,
   },
   mounted() {
     this.getteacher();

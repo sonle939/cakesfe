@@ -4,7 +4,7 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý học sinh" />
+        <HeaderContent text="Quản lý học sinh" :showform="SHOW_FORM_STUDENT" />
         <div class="search_table">
           <div class="search_filter">
             <div class="search_list">
@@ -12,11 +12,31 @@
               <input type="text" placeholder="Tìm kiếm trong danh sách" />
             </div>
             <div class="filter_item">
-              <Dropdown
-                text="Chọn điều kiện lọc"
-                :options="dropdownOptions"
-                @option-selected="handleOptionSelected"
-              />
+              <div class="dropdown">
+                <input
+                  type="text"
+                  v-model="selectedOption"
+                  placeholder="Chọn giá trị lọc"
+                  @click="toggleDropdown"
+                />
+                <i
+                  @click="toggleDropdown"
+                  :class="
+                    isOpen ? 'bx bx-chevron-down active' : 'bx bx-chevron-down'
+                  "
+                ></i>
+                <div class="overlaylist" v-show="isOpen">
+                  <ul ref="list">
+                    <li
+                      v-for="data in classroomstudent"
+                      :key="data.ClassRoomId"
+                      @click="selectOption(data.ClassRoomName)"
+                    >
+                      {{ data.ClassRoomName }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
               <div class="wrapper__i">
                 <div class="excel"></div>
               </div>
@@ -144,6 +164,7 @@
         </div>
       </div>
     </div>
+    <FStudentVue />
   </div>
 </template>
 
@@ -151,28 +172,39 @@
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import HeaderContent from "@/components/content/Header.vue";
-import Dropdown from "../components/Dropdown/Dropdown.vue";
 import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import { format } from "date-fns";
+import FStudentVue from "../components/Form/FStudent.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Student",
   data() {
-    return {};
+    return {
+      isOpen: false,
+      selectedOption: null,
+    };
   },
   components: {
     Navbar,
     Sidebar,
-    Dropdown,
     HeaderContent,
     AdminPaginnation,
+    FStudentVue,
   },
   methods: {
+    toggleDropdown() {
+      this.isOpen = !this.isOpen;
+    },
+    selectOption(options) {
+      this.selectedOption = options;
+      this.isOpen = false;
+    },
     ...mapMutations([
       "SET_PAGE_STUDENT",
       "HIDESTUDENT",
       "SELECTCHECKEDSTUDENT",
+      "SHOW_FORM_STUDENT",
     ]),
     ...mapActions([
       "setPageNumberstudent",

@@ -2,6 +2,9 @@
 @import "../style/components/animation.css";
 @import "../style//components/style.css";
 @import "../style/components/table.css";
+@import "../style/components/dropdown.css";
+@import "../style/components/input.css";
+@import "../style/components/button.css";
 @font-face {
   font-family: misa-roboto;
   src: url("../assets/font/Roboto-Regular.ttf");
@@ -61,28 +64,65 @@ label {
   cursor: pointer;
   user-select: none;
 }
+button {
+  border: none;
+}
 .w-50 {
   width: 50px;
-}
-.w-100 {
-  width: 100px;
 }
 .w-150 {
   width: 150px;
 }
-.w-200 {
-  width: 200px;
-}
-.w-300 {
-  width: 300px;
-}
 .w-350 {
   width: 350px;
+}
+.w-315 {
+  width: 315px;
+}
+.w_full {
+  width: 100%;
+}
+.h_full {
+  height: 100%;
+}
+.w-456 {
+  width: 456px;
 }
 .w-250 {
   width: 250px;
 }
-.mg-bot{
+.w-280 {
+  width: 280px;
+}
+.w-140 {
+  width: 140px;
+}
+.w-300 {
+  width: 300px;
+}
+.w-200 {
+  width: 200px;
+}
+.w-100 {
+  width: 100px;
+}
+.w-90 {
+  width: 90px;
+}
+.mr-6 {
+  margin-right: 6px;
+}
+.mr-8 {
+  margin-right: 8px;
+}
+.mt-8 {
+  margin-top: 8px;
+}
+.mb-8 {
+  margin-bottom: 12px;
+}
+
+.mg-bot {
   margin-bottom: 10px;
 }
 .page_content {

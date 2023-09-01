@@ -10,6 +10,7 @@ const studentModule = {
         loadingstudent: false,
         checkAllstudent: false,
         isHidestudent: false,
+        isshowstudent: false,
         selectedItemsstudent: [],
 
         //phan trang
@@ -23,6 +24,7 @@ const studentModule = {
     },
     getters: {
         student: state => state.student,
+        isshowstudent: state => state.isshowstudent,
         getByIdstudent: state => state.getByIdstudent,
         classroomstudent: state => state.classroomstudent,
         loadingstudent: state => state.loadingstudent,
@@ -279,6 +281,13 @@ const studentModule = {
             }
 
         },
+        SHOW_FORM_STUDENT(state) {
+            try {
+                state.isshowstudent = !state.isshowstudent
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
 }
 export default studentModule;

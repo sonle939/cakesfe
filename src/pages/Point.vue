@@ -12,11 +12,6 @@
               <input type="text" placeholder="Tìm kiếm trong danh sách" />
             </div>
             <div class="filter_item">
-              <Dropdown
-                text="Chọn điều kiện lọc"
-                :options="dropdownOptions"
-                @option-selected="handleOptionSelected"
-              />
               <div class="wrapper__i">
                 <div class="excel"></div>
               </div>
@@ -39,7 +34,6 @@
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import HeaderContent from "@/components/content/Header.vue";
-import Dropdown from "../components/Dropdown/Dropdown.vue";
 import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -48,7 +42,6 @@ export default {
     Navbar,
     Sidebar,
     HeaderContent,
-    Dropdown,
     AdminPaginnation,
   },
 };

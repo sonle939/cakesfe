@@ -10,6 +10,7 @@ const classroomModule = {
         loadingclassroom: false,
         checkAllclassroom: false,
         selectedItemsclassroom: [],
+        isshowclassroom: false
     },
     getters: {
         classroom: state => state.classroom,
@@ -18,6 +19,7 @@ const classroomModule = {
         loadingclassroom: state => state.loadingclassroom,
         checkAllclassroom: state => state.checkAllclassroom,
         isChecked: state => state.classroom.isChecked,
+        isshowclassroom: state => state.isshowclassroom,
         //dùng để đển số checkbox đã được chọn 
         checkAmountclassroom: state => state.classroom.filter((item) => item.isChecked == true).length,
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
@@ -204,6 +206,13 @@ const classroomModule = {
             }
 
         },
+        SHOW_FORM_CLASSROOM(state) {
+            try {
+                state.isshowclassroom = !state.isshowclassroom;
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
 }
 export default classroomModule;

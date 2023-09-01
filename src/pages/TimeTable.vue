@@ -12,11 +12,6 @@
               <input type="text" placeholder="Tìm kiếm trong danh sách" />
             </div>
             <div class="filter_item">
-              <Dropdown
-                text="Chọn điều kiện lọc"
-                :options="dropdownOptions"
-                @option-selected="handleOptionSelected"
-              />
               <div class="wrapper__i">
                 <div class="excel"></div>
               </div>
@@ -28,6 +23,8 @@
               </div>
             </div>
           </div>
+          <SInput type="text" placeholder="testthu" v-model="text" />
+          <button class="sbutton">Cập nhật</button>
           <AdminPaginnation />
         </div>
       </div>
@@ -39,16 +36,21 @@
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import HeaderContent from "@/components/content/Header.vue";
-import Dropdown from "../components/Dropdown/Dropdown.vue";
 import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
+import SInput from "../components/Input/SInput.vue";
 export default {
   name: "TimeTable",
+  data() {
+    return {
+      text: "le xuan sonáasasdasd",
+    };
+  },
   components: {
     Navbar,
     Sidebar,
     HeaderContent,
-    Dropdown,
     AdminPaginnation,
+    SInput,
   },
 };
 </script>

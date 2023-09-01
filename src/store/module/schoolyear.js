@@ -7,11 +7,13 @@ const schoolyearmodule = {
         getByIdschoolyear: [],
         loadingschoolyear: false,
         checkAllschoolyear: false,
+        isshowschoolyear: false,
         selectedItemsschoolyear: [],
     },
     getters: {
         getByIdschoolyear: state => state.getByIdschoolyear,
         schoolyear: state => state.schoolyear,
+        isshowschoolyear: state => state.isshowschoolyear,
         loadingschoolyear: state => state.loadingschoolyear,
         checkAllschoolyear: state => state.checkAllschoolyear,
         isCheckedschoolyear: state => state.schoolyear.isChecked,
@@ -182,6 +184,13 @@ const schoolyearmodule = {
             }
 
         },
+        SHOW_FORM_SCHOOLYEAR(state) {
+            try {
+                state.isshowschoolyear = !state.isshowschoolyear;
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
 }
 export default schoolyearmodule;

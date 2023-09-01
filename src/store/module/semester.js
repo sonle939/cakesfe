@@ -7,10 +7,12 @@ const semestermodule = {
         getByIdsemester: [],
         loadingsemester: false,
         checkAllsemester: false,
+        isshowsemester: false,
         selectedItemssemester: [],
     },
     getters: {
         getByIdsemester: state => state.getByIdsemester,
+        isshowsemester: state => state.isshowsemester,
         semester: state => state.semester,
         loadingsemester: state => state.loadingsemester,
         checkAllsemester: state => state.checkAllsemester,
@@ -177,6 +179,13 @@ const semestermodule = {
             }
 
         },
+        SHOW_FORM_SEMESTER(state) {
+            try {
+                state.isshowsemester = !state.isshowsemester;
+            } catch (error) {
+                console.log(error);
+            }
+        }
     }
 }
 export default semestermodule;

@@ -1,29 +1,33 @@
 .dropdown {
-  position: relative;
-  width: 260px;
-}
-.dropdown input {
+  width: 300px;
   height: 36px;
-  width: 100%;
   border-radius: 4px;
   background-color: white;
   border: 1px solid #e0e1e4;
-  outline: none;
-  padding: 0 16px;
-  color: #999999;
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 18px;
+  padding: 8px 8px 9px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
 }
-.dropdown input::placeholder {
-  font-size: 15px;
+.dropdown input {
+  height: 17px;
+  font-size: 14px;
+  font-weight: 400;
+  width: 75%;
+  border: none;
+  color: #999999;
+  background-color: transparent;
 }
 .dropdown i {
-  position: absolute;
-  top: 18%;
-  right: 10px;
+  width: 25px;
+  height: 25px;
   font-size: 24px;
-  color: #65696e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2px;
+  color: #999999;
   transition: all 0.4s ease-in;
 }
 .dropdown i.active {
@@ -33,7 +37,7 @@
   position: absolute;
   top: 37px;
   left: 0;
-  width: 100%;
+  width: 300px;
   background-color: white;
   height: 111px;
   border-radius: 4px;
@@ -42,10 +46,9 @@
   z-index: 99;
   animation: aniHeight 0.5s ease-in;
 }
-
 .overlaylist ul {
   width: 100%;
-  height: 100px;
+  height: 100%;
   overflow-y: scroll;
 }
 .overlaylist ul::-webkit-scrollbar {
@@ -60,8 +63,7 @@
   background: white;
   border-radius: 4px;
 }
-
-.overlaylist ul li {
+.overlaylist li {
   font-size: 14px;
   height: 36px;
   font-weight: 400;
@@ -72,6 +74,9 @@
   user-select: none;
   border-radius: 4px;
 }
-.overlaylist ul li:hover {
+.overlaylist li.active {
+  background-color: rgba(80, 184, 60, 0.1);
+}
+.overlaylist li:hover {
   background-color: rgba(80, 184, 60, 0.1);
 }

@@ -146,6 +146,22 @@ const teacherModule = {
             commit('SET_PAGE_NUMBER_TEACHER', currentPage)
             dispatch('getteacher')
         },
+        async filterteachersubject({ commit, dispatch }, filter) {
+            try {
+                commit('FILTER_TEACHER_SUBJECT', filter);
+                dispatch('getteacher');
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        async filterteachercode({ commit, dispatch }, filter) {
+            try {
+                commit('FILTER_TEACHER_TEACHERCODE', filter);
+                dispatch('getteacher');
+            } catch (error) {
+                console.error(error)
+            }
+        },
 
     },
     //MUTATIONS DÙNG ĐỂ THAO TÁC(thay doi trang thai state) VỚI STATE TRONG STORE
@@ -161,6 +177,20 @@ const teacherModule = {
         SET_TEACHER(state, teacher) {
             try {
                 state.teacher = teacher;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        FILTER_TEACHER_SUBJECT(state, subjectId) {
+            try {
+                state.subjectId = subjectId;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        FILTER_TEACHER_TEACHERCODE(state, teacherCode) {
+            try {
+                state.teacherCode = teacherCode;
             } catch (error) {
                 console.log(error);
             }

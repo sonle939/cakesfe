@@ -9,7 +9,12 @@
           <div class="search_filter">
             <div class="search_list">
               <i class="bx bx-search-alt-2"></i>
-              <input type="text" placeholder="Tìm kiếm trong danh sách" />
+              <input
+                type="text"
+                placeholder="Tìm kiếm trong danh sách"
+                v-model="searchCode"
+                @keydown.enter="setFilteraccountcode(searchCode)"
+              />
             </div>
             <div class="filter_item">
               <div class="dropdown">
@@ -41,14 +46,20 @@
                 <div class="excel"></div>
               </div>
               <div class="wrapper__i">
-                <div class="filter"></div>
+                <div class="filter" @click="clearFilterCondition()"></div>
               </div>
               <div class="wrapper__i">
                 <div class="setting"></div>
               </div>
             </div>
           </div>
-          <div class="table-wrapper mg-bot">
+          <div
+            :class="
+              loadingaccount
+                ? 'table-wrapper active mg-bot'
+                : 'table-wrapper mg-bot'
+            "
+          >
             <table style="width: 100%; height: auto">
               <thead>
                 <tr>
@@ -112,6 +123,11 @@
                 </tr>
               </tbody>
             </table>
+            <div class="noData" v-if="account.length == 0">
+              <img src="../assets/nodata.svg" alt="" />
+              <h3>Không có dữ liệu</h3>
+            </div>
+            <Loading v-show="loadingaccount" />
           </div>
           <AdminPaginnation
             :showIsHide="showIsHideaccount"
@@ -136,6 +152,7 @@ import Sidebar from "../components/Sidebar.vue";
 import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import FAccountVue from "../components/Form/FAccount.vue";
+import Loading from "../components/Loading.vue";
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -149,6 +166,7 @@ export default {
         { id: 2, name: "teacher" },
         { id: 3, name: "student" },
       ],
+      searchCode: "",
     };
   },
   computed: {
@@ -161,9 +179,10 @@ export default {
       "hasMoreItems",
       "pageNumberaccount",
       "totalPagesaccount",
-      "checkAll",
+      "checkAllaccount",
       "checkAmount",
       "trueChecked",
+      "loadingaccount",
     ]),
   },
   methods: {
@@ -172,14 +191,32 @@ export default {
     },
     selectOption(options) {
       this.selectedOption = options;
+      this.setFilterrole(options);
       this.isOpen = false;
     },
-    ...mapMutations(["SET_PAGE", "HIDE", "SELECTCHECKED", "SHOW_FORM_ACCOUNT"]),
+    clearFilterCondition() {
+      try {
+        this.getaccount();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    ...mapMutations([
+      "SET_PAGE",
+      "HIDE",
+      "SELECTCHECKED",
+      "SHOW_FORM_ACCOUNT",
+      "SET_FILTER_ROLE",
+      "SET_FILTER_ACCOUNTCODE",
+      "SET_LOADING_ACCOUNT",
+    ]),
     ...mapActions([
       "setPageNumberaccount",
       "setSizeaccount",
       "getaccount",
       "toggleAllSelection",
+      "setFilterrole",
+      "setFilteraccountcode",
     ]),
   },
   components: {
@@ -188,6 +225,7 @@ export default {
     HeaderContent,
     AdminPaginnation,
     FAccountVue,
+    Loading,
   },
   mounted() {
     this.getaccount();

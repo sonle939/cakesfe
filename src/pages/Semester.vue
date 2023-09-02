@@ -16,14 +16,21 @@
                 <div class="excel"></div>
               </div>
               <div class="wrapper__i">
-                <div class="filter" style="height: 20px"></div>
+                <div
+                  class="filter"
+                  @click="getsemester()"
+                  style="height: 20px"
+                ></div>
               </div>
               <div class="wrapper__i">
                 <div class="setting" style="height: 24px"></div>
               </div>
             </div>
           </div>
-          <div class="table-wrapper" style="height: auto">
+          <div
+            :class="loadingsemester ? 'table-wrapper active' : 'table-wrapper'"
+            style="height: auto"
+          >
             <table style="width: 100%; height: auto">
               <thead>
                 <tr>
@@ -81,6 +88,11 @@
                 </tr>
               </tbody>
             </table>
+            <div class="noData" v-if="semester.length == 0">
+              <img src="../assets/nodata.svg" alt="" />
+              <h3>Không có dữ liệu</h3>
+            </div>
+            <Loading v-show="loadingsemester" style="margin-top: -430px" />
           </div>
         </div>
       </div>
@@ -95,6 +107,7 @@ import Sidebar from "../components/Sidebar.vue";
 import HeaderContent from "@/components/content/Header.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import FSemesterVue from "../components/Form/FSemester.vue";
+import Loading from "../components/Loading.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Semester",
@@ -107,6 +120,7 @@ export default {
       "checkAllsemester",
       "checkAmountsemester",
       "trueCheckedsemester",
+      "loadingsemester",
     ]),
   },
   methods: {
@@ -128,6 +142,7 @@ export default {
     Sidebar,
     HeaderContent,
     FSemesterVue,
+    Loading,
   },
 };
 </script>

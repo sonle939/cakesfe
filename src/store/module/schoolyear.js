@@ -74,6 +74,7 @@ const schoolyearmodule = {
         },
         async getschoolyear({ commit }) {
             try {
+                commit('SET_LOADING_SCHOOLYEAR')
                 const res = await axios.get(`${API_BASE_URL}SchoolYear`)
                 commit('SET_SCHOOLYEAR', res.data)
             } catch (error) {
@@ -151,7 +152,7 @@ const schoolyearmodule = {
             }
         },
         //SET THỜI GIAN HIỂN THỊ loadingschoolyear DỮ LIỆU
-        SET_LOADING(state) {
+        SET_LOADING_SCHOOLYEAR(state) {
             try {
                 state.loadingschoolyear = true;
                 setTimeout(() => {
@@ -170,7 +171,7 @@ const schoolyearmodule = {
                     item.isChecked = !allChecked;
                 });
 
-                state.checkAllgrade = !allChecked;
+                state.checkAllschoolyear = !allChecked;
             } catch (error) {
                 console.log(error);
             }

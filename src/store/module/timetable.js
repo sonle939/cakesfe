@@ -257,7 +257,7 @@ const timetableModule = {
                     item.isChecked = !allChecked;
                 });
 
-                state.checkAllclassroom = !allChecked;
+                state.checkAlltimetable = !allChecked;
             } catch (error) {
                 console.log(error);
             }

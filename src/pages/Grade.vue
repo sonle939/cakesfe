@@ -16,14 +16,21 @@
                 <div class="excel"></div>
               </div>
               <div class="wrapper__i">
-                <div class="filter" style="height: 20px"></div>
+                <div
+                  class="filter"
+                  @click="getGrade()"
+                  style="height: 20px"
+                ></div>
               </div>
               <div class="wrapper__i">
                 <div class="setting" style="height: 24px"></div>
               </div>
             </div>
           </div>
-          <div class="table-wrapper" style="height: auto">
+          <div
+            :class="loadinggrade ? 'table-wrapper active' : 'table-wrapper'"
+            style="height: auto"
+          >
             <table style="width: 100%; height: auto">
               <thead>
                 <tr>
@@ -81,6 +88,11 @@
                 </tr>
               </tbody>
             </table>
+            <div class="noData" v-if="grade.length == 0">
+              <img src="../assets/nodata.svg" alt="" />
+              <h3>Không có dữ liệu</h3>
+            </div>
+            <Loading v-show="loadinggrade" style="margin-top: -385px" />
           </div>
         </div>
       </div>
@@ -95,6 +107,7 @@ import Sidebar from "../components/Sidebar.vue";
 import HeaderContent from "@/components/content/Header.vue";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import FGrade from "../components/Form/FGrade.vue";
+import Loading from "../components/Loading.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Grade",
@@ -105,6 +118,7 @@ export default {
       "checkAmountgrade",
       "trueCheckedgrade",
       "grade",
+      "loadinggrade",
     ]),
   },
   methods: {
@@ -126,6 +140,7 @@ export default {
     Sidebar,
     HeaderContent,
     FGrade,
+    Loading,
   },
 };
 </script>

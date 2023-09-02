@@ -4,7 +4,10 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý lịch học" />
+        <HeaderContent
+          text="Quản lý lịch học"
+          :showform="SHOW_FORM_TIMETABLE"
+        />
         <div class="search_table">
           <div class="search_filter">
             <div class="search_list">
@@ -29,6 +32,7 @@
         </div>
       </div>
     </div>
+    <FTimetableVue />
   </div>
 </template>
 
@@ -38,6 +42,8 @@ import Sidebar from "../components/Sidebar.vue";
 import HeaderContent from "@/components/content/Header.vue";
 import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 import SInput from "../components/Input/SInput.vue";
+import FTimetableVue from "../components/Form/FTimetable.vue";
+import { mapMutations } from "vuex";
 export default {
   name: "TimeTable",
   data() {
@@ -45,12 +51,16 @@ export default {
       text: "le xuan sonáasasdasd",
     };
   },
+  methods: {
+    ...mapMutations(["SHOW_FORM_TIMETABLE"]),
+  },
   components: {
     Navbar,
     Sidebar,
     HeaderContent,
     AdminPaginnation,
     SInput,
+    FTimetableVue,
   },
 };
 </script>

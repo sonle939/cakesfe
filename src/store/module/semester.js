@@ -74,6 +74,7 @@ const semestermodule = {
         },
         async getsemester({ commit }) {
             try {
+                commit('SET_LOADING_SEMESTER')
                 const res = await axios.get(`${API_BASE_URL}Semesters`)
                 commit('SET_SEMESTER', res.data)
             } catch (error) {
@@ -144,7 +145,7 @@ const semestermodule = {
             }
         },
         //SET THỜI GIAN HIỂN THỊ loadingsemester DỮ LIỆU
-        SET_LOADING(state) {
+        SET_LOADING_SEMESTER(state) {
             try {
                 state.loadingsemester = true;
                 setTimeout(() => {

@@ -9,7 +9,12 @@
           <div class="search_filter">
             <div class="search_list">
               <i class="bx bx-search-alt-2"></i>
-              <input type="text" placeholder="Tìm kiếm trong danh sách" />
+              <input
+                type="text"
+                placeholder="Tìm kiếm trong danh sách"
+                v-model="searchText"
+                @keydown.enter="filterteachercode(searchText)"
+              />
             </div>
             <div class="filter_item">
               <div class="dropdown">
@@ -28,11 +33,11 @@
                 <div class="overlaylist" v-show="isOpen">
                   <ul ref="list">
                     <li
-                      v-for="data in subjectList"
-                      :key="data.id"
-                      @click="selectOption(data.name)"
+                      v-for="data in subjectteacher"
+                      :key="data.SubjectId"
+                      @click="selectOption(data.SubjectId, data.SubjectName)"
                     >
-                      {{ data.name }}
+                      {{ data.SubjectName }}
                     </li>
                   </ul>
                 </div>
@@ -41,14 +46,20 @@
                 <div class="excel"></div>
               </div>
               <div class="wrapper__i">
-                <div class="filter"></div>
+                <div class="filter" @click="clearFilterCondition"></div>
               </div>
               <div class="wrapper__i">
                 <div class="setting"></div>
               </div>
             </div>
           </div>
-          <div class="table-wrapper mg-bot">
+          <div
+            :class="
+              loadingteacher
+                ? 'table-wrapper active mg-bot'
+                : 'table-wrapper mg-bot'
+            "
+          >
             <table style="width: 100%; height: auto">
               <thead>
                 <tr>
@@ -150,6 +161,11 @@
                 </tr>
               </tbody>
             </table>
+            <div class="noData" v-if="teacher.length == 0">
+              <img src="../assets/nodata.svg" alt="" />
+              <h3>Không có dữ liệu</h3>
+            </div>
+            <Loading v-show="loadingteacher" />
           </div>
           <AdminPaginnation
             :HIDE="HIDETEACHER"
@@ -176,28 +192,20 @@ import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 import { format } from "date-fns";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import FTeacher from "../components/Form/FTeacher.vue";
+import Loading from "../components/Loading.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Teacher",
   data() {
     return {
-      subjectList: [
-        { id: 1, name: "Toán học" },
-        { id: 2, name: "Ngữ Văn" },
-        { id: 3, name: "Sinh học" },
-        { id: 4, name: "Nghệ thuật" },
-        { id: 5, name: "Lịch sử" },
-        { id: 6, name: "Địa Lý" },
-        { id: 7, name: "Hóa học" },
-        { id: 8, name: "Tiếng Anh" },
-        { id: 9, name: "Vật lý" },
-      ],
       isOpen: false,
       selectedOption: null,
+      searchText: "",
     };
   },
   computed: {
     ...mapGetters([
+      "subjectteacher",
       "teacher",
       "allTeacher",
       "showIsHideteacher",
@@ -209,15 +217,24 @@ export default {
       "checkAmountteacher",
       "trueCheckedteacher",
       "subjectteacher",
+      "loadingteacher",
     ]),
   },
   methods: {
     toggleDropdown() {
       this.isOpen = !this.isOpen;
     },
-    selectOption(options) {
+    selectOption(id, options) {
       this.selectedOption = options;
+      this.filterteachersubject(id);
       this.isOpen = false;
+    },
+    clearFilterCondition() {
+      try {
+        this.getteacher();
+      } catch (error) {
+        console.log(error);
+      }
     },
     ...mapMutations([
       "SET_PAGE_TEACHER",
@@ -232,6 +249,8 @@ export default {
       "getteacher",
       "toggleAllSelectionteacher",
       "getsubjectteacher",
+      "filterteachersubject",
+      "filterteachercode",
     ]),
     formattedDate(data) {
       return format(new Date(data), "dd/MM/yyyy");
@@ -243,6 +262,7 @@ export default {
     HeaderContent,
     AdminPaginnation,
     FTeacher,
+    Loading,
   },
   mounted() {
     this.getteacher();

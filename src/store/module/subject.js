@@ -74,6 +74,7 @@ const subjectmodule = {
         },
         async getsubject({ commit }) {
             try {
+                commit('SET_LOADING_SUBJECT')
                 const res = await axios.get(`${API_BASE_URL}Subjects`)
                 commit('SET_SUBJECT', res.data)
             } catch (error) {

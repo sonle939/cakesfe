@@ -7,7 +7,7 @@ const accountModule = {
         account: [],
         getById: [],
         loadingaccount: false,
-        checkAll: false,
+        checkAllaccount: false,
         isHide: false,
         isshowaccount: false,
         selectedItems: [],
@@ -15,7 +15,7 @@ const accountModule = {
         studentAll: [],
         //phan trang
         pageSizeaccount: 15, // số lượng item trên một trang
-        pageNumberaccount: 1, // số trang đang hiển thị
+        pageNumberaccount: 1, // số trang đang hiển thị 
         role: '',
         accountCode: '',
         totalRecordsaccount: 1,
@@ -27,9 +27,12 @@ const accountModule = {
         studentAll: state => state.studentAll,
         teacherAll: state => state.teacherAll,
         getById: state => state.getById,
+        /**dung de loc theo dieu kien */
+        role: state => state.role,
+        accountCode: state => state.accountCode,
         loadingaccount: state => state.loadingaccount,
-        checkAll: state => state.checkAll,
-        isChecked: state => state.account.isChecked,
+        checkAllaccount: state => state.checkAllaccount,
+        isCheckedaccount: state => state.account.isChecked,
         isshowaccount: state => state.isshowaccount,
         //dùng để đếm số lượng dữ liệu (phân trang)
         allAccount: state => state.account.length,
@@ -129,7 +132,7 @@ const accountModule = {
         },
         toggleAllSelection({ commit }) {
             try {
-                commit('SELECT_ALL')
+                commit('SELECT_ALL_ACCOUNT')
             } catch (error) {
                 console.log(error);
             }
@@ -148,7 +151,22 @@ const accountModule = {
             commit('SET_PAGE_NUMBER', currentPage)
             dispatch('getaccount')
         },
-
+        async setFilterrole({ commit, dispatch }, filter) {
+            try {
+                commit('SET_FILTER_ROLE', filter);
+                dispatch('getaccount');
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        async setFilteraccountcode({ commit, dispatch }, filter) {
+            try {
+                commit('SET_FILTER_ACCOUNTCODE', filter);
+                dispatch('getaccount');
+            } catch (error) {
+                console.error(error)
+            }
+        },
     },
     //MUTATIONS DÙNG ĐỂ THAO TÁC(thay doi trang thai state) VỚI STATE TRONG STORE
     mutations: {
@@ -159,6 +177,22 @@ const accountModule = {
                 console.log(error);
             }
 
+        },
+        /**dunfg de loc du lieu theo loai tai khoan */
+        SET_FILTER_ROLE(state, role) {
+            try {
+                state.role = role;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        /**dunfg de loc du lieu theo ma tai khoan */
+        SET_FILTER_ACCOUNTCODE(state, accountCode) {
+            try {
+                state.accountCode = accountCode;
+            } catch (error) {
+                console.log(error);
+            }
         },
         SET_ACCOUNT(state, account) {
             try {
@@ -224,18 +258,15 @@ const accountModule = {
 
         },
         //DÙNG ĐỂ KIỂM TRA CÁC CHECKBOX XEM ĐƯỢC CHỌN HAY CHƯA
-        SELECT_ALL(state) {
+        SELECT_ALL_ACCOUNT(state) {
             try {
-                state.account.map((item) => {
-                    if (item.isChecked == false) {
-                        item.isChecked = true;
-                        state.checkAll = true
-                    }
-                    else {
-                        item.isChecked = false;
-                        state.checkAll = false
-                    }
+                const allChecked = state.account.every(item => item.isChecked);
+
+                state.account.forEach(item => {
+                    item.isChecked = !allChecked;
                 });
+
+                state.checkAllaccount = !allChecked;
             } catch (error) {
                 console.log(error);
             }

@@ -26,6 +26,7 @@ const grademodule = {
     actions: {
         async addGrade({ commit, dispatch }, newStaff) {
             try {
+
                 const res = await axios.post(`${API_BASE_URL}Grades/`, newStaff)
                 //commit('SETTEXTCHECK', res.data.notify)
                 commit('ADD_GRADE', newStaff)
@@ -74,6 +75,7 @@ const grademodule = {
         },
         async getGrade({ commit }) {
             try {
+                commit('SET_LOADING_GRADE')
                 const res = await axios.get(`${API_BASE_URL}Grades`)
                 commit('SET_GRADE', res.data)
             } catch (error) {

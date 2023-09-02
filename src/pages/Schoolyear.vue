@@ -19,14 +19,23 @@
                 <div class="excel"></div>
               </div>
               <div class="wrapper__i">
-                <div class="filter" style="height: 20px"></div>
+                <div
+                  class="filter"
+                  @click="getschoolyear()"
+                  style="height: 20px"
+                ></div>
               </div>
               <div class="wrapper__i">
                 <div class="setting" style="height: 24px"></div>
               </div>
             </div>
           </div>
-          <div class="table-wrapper" style="height: auto">
+          <div
+            :class="
+              loadingschoolyear ? 'table-wrapper active' : 'table-wrapper'
+            "
+            style="height: auto"
+          >
             <table style="width: 100%; height: auto">
               <thead>
                 <tr>
@@ -84,8 +93,12 @@
                 </tr>
               </tbody>
             </table>
+            <div class="noData" v-if="schoolyear.length == 0">
+              <img src="../assets/nodata.svg" alt="" />
+              <h3>Không có dữ liệu</h3>
+            </div>
+            <Loading v-show="loadingschoolyear" style="margin-top: -430px" />
           </div>
-          <AdminPaginnation />
         </div>
       </div>
     </div>
@@ -97,9 +110,9 @@
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
 import HeaderContent from "@/components/content/Header.vue";
-import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import FSchoolyearVue from "../components/Form/FSchoolyear.vue";
+import Loading from "../components/Loading.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Schoolyear",
@@ -112,6 +125,7 @@ export default {
       "checkAllschoolyear",
       "checkAmountschoolyear",
       "trueCheckedschoolyear",
+      "loadingschoolyear",
     ]),
   },
   methods: {
@@ -136,8 +150,8 @@ export default {
     Navbar,
     Sidebar,
     HeaderContent,
-    AdminPaginnation,
     FSchoolyearVue,
+    Loading,
   },
 };
 </script>

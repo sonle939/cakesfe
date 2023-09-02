@@ -41,14 +41,17 @@
                 <div class="excel"></div>
               </div>
               <div class="wrapper__i">
-                <div class="filter"></div>
+                <div class="filter" @click="getClassRoom()"></div>
               </div>
               <div class="wrapper__i">
                 <div class="setting"></div>
               </div>
             </div>
           </div>
-          <div class="table-wrapper" style="height: auto">
+          <div
+            :class="loadingclassroom ? 'table-wrapper active' : 'table-wrapper'"
+            style="height: auto"
+          >
             <table style="width: 100%; height: auto">
               <thead>
                 <tr>
@@ -112,6 +115,11 @@
                 </tr>
               </tbody>
             </table>
+            <div class="noData" v-if="classroom.length == 0">
+              <img src="../assets/nodata.svg" alt="" />
+              <h3>Không có dữ liệu</h3>
+            </div>
+            <Loading v-show="loadingclassroom" style="margin-top: -310px" />
           </div>
         </div>
       </div>
@@ -126,6 +134,7 @@ import Sidebar from "../components/Sidebar.vue";
 import HeaderContent from "@/components/content/Header.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import FClassroom from "../components/Form/FClassroom.vue";
+import Loading from "../components/Loading.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Classroom",
@@ -142,6 +151,7 @@ export default {
       "checkAmountclassroom",
       "trueCheckedclassroom",
       "gradeclassroom",
+      "loadingclassroom",
     ]),
   },
   methods: {
@@ -171,6 +181,7 @@ export default {
     Sidebar,
     HeaderContent,
     FClassroom,
+    Loading,
   },
   mounted() {
     this.getClassRoom();

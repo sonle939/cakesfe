@@ -9,7 +9,12 @@
           <div class="search_filter">
             <div class="search_list">
               <i class="bx bx-search-alt-2"></i>
-              <input type="text" placeholder="Tìm kiếm trong danh sách" />
+              <input
+                type="text"
+                placeholder="Tìm kiếm trong danh sách"
+                v-model="searchtext"
+                @keydown.enter="setFilterstudentcodestudent(searchtext)"
+              />
             </div>
             <div class="filter_item">
               <div class="dropdown">
@@ -30,7 +35,9 @@
                     <li
                       v-for="data in classroomstudent"
                       :key="data.ClassRoomId"
-                      @click="selectOption(data.ClassRoomName)"
+                      @click="
+                        selectOption(data.ClassRoomId, data.ClassRoomName)
+                      "
                     >
                       {{ data.ClassRoomName }}
                     </li>
@@ -41,14 +48,20 @@
                 <div class="excel"></div>
               </div>
               <div class="wrapper__i">
-                <div class="filter"></div>
+                <div class="filter" @click="clearFilterCondition()"></div>
               </div>
               <div class="wrapper__i">
                 <div class="setting"></div>
               </div>
             </div>
           </div>
-          <div class="table-wrapper mg-bot">
+          <div
+            :class="
+              loadingstudent
+                ? 'table-wrapper active mg-bot'
+                : 'table-wrapper mg-bot'
+            "
+          >
             <table style="width: 100%; height: auto">
               <thead>
                 <tr>
@@ -150,6 +163,11 @@
                 </tr>
               </tbody>
             </table>
+            <div class="noData" v-if="student.length == 0">
+              <img src="../assets/nodata.svg" alt="" />
+              <h3>Không có dữ liệu</h3>
+            </div>
+            <Loading v-show="loadingstudent" />
           </div>
           <AdminPaginnation
             :showIsHide="showIsHidestudent"
@@ -176,6 +194,7 @@ import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import { format } from "date-fns";
 import FStudentVue from "../components/Form/FStudent.vue";
+import Loading from "../components/Loading.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Student",
@@ -183,6 +202,7 @@ export default {
     return {
       isOpen: false,
       selectedOption: null,
+      searchtext: "",
     };
   },
   components: {
@@ -191,14 +211,23 @@ export default {
     HeaderContent,
     AdminPaginnation,
     FStudentVue,
+    Loading,
   },
   methods: {
     toggleDropdown() {
       this.isOpen = !this.isOpen;
     },
-    selectOption(options) {
+    selectOption(id, options) {
       this.selectedOption = options;
+      this.setFilterclassroomidstudent(id);
       this.isOpen = false;
+    },
+    clearFilterCondition() {
+      try {
+        this.getstudent();
+      } catch (error) {
+        console.log(error);
+      }
     },
     ...mapMutations([
       "SET_PAGE_STUDENT",
@@ -212,6 +241,8 @@ export default {
       "getstudent",
       "toggleAllSelectionstudent",
       "getclassroomstudent",
+      "setFilterstudentcodestudent",
+      "setFilterclassroomidstudent",
     ]),
     formattedDate(data) {
       return format(new Date(data), "dd/MM/yyyy");
@@ -230,6 +261,7 @@ export default {
       "checkAmountstudent",
       "trueCheckedstudent",
       "classroomstudent",
+      "loadingstudent",
     ]),
   },
   mounted() {

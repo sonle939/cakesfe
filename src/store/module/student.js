@@ -12,6 +12,8 @@ const studentModule = {
         isHidestudent: false,
         isshowstudent: false,
         selectedItemsstudent: [],
+        formModestudent: false,
+        studentmaxcode: null,
 
         //phan trang
         pageSizestudent: 15, // số lượng item trên một trang
@@ -30,6 +32,8 @@ const studentModule = {
         loadingstudent: state => state.loadingstudent,
         checkAllstudent: state => state.checkAllstudent,
         isCheckedstudent: state => state.student.isChecked,
+        formModestudent: state => state.formModestudent,
+        studentmaxcode: state => state.studentmaxcode,
         //dùng để đếm số lượng dữ liệu (phân trang)
         allStudent: state => state.student.length,
         showIsHidestudent: state => state.isHidestudent,
@@ -62,7 +66,7 @@ const studentModule = {
         async getIDstudent({ commit }, object) {
             try {
                 const response = await axios.get(`${API_BASE_URL}Students/${object.StudentId}`)
-                commit('getByIdstudent', response.data)
+                commit('GETBYIDSTUDENT', response.data)
             } catch (error) {
                 console.log(error)
             }
@@ -74,6 +78,7 @@ const studentModule = {
                 commit('ADD_STUDENT', newStaff)
                 dispatch('getstudent');
                 dispatch("getclassroomstudent");
+                dispatch('getMaxCodestudent');
                 console.log('aaa', res.data.notify);
             } catch (error) {
                 console.log(error);
@@ -86,6 +91,7 @@ const studentModule = {
                 await axios.delete(`${API_BASE_URL}Students/${StudentId}`)
                 commit('DELETE_STUDENT', StudentId);
                 dispatch('getstudent');
+                dispatch('getMaxCodestudent');
             } catch (error) {
                 console.log(error)
             }
@@ -99,6 +105,7 @@ const studentModule = {
                 if (response.status === 200) {
                     commit('DELETE_STUDENT', StudentIds);
                     dispatch('getstudent');
+                    dispatch('getMaxCodestudent');
                 }
             } catch (error) {
                 console.log(error);
@@ -112,6 +119,7 @@ const studentModule = {
                 commit('UPDATE_STUDENT', response.data);
                 //  commit('SETUPDATECHECK', response.data.message)
                 dispatch('getstudent');
+                dispatch('getMaxCodestudent');
                 console.log('update', response.data.message);
             } catch (error) {
                 console.log(error);
@@ -162,11 +170,27 @@ const studentModule = {
                 console.error(error)
             }
         },
+        async getMaxCodestudent({ commit }) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Students/StudentCodeMax`)
+                commit('SET_MAXCODE_STUDENT', response.data.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        uncheckItemsstudent({ commit }) {
+            try {
+                commit('UN_CHECK_STUDENT')
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
 
     },
     //MUTATIONS DÙNG ĐỂ THAO TÁC(thay doi trang thai state) VỚI STATE TRONG STORE
     mutations: {
-        getByIdstudent(state, data) {
+        GETBYIDSTUDENT(state, data) {
             try {
                 state.getByIdstudent = data
             } catch (error) {
@@ -317,7 +341,41 @@ const studentModule = {
             } catch (error) {
                 console.log(error);
             }
-        }
+        },
+        ADD_MODE_STUDENT(state) {
+            try {
+                state.formModestudent = true
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        UPDATE_MODE_STUDENT(state) {
+            try {
+                state.formModestudent = false;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        //DÙNG ĐỂ UN CHECK CÁC CHECKBOX ĐÃ ĐƯỢC CLICK
+        UN_CHECK_STUDENT(state) {
+            try {
+                state.student.map((item) => {
+                    if (item.isChecked === true) {
+                        item.isChecked = false;
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        SET_MAXCODE_STUDENT(state, studentmaxcode) {
+            try {
+                state.studentmaxcode = studentmaxcode
+            } catch (error) {
+                console.log(error);
+            }
+        },
     }
 }
 export default studentModule;

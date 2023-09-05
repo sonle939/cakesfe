@@ -1,6 +1,28 @@
 <template>
   <div class="form_container" v-if="isshowteacher">
-    <form class="teacher_form">
+    <div class="notify_error" v-if="checkForm">
+      <div class="error_wrapper">
+        <div class="error_text">
+          <h1>Dữ liệu không hợp lệ</h1>
+          <i class="bx bx-x" @click="handleClose"></i>
+        </div>
+        <ul>
+          <li v-for="(erro, index) in error" :key="index">
+            <i class="bx bxs-error"></i>
+            {{ erro }}
+          </li>
+        </ul>
+        <div class="error_btn">
+          <button @click="handleClose">Đồng ý</button>
+        </div>
+      </div>
+    </div>
+    <form
+      class="teacher_form"
+      @submit.prevent="onSubmitAdd"
+      novalidate="true"
+      v-if="formModeteacher === true"
+    >
       <div class="info_title" style="margin-bottom: 0px">
         <div class="title_left">
           <h1>Thêm mới giáo viên</h1>
@@ -18,6 +40,7 @@
             class="sinput"
             style="width: 315px"
             placeholder="mã giáo viên"
+            v-model="formData.TeacherCode"
           />
         </label>
         <label class="slabel"
@@ -27,11 +50,17 @@
             class="sinput"
             style="width: 315px"
             placeholder="tên giáo viên"
+            v-model="formData.TeacherName"
           />
         </label>
         <label class="slabel"
           >Ngày sinh
-          <input type="date" class="sinput" style="width: 315px" />
+          <input
+            type="date"
+            class="sinput"
+            style="width: 315px"
+            v-model="formData.DateOfBirth"
+          />
         </label>
         <label class="slabel"
           >Địa chỉ email
@@ -40,32 +69,51 @@
             class="sinput"
             style="width: 315px"
             placeholder="email..."
+            v-model="formData.Email"
           />
         </label>
         <div class="sex_wrapper" style="margin-left: 26px">
           <p>Giới tính</p>
           <div class="sex_input">
             <div class="sex_item">
-              <VRadio name="sex" class="mr-6" id="nam" />
-              <label for="nam">Nam</label>
+              <VRadio
+                name="sex"
+                class="mr-6"
+                id="nam"
+                v-model="formData.Gender"
+                @click="formData.Gender = 1"
+              />
+              <label for="nam" @click="formData.Gender = 1">Nam</label>
             </div>
             <div class="sex_item">
-              <VRadio name="sex" class="mr-6" id="women" />
-              <label for="women">Nữ</label>
+              <VRadio
+                name="sex"
+                class="mr-6"
+                id="women"
+                v-model="formData.Gender"
+                @click="formData.Gender = 0"
+              />
+              <label for="women" @click="formData.Gender = 0">Nữ</label>
             </div>
             <div class="sex_item">
-              <VRadio name="sex" class="mr-6" id="khac" />
-              <label for="khac">Khác</label>
+              <VRadio
+                name="sex"
+                class="mr-6"
+                id="khac"
+                v-model="formData.Gender"
+                @click="formData.Gender = 2"
+              />
+              <label for="khac" @click="formData.Gender = 2">Khác</label>
             </div>
           </div>
         </div>
         <label
           class="slabel"
           @click="toggleDropdowns"
-          style="margin-left: 110px"
+          style="margin-left: 95px"
         >
           Thông tin chuyên môn
-          <div class="dropdown" style="margin-top: 8px">
+          <div class="dropdown" style="margin-top: 8px; width: 315px">
             <input
               type="text"
               v-model="selectedOptions"
@@ -77,14 +125,118 @@
                 isOpens ? 'bx bx-chevron-down active' : 'bx bx-chevron-down'
               "
             ></i>
-            <div class="overlaylist" v-show="isOpens">
+            <div class="overlaylist" v-show="isOpens" style="width: 315px">
               <ul ref="list">
                 <li
                   v-for="data in subjectteacher"
                   :key="data.SubjectId"
-                  @click="selectOptions(data.SubjectName)"
+                  @click="selectOptions(data.SubjectId, data.SubjectName)"
                 >
                   {{ data.SubjectName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+        <label class="slabel" @click="toggleDropdownsClassroomId">
+          Thông tin lớp dạy
+          <div class="dropdown" style="margin-top: 8px; width: 315px">
+            <input
+              type="text"
+              v-model="selectedOptionsClassroomId"
+              placeholder="Chọn thông tin lớp dạy"
+            />
+            <i
+              @click="toggleDropdownsClassroomId"
+              :class="
+                isOpensClassroomId
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpensClassroomId"
+              style="width: 315px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in classroomteacher"
+                  :key="data.ClassRoomId"
+                  @click="
+                    selectOptionsClassroomId(
+                      data.ClassRoomId,
+                      data.ClassRoomName
+                    )
+                  "
+                >
+                  {{ data.ClassRoomName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+        <label class="slabel" @click="toggleDropdownsCollaborate">
+          Tình trạng công tác
+          <div class="dropdown" style="margin-top: 8px; width: 315px">
+            <input
+              type="text"
+              v-model="selectedOptionsCollaborate"
+              placeholder="Chọn thông tin công tác"
+            />
+            <i
+              @click="toggleDropdownsCollaborate"
+              :class="
+                isOpensCollaborate
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpensCollaborate"
+              style="width: 315px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in Collaborate"
+                  :key="data.id"
+                  @click="selectOptionsCollaborate(data.CollaborateName)"
+                >
+                  {{ data.CollaborateName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+        <label class="slabel" @click="toggleDropdownsStandard">
+          Trình độ giáo viên
+          <div class="dropdown" style="margin-top: 8px; width: 315px">
+            <input
+              type="text"
+              v-model="selectedOptionsStandard"
+              placeholder="Chọn bằng cấp"
+            />
+            <i
+              @click="toggleDropdownsStandard"
+              :class="
+                isOpensStandard
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpensStandard"
+              style="width: 315px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in Standard"
+                  :key="data.id"
+                  @click="selectOptionsStandard(data.StandardName)"
+                >
+                  {{ data.StandardName }}
                 </li>
               </ul>
             </div>
@@ -108,37 +260,584 @@
         </div>
       </div>
     </form>
+    <form
+      class="teacher_form"
+      @submit.prevent="onSubmitUpdate"
+      novalidate="true"
+      v-if="formModeteacher === false"
+    >
+      <div class="info_title" style="margin-bottom: 0px">
+        <div class="title_left">
+          <h1>Cập nhật giáo viên</h1>
+        </div>
+        <div class="title_close">
+          <i class="bx bx-help-circle"></i>
+          <i class="bx bx-x" @click="SHOW_FORM_TEACHER"></i>
+        </div>
+      </div>
+      <div class="info_property">
+        <label class="slabel"
+          >Mã giáo viên
+          <input
+            type="text"
+            class="sinput"
+            style="width: 315px"
+            placeholder="mã giáo viên"
+            v-model="getByIdteacher.TeacherCode"
+          />
+        </label>
+        <label class="slabel"
+          >Tên giáo viên
+          <input
+            type="text"
+            class="sinput"
+            style="width: 315px"
+            placeholder="tên giáo viên"
+            v-model="getByIdteacher.TeacherName"
+          />
+        </label>
+        <label class="slabel"
+          >Ngày sinh
+          <input
+            type="date"
+            class="sinput"
+            style="width: 315px"
+            v-model="formattedDateOfBirth"
+          />
+        </label>
+        <label class="slabel"
+          >Địa chỉ email
+          <input
+            type="text"
+            class="sinput"
+            style="width: 315px"
+            placeholder="email..."
+            v-model="getByIdteacher.Email"
+          />
+        </label>
+        <div class="sex_wrapper" style="margin-left: 26px">
+          <p>Giới tính</p>
+          <div class="sex_input">
+            <div class="sex_item">
+              <VRadio
+                name="sex"
+                class="mr-6"
+                id="nam"
+                @click="getByIdteacher.Gender = 1"
+                :checked="getByIdteacher.Gender == 1"
+              />
+              <label for="nam" @click="getByIdteacher.Gender = 1">Nam</label>
+            </div>
+            <div class="sex_item">
+              <VRadio
+                name="sex"
+                class="mr-6"
+                id="women"
+                @click="getByIdteacher.Gender = 0"
+                :checked="getByIdteacher.Gender == 0"
+              />
+              <label for="women" @click="getByIdteacher.Gender = 0">Nữ</label>
+            </div>
+            <div class="sex_item">
+              <VRadio
+                name="sex"
+                class="mr-6"
+                id="khac"
+                @click="getByIdteacher.Gender = 2"
+                :checked="getByIdteacher.Gender == 2"
+              />
+              <label for="khac" @click="getByIdteacher.Gender = 2">Khác</label>
+            </div>
+          </div>
+        </div>
+        <label
+          class="slabel"
+          @click="toggleDropdownsUpdate"
+          style="margin-left: 95px"
+        >
+          Thông tin chuyên môn
+          <div class="dropdown" style="margin-top: 8px; width: 315px">
+            <input
+              type="text"
+              v-model="getByIdteacher.SubjectName"
+              placeholder="Chọn môn học"
+            />
+            <i
+              @click="toggleDropdownsUpdate"
+              :class="
+                isOpensUpdate
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpensUpdate"
+              style="width: 315px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in subjectteacher"
+                  :key="data.SubjectId"
+                  @click="selectOptionsUpdate(data.SubjectId, data.SubjectName)"
+                >
+                  {{ data.SubjectName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+        <label class="slabel" @click="toggleDropdownsClassroomIdUpdate">
+          Thông tin lớp dạy
+          <div class="dropdown" style="margin-top: 8px; width: 315px">
+            <input
+              type="text"
+              v-model="getByIdteacher.ClassRoomName"
+              placeholder="Chọn lớp dạy "
+            />
+            <i
+              @click="toggleDropdownsClassroomIdUpdate"
+              :class="
+                isOpensClassroomIdUpdate
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpensClassroomIdUpdate"
+              style="width: 315px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in classroomteacher"
+                  :key="data.ClassRoomId"
+                  @click="
+                    selectOptionsClassroomIdUpdate(
+                      data.ClassRoomId,
+                      data.ClassRoomName
+                    )
+                  "
+                >
+                  {{ data.ClassRoomName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+        <label class="slabel" @click="toggleDropdownsCollaborateUpdate">
+          Tình trạng công tác
+          <div class="dropdown" style="margin-top: 8px; width: 315px">
+            <input
+              type="text"
+              v-model="getByIdteacher.Collaborate"
+              placeholder="Chọn thông tin công tác"
+            />
+            <i
+              @click="toggleDropdownsCollaborateUpdate"
+              :class="
+                isOpensCollaborateUpdate
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpensCollaborateUpdate"
+              style="width: 315px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in Collaborate"
+                  :key="data.id"
+                  @click="selectOptionsCollaborateUpdate(data.CollaborateName)"
+                >
+                  {{ data.CollaborateName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+        <label class="slabel" @click="toggleDropdownsStandardUpdate">
+          Trình độ giáo viên
+          <div class="dropdown" style="margin-top: 8px; width: 315px">
+            <input
+              type="text"
+              v-model="getByIdteacher.Standard"
+              placeholder="Chọn bằng cấp"
+            />
+            <i
+              @click="toggleDropdownsStandardUpdate"
+              :class="
+                isOpensStandardUpdate
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpensStandardUpdate"
+              style="width: 315px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in Standard"
+                  :key="data.id"
+                  @click="selectOptionsStandardUpdate(data.StandardName)"
+                >
+                  {{ data.StandardName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+        <label class="slabel" style="width: 100%"
+          >Địa chỉ giáo viên
+          <input
+            type="text"
+            class="sinput"
+            style="width: 100%"
+            placeholder="địa chỉ giáo viên"
+            v-model="getByIdteacher.Address"
+          />
+        </label>
+      </div>
+      <div class="info_btn" style="margin-bottom: 20px">
+        <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_TEACHER" />
+        <div class="btn_wp">
+          <VButton text="Cất" class="btn_phu" />
+          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+        </div>
+      </div>
+    </form>
   </div>
 </template>
       
       <script>
+import { reactive, ref } from "vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import VButton from "../Button/VButton.vue";
 import VRadio from "../Input/VRadio.vue";
+import { v4 as uuidv4 } from "uuid";
 export default {
   name: "FClassroom",
-  data() {
+  setup() {
+    const isOpens = ref(false);
+    const isOpensStandard = ref(false);
+    const isOpensClassroomId = ref(false);
+    const isOpensCollaborate = ref(false);
+    const isOpensUpdate = ref(false);
+    const isOpensStandardUpdate = ref(false);
+    const isOpensClassroomIdUpdate = ref(false);
+    const isOpensCollaborateUpdate = ref(false);
+    const selectedOptions = ref("");
+    const selectedOptionsStandard = ref("");
+    const selectedOptionsClassroomId = ref("");
+    const selectedOptionsCollaborate = ref("");
+    const Collaborate = reactive([
+      { id: 1, CollaborateName: "Hợp đồng" },
+      { id: 2, CollaborateName: "Biên chế" },
+    ]);
+    const Standard = reactive([
+      { id: 1, StandardName: "Đại học" },
+      { id: 2, StandardName: "Cao đẳng" },
+    ]);
+    const checkForm = ref(false);
+    const error = ref([]);
+    const build = ref(false);
+    const formData = reactive({
+      TeacherCode: "",
+      TeacherName: "",
+      DateOfBirth: new Date(),
+      Email: "",
+      Gender: "",
+      SubjectId: "",
+      Address: "",
+      ClassRoomId: "",
+      Collaborate: "",
+      Standard: "",
+    });
     return {
-      isOpens: false,
-      selectedOptions: "",
+      checkForm,
+      error,
+      build,
+      formData,
+      Collaborate,
+      Standard,
+      isOpens,
+      isOpensClassroomId,
+      isOpensCollaborate,
+      isOpensStandard,
+      isOpensUpdate,
+      isOpensClassroomIdUpdate,
+      isOpensCollaborateUpdate,
+      isOpensStandardUpdate,
+      selectedOptions,
+      selectedOptionsClassroomId,
+      selectedOptionsCollaborate,
+      selectedOptionsStandard,
     };
   },
   computed: {
-    ...mapGetters(["subjectteacher", "isshowteacher"]),
+    ...mapGetters([
+      "subjectteacher",
+      "classroomteacher",
+      "isshowteacher",
+      "teachermaxcode",
+      "teacher",
+      "formModeteacher",
+      "getByIdteacher",
+    ]),
+    maxId() {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      return (this.formData = {
+        ...this.formData,
+        TeacherCode: this.teachermaxcode,
+      });
+    },
+    TeacherList() {
+      return this.teacher
+        .filter((item) => item.TeacherId !== this.getByIdteacher.TeacherId)
+        .map((employee) => {
+          return employee.TeacherCode;
+        });
+    },
+    formattedDateOfBirth: {
+      get() {
+        // Chuyển đổi từ ISO 8601 sang "yyyy-MM-dd"
+        const isoDate = new Date(this.getByIdteacher.DateOfBirth);
+        const year = isoDate.getFullYear();
+        const month = String(isoDate.getMonth() + 1).padStart(2, "0");
+        const day = String(isoDate.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+      },
+      set(value) {
+        // Khi người dùng thay đổi giá trị trong input, chuyển đổi lại định dạng
+        this.getByIdteacher.DateOfBirth = value;
+      },
+    },
   },
   methods: {
     toggleDropdowns() {
       this.isOpens = !this.isOpens;
     },
-    selectOptions(options) {
+    toggleDropdownsUpdate() {
+      this.isOpensUpdate = !this.isOpensUpdate;
+    },
+    toggleDropdownsStandard() {
+      this.isOpensStandard = !this.isOpensStandard;
+    },
+    toggleDropdownsStandardUpdate() {
+      this.isOpensStandardUpdate = !this.isOpensStandardUpdate;
+    },
+    toggleDropdownsCollaborate() {
+      this.isOpensCollaborate = !this.isOpensCollaborate;
+    },
+    toggleDropdownsCollaborateUpdate() {
+      this.isOpensCollaborateUpdate = !this.isOpensCollaborateUpdate;
+    },
+    toggleDropdownsClassroomId() {
+      this.isOpensClassroomId = !this.isOpensClassroomId;
+    },
+    toggleDropdownsClassroomIdUpdate() {
+      this.isOpensClassroomIdUpdate = !this.isOpensClassroomIdUpdate;
+    },
+    selectOptions(id, options) {
+      this.formData.SubjectId = id;
       this.selectedOptions = options;
       this.isOpens = false;
     },
-    ...mapActions(["getsubjectteacher"]),
+    selectOptionsUpdate(id, options) {
+      this.getByIdteacher.SubjectId = id;
+      this.getByIdteacher.SubjectName = options;
+      this.isOpensUpdate = false;
+    },
+    selectOptionsStandard(options) {
+      this.formData.Standard = options;
+      this.selectedOptionsStandard = options;
+      this.isOpensStandard = false;
+    },
+    selectOptionsStandardUpdate(options) {
+      this.getByIdteacher.Standard = options;
+      this.isOpensStandardUpdate = false;
+    },
+    selectOptionsClassroomId(id, options) {
+      this.formData.ClassRoomId = id;
+      this.selectedOptionsClassroomId = options;
+      this.isOpensClassroomId = false;
+    },
+    selectOptionsClassroomIdUpdate(id, options) {
+      this.getByIdteacher.ClassRoomId = id;
+      this.getByIdteacher.ClassRoomName = options;
+      this.isOpensClassroomIdUpdate = false;
+    },
+    selectOptionsCollaborate(options) {
+      this.formData.Collaborate = options;
+      this.selectedOptionsCollaborate = options;
+      this.isOpensCollaborate = false;
+    },
+    selectOptionsCollaborateUpdate(options) {
+      this.getByIdteacher.Collaborate = options;
+      this.isOpensCollaborateUpdate = false;
+    },
+    ...mapActions([
+      "getsubjectteacher",
+      "getclassroomteacher",
+      "addteacher",
+      "updateItemteacher",
+      "getMaxCodeteacher",
+      "getByIdteacher",
+    ]),
     ...mapMutations(["SHOW_FORM_TEACHER"]),
+    checkCodeteacher(code) {
+      try {
+        if (this.TeacherList.includes(code)) {
+          console.log(code);
+          return true;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    handleClose() {
+      try {
+        this.checkForm = !this.checkForm;
+        this.error = [];
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    validateFormAdd() {
+      try {
+        let isValid = true;
+        switch (true) {
+          case this.teacher.findIndex(
+            (ele) => ele.TeacherCode === this.formData.TeacherCode
+          ) !== -1:
+            isValid = false;
+            this.error.push("Mã giáo viên nhập bị trùng");
+            break;
+          case this.formData.TeacherCode.trim() === "":
+            isValid = false;
+            this.error.push("Vui lòng nhập mã giáo viên");
+            break;
+          case this.formData.TeacherName.trim() === "":
+            isValid = false;
+            this.error.push("Vui lòng nhập tên giáo viên");
+            break;
+          case this.formData.TeacherName.length < 5:
+            isValid = false;
+            this.error.push("Tên giáo viên phải lớn hơn 5 kí tự");
+            break;
+          case this.selectedOptions == null:
+            isValid = false;
+            this.error.push("Vui lòng chọn bộ môn");
+            break;
+          case this.selectedOptionsClassroomId == null:
+            isValid = false;
+            this.error.push("Vui lòng chọn lớp học");
+            break;
+          case this.selectedOptionsCollaborate == null:
+            isValid = false;
+            this.error.push("Vui lòng chọn tình trạng");
+            break;
+          case this.selectedOptionsStandard == null:
+            isValid = false;
+            this.error.push("Vui lòng chọn trình độ");
+            break;
+          default:
+            break;
+        }
+        return isValid;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    validateFormUpdate() {
+      try {
+        let isValid = true;
+        switch (true) {
+          case this.checkCodeteacher(this.getByIdteacher.TeacherCode):
+            isValid = false;
+            this.error.push("Mã giáo viên bị trùng");
+            break;
+          case this.getByIdteacher.TeacherCode.trim() === "":
+            isValid = false;
+            this.error.push("Mã giáo viên không được để trống");
+            break;
+          case this.getByIdteacher.TeacherName.trim() === "":
+            isValid = false;
+            this.error.push("Tên giáo viên không được để trống");
+            break;
+          case this.getByIdteacher.TeacherName.length < 5:
+            isValid = false;
+            this.error.push("Tên giáo viên phải lớn hơn 5 kí tự");
+            break;
+          default:
+            break;
+        }
+        return isValid;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    onSubmitAdd() {
+      try {
+        this.checkForm = true;
+        if (this.validateFormAdd()) {
+          this.addteacher({
+            TeacherId: uuidv4(),
+            TeacherName: this.formData.TeacherName,
+            TeacherCode: this.formData.TeacherCode,
+            DateOfBirth: this.formData.DateOfBirth,
+            Email: this.formData.Email,
+            Gender: this.formData.Gender,
+            Address: this.formData.Address,
+            ClassRoomId: this.formData.ClassRoomId,
+            SubjectId: this.formData.SubjectId,
+            Standard: this.formData.Standard,
+            Collaborate: this.formData.Collaborate,
+            isChecked: false,
+          });
+          // reset formData
+          this.formData = { TeacherCode: this.teachermaxcode };
+          this.selectedOptions = null;
+          this.selectedOptionsClassroomId = null;
+          this.selectedOptionsCollaborate = null;
+          this.selectedOptionsStandard = null;
+          this.SHOW_FORM_TEACHER();
+          this.checkForm = false;
+          return false;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    onSubmitUpdate() {
+      try {
+        this.checkForm = true;
+        if (this.validateFormUpdate()) {
+          this.getByIdteacher.IsChecked = false;
+          this.updateItemteacher(this.getByIdteacher);
+          this.SHOW_FORM_TEACHER();
+          this.checkForm = false;
+          return false;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  beforeUpdate() {
+    this.maxId;
   },
   mounted() {
+    this.maxId;
     this.getsubjectteacher();
+    this.getclassroomteacher();
+    this.getMaxCodeteacher();
   },
   components: {
     VButton,
@@ -184,7 +883,7 @@ export default {
   font-size: 34px;
 }
 .teacher_form {
-  height: 50%;
+  height: 61%;
   width: 60%;
   background-color: #fff;
   border-radius: 4px;

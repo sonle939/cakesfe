@@ -4,12 +4,33 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý học kỳ" :showform="SHOW_FORM_SEMESTER" />
+        <HeaderContent text="Quản lý học kỳ" :showform="modeFormInsert" />
         <div class="search_table">
           <div class="search_filter">
-            <div class="search_list">
-              <i class="bx bx-search-alt-2"></i>
-              <input type="text" placeholder="Tìm kiếm trong danh sách" />
+            <div class="search_check">
+              <div class="search_list">
+                <i class="bx bx-search-alt-2"></i>
+                <input type="text" placeholder="Tìm kiếm trong danh sách" />
+              </div>
+              <div class="checked_data" v-show="trueCheckedsemester">
+                <h3>
+                  Đã chọn tất cả
+                  <p>{{ checkAmountsemester }}</p>
+                </h3>
+                <h3 @click="uncheckItemssemester">Bỏ chọn</h3>
+                <VButton
+                  text="Xác nhận thông tin"
+                  class="btn_info"
+                  leftIcon="bx bx-check-circle remove_icon"
+                />
+                <VButton
+                  text="Xóa"
+                  leftIcon="fa fa-times remove_icon"
+                  class="remove_btn"
+                  @click="deleteMultiplesemester(selectedItemssemester)"
+                />
+                <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
+              </div>
             </div>
             <div class="filter_item">
               <div class="wrapper__i">
@@ -76,11 +97,15 @@
                     <div class="control_table">
                       <span
                         content="Cập nhật"
+                        @click="modeFormUpdate(data)"
                         v-tippy="{ arrow: true, arrowType: 'round' }"
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span content="Xóa" v-tippy
+                      <span
+                        content="Xóa"
+                        v-tippy
+                        @click="deletesemester(data.SemesterId)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -108,6 +133,7 @@ import HeaderContent from "@/components/content/Header.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import FSemesterVue from "../components/Form/FSemester.vue";
 import Loading from "../components/Loading.vue";
+import VButton from "../components/Button/VButton.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Semester",
@@ -121,14 +147,37 @@ export default {
       "checkAmountsemester",
       "trueCheckedsemester",
       "loadingsemester",
+      "selectedItemssemester",
     ]),
   },
   methods: {
-    ...mapActions(["getsemester", "toggleAllSelectionsemester"]),
-    ...mapMutations(["SELECTCHECKEDSEMESTER", "SHOW_FORM_SEMESTER"]),
-    delItemCheck(id) {
+    ...mapActions([
+      "getsemester",
+      "toggleAllSelectionsemester",
+      "uncheckItemssemester",
+      "getIDsemester",
+      "deletesemester",
+      "deleteMultiplesemester",
+    ]),
+    ...mapMutations([
+      "SELECTCHECKEDSEMESTER",
+      "SHOW_FORM_SEMESTER",
+      "UPDATE_MODE_SEMESTER",
+      "ADD_MODE_SEMESTER",
+    ]),
+    modeFormUpdate(data) {
       try {
-        this.SELECTCHECKED(id);
+        this.UPDATE_MODE_SEMESTER();
+        this.getIDsemester(data);
+        this.SHOW_FORM_SEMESTER();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    modeFormInsert() {
+      try {
+        this.ADD_MODE_SEMESTER();
+        this.SHOW_FORM_SEMESTER();
       } catch (error) {
         console.log(error);
       }
@@ -143,6 +192,7 @@ export default {
     HeaderContent,
     FSemesterVue,
     Loading,
+    VButton,
   },
 };
 </script>

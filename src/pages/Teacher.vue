@@ -4,17 +4,38 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý giáo viên" :showform="SHOW_FORM_TEACHER" />
+        <HeaderContent text="Quản lý giáo viên" :showform="modeFormInsert" />
         <div class="search_table">
           <div class="search_filter">
-            <div class="search_list">
-              <i class="bx bx-search-alt-2"></i>
-              <input
-                type="text"
-                placeholder="Tìm kiếm trong danh sách"
-                v-model="searchText"
-                @keydown.enter="filterteachercode(searchText)"
-              />
+            <div class="search_check">
+              <div class="search_list">
+                <i class="bx bx-search-alt-2"></i>
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm trong danh sách"
+                  v-model="searchText"
+                  @keydown.enter="filterteachercode(searchText)"
+                />
+              </div>
+              <div class="checked_data" v-show="trueCheckedteacher">
+                <h3>
+                  Đã chọn tất cả
+                  <p>{{ checkAmountteacher }}</p>
+                </h3>
+                <h3 @click="uncheckItemsteacher">Bỏ chọn</h3>
+                <VButton
+                  text="Xác nhận thông tin"
+                  class="btn_info"
+                  leftIcon="bx bx-check-circle remove_icon"
+                />
+                <VButton
+                  text="Xóa"
+                  leftIcon="fa fa-times remove_icon"
+                  class="remove_btn"
+                  @click="deleteMultipleteacher(selectedItemsteacher)"
+                />
+                <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
+              </div>
             </div>
             <div class="filter_item">
               <div class="dropdown">
@@ -59,8 +80,9 @@
                 ? 'table-wrapper active mg-bot'
                 : 'table-wrapper mg-bot'
             "
+            style="width: 750px"
           >
-            <table style="width: 100%; height: auto">
+            <table>
               <thead>
                 <tr>
                   <th
@@ -83,6 +105,9 @@
                   <th style="min-width: 155px">Email</th>
                   <th style="min-width: 170px">Giới tính</th>
                   <th style="min-width: 155px">Chuyên môn</th>
+                  <th style="min-width: 155px">Dạy lớp</th>
+                  <th style="min-width: 155px">Tình trạng công tác</th>
+                  <th style="min-width: 155px">Trình độ</th>
                   <th style="min-width: 170px">Địa chỉ</th>
                   <th style="min-width: 100px">Chức năng</th>
                 </tr>
@@ -141,6 +166,21 @@
                     </tippy>
                   </td>
                   <td class="text_left">
+                    <tippy :content="data.ClassRoomName">
+                      {{ data.ClassRoomName }}
+                    </tippy>
+                  </td>
+                  <td class="text_left">
+                    <tippy :content="data.Collaborate">
+                      {{ data.Collaborate }}
+                    </tippy>
+                  </td>
+                  <td class="text_left">
+                    <tippy :content="data.Standard">
+                      {{ data.Standard }}
+                    </tippy>
+                  </td>
+                  <td class="text_left">
                     <tippy :content="data.Address">
                       {{ data.Address }}
                     </tippy>
@@ -149,11 +189,15 @@
                     <div class="control_table">
                       <span
                         content="Cập nhật"
+                        @click="modeFormUpdate(data)"
                         v-tippy="{ arrow: true, arrowType: 'round' }"
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span content="Xóa" v-tippy
+                      <span
+                        content="Xóa"
+                        v-tippy
+                        @click="deleteteacher(data.TeacherId)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -193,6 +237,7 @@ import { format } from "date-fns";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import FTeacher from "../components/Form/FTeacher.vue";
 import Loading from "../components/Loading.vue";
+import VButton from "../components/Button/VButton.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Teacher",
@@ -218,6 +263,7 @@ export default {
       "trueCheckedteacher",
       "subjectteacher",
       "loadingteacher",
+      "selectedItemsteacher",
     ]),
   },
   methods: {
@@ -242,6 +288,8 @@ export default {
       "SELECTCHECKEDTEACHER",
       "HIDETEACHER",
       "SHOW_FORM_TEACHER",
+      "ADD_MODE_TEACHER",
+      "UPDATE_MODE_TEACHER",
     ]),
     ...mapActions([
       "setPageNumberteacher",
@@ -251,9 +299,30 @@ export default {
       "getsubjectteacher",
       "filterteachersubject",
       "filterteachercode",
+      "uncheckItemsteacher",
+      "deleteMultipleteacher",
+      "deleteteacher",
+      "getIDteacher",
     ]),
     formattedDate(data) {
       return format(new Date(data), "dd/MM/yyyy");
+    },
+    modeFormUpdate(data) {
+      try {
+        this.UPDATE_MODE_TEACHER();
+        this.getIDteacher(data);
+        this.SHOW_FORM_TEACHER();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    modeFormInsert() {
+      try {
+        this.ADD_MODE_TEACHER();
+        this.SHOW_FORM_TEACHER();
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
   components: {
@@ -263,6 +332,7 @@ export default {
     AdminPaginnation,
     FTeacher,
     Loading,
+    VButton,
   },
   mounted() {
     this.getteacher();

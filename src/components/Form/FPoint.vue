@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <div class="form_container" v-if="isshowpoint">
     <form class="point_form">
       <div class="info_title">
@@ -18,14 +18,7 @@
           >Ngày học
           <input type="text" class="sinput" placeholder="tên lớp học" />
         </label>
-        <label class="slabel"
-          >Giờ bắt đầu
-          <input type="date" class="sinput" style="width: 150px" />
-        </label>
-        <label class="slabel"
-          >Giờ kết thúc
-          <input type="date" class="sinput" style="width: 150px" />
-        </label>
+
         <label class="slabel" @click="toggleDropdownsubject">
           Thông tin môn học
           <div class="dropdown" style="margin-top: 8px">
@@ -270,4 +263,4 @@ export default {
   align-items: center;
   flex-wrap: wrap;
 }
-</style> -->
+</style>

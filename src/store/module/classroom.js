@@ -10,16 +10,20 @@ const classroomModule = {
         loadingclassroom: false,
         checkAllclassroom: false,
         selectedItemsclassroom: [],
-        isshowclassroom: false
+        isshowclassroom: false,
+        formModeclassroom: false,
+        classroommaxcode: null
     },
     getters: {
         classroom: state => state.classroom,
         getByIdClassroom: state => state.getByIdClassroom,
-        gradeclassroom: state => state.gradeclass,
+        gradeclassroom: state => state.gradeclassroom,
         loadingclassroom: state => state.loadingclassroom,
         checkAllclassroom: state => state.checkAllclassroom,
         isChecked: state => state.classroom.isChecked,
         isshowclassroom: state => state.isshowclassroom,
+        formModeclassroom: state => state.formModeclassroom,
+        classroommaxcode: state => state.classroommaxcode,
         //dùng để đển số checkbox đã được chọn 
         checkAmountclassroom: state => state.classroom.filter((item) => item.isChecked == true).length,
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
@@ -42,6 +46,7 @@ const classroomModule = {
                 //commit('SETTEXTCHECK', res.data.notify)
                 commit('ADD_CLASSROOM', newStaff)
                 dispatch('getClassRoom');
+                dispatch('getMaxCodeclassroom')
                 dispatch("getGradeclassroom");
                 console.log('aaa', res.data.notify);
             } catch (error) {
@@ -55,6 +60,7 @@ const classroomModule = {
                 await axios.delete(`${API_BASE_URL}ClassRooms/${ClassRoomId}`)
                 commit('DELETE_CLASSROOM', ClassRoomId);
                 dispatch('getClassRoom');
+                dispatch('getMaxCodeclassroom');
             } catch (error) {
                 console.log(error)
             }
@@ -68,6 +74,7 @@ const classroomModule = {
                 if (response.status === 200) {
                     commit('DELETE_CLASSROOM', ClassRoomIds);
                     dispatch('getClassRoom');
+                    dispatch('getMaxCodeclassroom');
                 }
             } catch (error) {
                 console.log(error);
@@ -81,6 +88,7 @@ const classroomModule = {
                 commit('UPDATE_CLASSROOM', response.data);
                 //  commit('SETUPDATECHECK', response.data.message)
                 dispatch('getClassRoom');
+                dispatch('getMaxCodeclassroom');
                 console.log('update', response.data.message);
             } catch (error) {
                 console.log(error);
@@ -112,6 +120,22 @@ const classroomModule = {
         toggleAllSelectionclassroom({ commit }) {
             try {
                 commit('SELECT_ALL_CLASSROOM')
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        async getMaxCodeclassroom({ commit }) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}ClassRooms/ClassroomCodeMax`)
+                commit('SET_MAXCODE_CLASSROOM', response.data.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        uncheckItemsclassroom({ commit }) {
+            try {
+                commit('UN_CHECK_CLASSROOM')
             } catch (error) {
                 console.log(error);
             }
@@ -167,7 +191,7 @@ const classroomModule = {
         },
         SET_GRADE_CLASSROOM(state, gradeclassroom) {
             try {
-                state.gradeclass = gradeclassroom;
+                state.gradeclassroom = gradeclassroom;
             } catch (error) {
                 console.log(error);
             }
@@ -212,7 +236,42 @@ const classroomModule = {
             } catch (error) {
                 console.log(error);
             }
-        }
+        },
+        //tạo một hàm dùng để chuyển đổi từ add sang update vầ nguwopjc lại
+        ADD_MODE_CLASSROOM(state) {
+            try {
+                state.formModeclassroom = true
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        UPDATE_MODE_CLASSROOM(state) {
+            try {
+                state.formModeclassroom = false;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        //DÙNG ĐỂ UN CHECK CÁC CHECKBOX ĐÃ ĐƯỢC CLICK
+        UN_CHECK_CLASSROOM(state) {
+            try {
+                state.classroom.map((item) => {
+                    if (item.isChecked === true) {
+                        item.isChecked = false;
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        SET_MAXCODE_CLASSROOM(state, classroommaxcode) {
+            try {
+                state.classroommaxcode = classroommaxcode
+            } catch (error) {
+                console.log(error);
+            }
+        },
     }
 }
 export default classroomModule;

@@ -9,11 +9,16 @@ const grademodule = {
         checkAllgrade: false,
         isshowgrade: false,
         selectedItemsgrade: [],
+        //dung de chuyen doi tu form them sang form sua
+        formModegrade: true,
+        grademaxcode: null,
     },
     getters: {
         getByIdgrade: state => state.getByIdgrade,
         isshowgrade: state => state.isshowgrade,
+        formModegrade: state => state.formModegrade,
         grade: state => state.grade,
+        grademaxcode: state => state.grademaxcode,
         loadinggrade: state => state.loadinggrade,
         checkAllgrade: state => state.checkAllgrade,
         isCheckedgrade: state => state.grade.isChecked,
@@ -31,6 +36,7 @@ const grademodule = {
                 //commit('SETTEXTCHECK', res.data.notify)
                 commit('ADD_GRADE', newStaff)
                 dispatch("getGrade");
+                dispatch('getMaxCodeGrade');
                 console.log('aaa', res.data);
             } catch (error) {
                 console.log(error);
@@ -43,11 +49,12 @@ const grademodule = {
                 await axios.delete(`${API_BASE_URL}Grades/${GradeId}`)
                 commit('DELETE_GRADE', GradeId);
                 dispatch('getGrade');
+                dispatch('getMaxCodeGrade');
             } catch (error) {
                 console.log(error)
             }
         },
-        async deleteMultipleclassroom({ commit, dispatch }, GradeIds) {
+        async deleteMultiplegrade({ commit, dispatch }, GradeIds) {
             try {
                 // Gọi API để xóa employees
                 const response = await axios.delete(`${API_BASE_URL}Grades`, { data: GradeIds });
@@ -56,6 +63,7 @@ const grademodule = {
                 if (response.status === 200) {
                     commit('DELETE_GRADE', GradeIds);
                     dispatch('getGrade');
+                    dispatch('getMaxCodeGrade');
                 }
             } catch (error) {
                 console.log(error);
@@ -69,6 +77,7 @@ const grademodule = {
                 commit('UPDATE_GRADE', response.data);
                 //  commit('SETUPDATECHECK', response.data.message)
                 dispatch('getGrade');
+                dispatch('getMaxCodeGrade');
             } catch (error) {
                 console.log(error);
             }
@@ -78,6 +87,14 @@ const grademodule = {
                 commit('SET_LOADING_GRADE')
                 const res = await axios.get(`${API_BASE_URL}Grades`)
                 commit('SET_GRADE', res.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getMaxCodeGrade({ commit }) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Grades/GradeCodeMax`)
+                commit('SET_MAXCODE_GRADE', response.data.data)
             } catch (error) {
                 console.log(error)
             }
@@ -100,6 +117,14 @@ const grademodule = {
         toggleAllSelectiongrade({ commit }) {
             try {
                 commit('SELECT_ALL_GRADE')
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        uncheckItemsgrade({ commit }) {
+            try {
+                commit('UN_CHECK_GRADE')
             } catch (error) {
                 console.log(error);
             }
@@ -152,6 +177,13 @@ const grademodule = {
                 console.log(error);
             }
         },
+        SET_MAXCODE_GRADE(state, grademaxcode) {
+            try {
+                state.grademaxcode = grademaxcode
+            } catch (error) {
+                console.log(error);
+            }
+        },
         //SET THỜI GIAN HIỂN THỊ loadinggrade DỮ LIỆU
         SET_LOADING_GRADE(state) {
             try {
@@ -193,7 +225,36 @@ const grademodule = {
             } catch (error) {
                 console.log(error);
             }
-        }
+        },
+        //tạo một hàm dùng để chuyển đổi từ add sang update vầ nguwopjc lại
+        UPDATE_MODE_GRADE(state) {
+            try {
+                state.formModegrade = false;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        //tạo một hàm dùng để chuyển đổi từ add sang update vầ nguwopjc lại
+        ADD_MODE_GRADE(state) {
+            try {
+                state.formModegrade = true
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        //DÙNG ĐỂ UN CHECK CÁC CHECKBOX ĐÃ ĐƯỢC CLICK
+        UN_CHECK_GRADE(state) {
+            try {
+                state.grade.map((item) => {
+                    if (item.isChecked === true) {
+                        item.isChecked = false;
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        },
     }
 }
 export default grademodule;

@@ -4,12 +4,33 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý lớp học" :showform="SHOW_FORM_CLASSROOM" />
+        <HeaderContent text="Quản lý lớp học" :showform="modeFormInsert" />
         <div class="search_table">
           <div class="search_filter">
-            <div class="search_list">
-              <i class="bx bx-search-alt-2"></i>
-              <input type="text" placeholder="Tìm kiếm trong danh sách" />
+            <div class="search_check">
+              <div class="search_list">
+                <i class="bx bx-search-alt-2"></i>
+                <input type="text" placeholder="Tìm kiếm trong danh sách" />
+              </div>
+              <div class="checked_data" v-show="trueCheckedclassroom">
+                <h3>
+                  Đã chọn tất cả
+                  <p>{{ checkAmountclassroom }}</p>
+                </h3>
+                <h3 @click="uncheckItemsclassroom">Bỏ chọn</h3>
+                <VButton
+                  text="Xác nhận thông tin"
+                  class="btn_info"
+                  leftIcon="bx bx-check-circle remove_icon"
+                />
+                <VButton
+                  text="Xóa"
+                  leftIcon="fa fa-times remove_icon"
+                  class="remove_btn"
+                  @click="deleteMultipleclassroom(selectedItemsclassroom)"
+                />
+                <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
+              </div>
             </div>
             <div class="filter_item">
               <div class="dropdown">
@@ -103,11 +124,15 @@
                     <div class="control_table">
                       <span
                         content="Cập nhật"
+                        @click="modeFormUpdate(data)"
                         v-tippy="{ arrow: true, arrowType: 'round' }"
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span content="Xóa" v-tippy
+                      <span
+                        content="Xóa"
+                        v-tippy
+                        @click="deleteclassroom(data.ClassRoomId)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -135,6 +160,7 @@ import HeaderContent from "@/components/content/Header.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import FClassroom from "../components/Form/FClassroom.vue";
 import Loading from "../components/Loading.vue";
+import VButton from "../components/Button/VButton.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Classroom",
@@ -152,6 +178,7 @@ export default {
       "trueCheckedclassroom",
       "gradeclassroom",
       "loadingclassroom",
+      "selectedItemsclassroom",
     ]),
   },
   methods: {
@@ -166,11 +193,30 @@ export default {
       "getClassRoom",
       "toggleAllSelectionclassroom",
       "getGradeclassroom",
+      "uncheckItemsclassroom",
+      "deleteclassroom",
+      "deleteMultipleclassroom",
+      "getIDclassroom",
     ]),
-    ...mapMutations(["SELECTCHECKEDCLASSROOM", "SHOW_FORM_CLASSROOM"]),
-    delItemCheck(id) {
+    ...mapMutations([
+      "SELECTCHECKEDCLASSROOM",
+      "SHOW_FORM_CLASSROOM",
+      "ADD_MODE_CLASSROOM",
+      "UPDATE_MODE_CLASSROOM",
+    ]),
+    modeFormUpdate(data) {
       try {
-        this.SELECTCHECKEDCLASSROOM(id);
+        this.UPDATE_MODE_CLASSROOM();
+        this.getIDclassroom(data);
+        this.SHOW_FORM_CLASSROOM();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    modeFormInsert() {
+      try {
+        this.ADD_MODE_CLASSROOM();
+        this.SHOW_FORM_CLASSROOM();
       } catch (error) {
         console.log(error);
       }
@@ -182,6 +228,7 @@ export default {
     HeaderContent,
     FClassroom,
     Loading,
+    VButton,
   },
   mounted() {
     this.getClassRoom();

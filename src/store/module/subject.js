@@ -7,14 +7,19 @@ const subjectmodule = {
         getByIdsubject: [],
         loadingsubject: false,
         checkAllsubject: false,
+        //dung de chuyen doi tu form them sang form sua
+        formModesubject: true,
         isshowsubject: false,
         selectedItemssubject: [],
+        subjectmaxCode: null
     },
     getters: {
         getByIdsubject: state => state.getByIdsubject,
         isshowsubject: state => state.isshowsubject,
         subject: state => state.subject,
+        subjectmaxCode: state => state.subjectmaxCode,
         loadingsubject: state => state.loadingsubject,
+        formModesubject: state => state.formModesubject,
         checkAllsubject: state => state.checkAllsubject,
         isCheckedsubject: state => state.subject.isChecked,
         //dùng để đển số checkbox đã được chọn 
@@ -30,6 +35,7 @@ const subjectmodule = {
                 //commit('SETTEXTCHECK', res.data.notify)
                 commit('ADD_SUBJECT', newStaff)
                 dispatch("getsubject");
+                dispatch('getMaxCodeSubject');
                 console.log('aaa', res.data);
             } catch (error) {
                 console.log(error);
@@ -42,6 +48,7 @@ const subjectmodule = {
                 await axios.delete(`${API_BASE_URL}Subjects/${SubjectId}`)
                 commit('DELETE_SUBJECT', SubjectId);
                 dispatch('getsubject');
+                dispatch('getMaxCodeSubject');
             } catch (error) {
                 console.log(error)
             }
@@ -55,6 +62,7 @@ const subjectmodule = {
                 if (response.status === 200) {
                     commit('DELETE_SUBJECT', SubjectIds);
                     dispatch('getsubject');
+                    dispatch('getMaxCodeSubject');
                 }
             } catch (error) {
                 console.log(error);
@@ -68,6 +76,8 @@ const subjectmodule = {
                 commit('UPDATE_SUBJECT', response.data);
                 //  commit('SETUPDATECHECK', response.data.message)
                 dispatch('getsubject');
+                dispatch('getMaxCodeSubject');
+                console.log('update', response.data.message);
             } catch (error) {
                 console.log(error);
             }
@@ -93,6 +103,22 @@ const subjectmodule = {
         toggleAllSelectionsubject({ commit }) {
             try {
                 commit('SELECT_ALL_SUBJECT')
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        async getMaxCodeSubject({ commit }) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Subjects/SubjectCodeMax`)
+                commit('SET_MAXCODE_SUBJECT', response.data.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        uncheckItemsubject({ commit }) {
+            try {
+                commit('UN_CHECK_SUBJECT')
             } catch (error) {
                 console.log(error);
             }
@@ -137,6 +163,13 @@ const subjectmodule = {
                 console.log(error);
             }
 
+        },
+        SET_MAXCODE_SUBJECT(state, subjectmaxCode) {
+            try {
+                state.subjectmaxCode = subjectmaxCode
+            } catch (error) {
+                console.log(error);
+            }
         },
         SET_SUBJECT(state, subject) {
             try {
@@ -187,7 +220,37 @@ const subjectmodule = {
             } catch (error) {
                 console.log(error);
             }
-        }
+        },
+        //tạo một hàm dùng để chuyển đổi từ add sang update vầ nguwopjc lại
+        UPDATE_MODE_SUBJECT(state) {
+            try {
+                state.formModesubject = false;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        //tạo một hàm dùng để chuyển đổi từ add sang update vầ nguwopjc lại
+        ADD_MODE_SUBJECT(state) {
+            try {
+                state.formModesubject = true
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        //DÙNG ĐỂ UN CHECK CÁC CHECKBOX ĐÃ ĐƯỢC CLICK
+        UN_CHECK_SUBJECT(state) {
+            try {
+                state.subject.map((item) => {
+                    if (item.isChecked === true) {
+                        item.isChecked = false;
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
     }
 }
 export default subjectmodule;

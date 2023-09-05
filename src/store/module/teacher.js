@@ -6,12 +6,15 @@ const teacherModule = {
     state: {
         teacher: [],
         subjectteacher: [],
+        classroomteacher: [],
         getByIdteacher: [],
         loadingteacher: false,
         checkAllteacher: false,
         isHideteacher: false,
         selectedItemsteacher: [],
         isshowteacher: false,
+        formModeteacher: false,
+        teachermaxcode: null,
 
         //phan trang
         pageSizeteacher: 15, // số lượng item trên một trang
@@ -26,10 +29,13 @@ const teacherModule = {
         teacher: state => state.teacher,
         isshowteacher: state => state.isshowteacher,
         getByIdteacher: state => state.getByIdteacher,
-        subjectteacher: state => state.subject,
+        subjectteacher: state => state.subjectteacher,
         loadingteacher: state => state.loadingteacher,
         checkAllteacher: state => state.checkAllteacher,
         isChecked: state => state.teacher.isChecked,
+        formModeteacher: state => state.formModeteacher,
+        teachermaxcode: state => state.teachermaxcode,
+        classroomteacher: state => state.classroomteacher,
         //dùng để đếm số lượng dữ liệu (phân trang)
         allTeacher: state => state.teacher.length,
         showIsHideteacher: state => state.isHideteacher,
@@ -125,6 +131,14 @@ const teacherModule = {
                 console.log(error)
             }
         },
+        async getclassroomteacher({ commit }) {
+            try {
+                const res = await axios.get(`${API_BASE_URL}ClassRooms`)
+                commit('SET_CLASSROOM_TEACHER', res.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
         toggleAllSelectionteacher({ commit }) {
             try {
                 commit('SELECT_ALL_TEACHER')
@@ -161,6 +175,22 @@ const teacherModule = {
             } catch (error) {
                 console.error(error)
             }
+        },
+        async getMaxCodeteacher({ commit }) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Teachers/TeacherCodeMax`)
+                commit('SET_MAXCODE_TEACHER', response.data.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        uncheckItemsteacher({ commit }) {
+            try {
+                commit('UN_CHECK_TEACHER')
+            } catch (error) {
+                console.log(error);
+            }
+
         },
 
     },
@@ -227,7 +257,14 @@ const teacherModule = {
         },
         SET_SUBJECT_TEACHER(state, subjectteacher) {
             try {
-                state.subject = subjectteacher;
+                state.subjectteacher = subjectteacher;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        SET_CLASSROOM_TEACHER(state, classroomteacher) {
+            try {
+                state.classroomteacher = classroomteacher;
             } catch (error) {
                 console.log(error);
             }
@@ -316,7 +353,41 @@ const teacherModule = {
             } catch (error) {
                 console.log(error);
             }
-        }
+        },
+        ADD_MODE_TEACHER(state) {
+            try {
+                state.formModeteacher = true
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        UPDATE_MODE_TEACHER(state) {
+            try {
+                state.formModeteacher = false;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        //DÙNG ĐỂ UN CHECK CÁC CHECKBOX ĐÃ ĐƯỢC CLICK
+        UN_CHECK_TEACHER(state) {
+            try {
+                state.teacher.map((item) => {
+                    if (item.isChecked === true) {
+                        item.isChecked = false;
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        SET_MAXCODE_TEACHER(state, teachermaxcode) {
+            try {
+                state.teachermaxcode = teachermaxcode
+            } catch (error) {
+                console.log(error);
+            }
+        },
     }
 }
 export default teacherModule;

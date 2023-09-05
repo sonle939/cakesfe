@@ -17,6 +17,7 @@ const pointModule = {
         isshowpoint: false,
         selectedItemspoint: [],
 
+
         //phan trang
         pageSizespoint: 15, // số lượng item trên một trang
         pageNumberpoint: 1, // số trang đang hiển thị
@@ -62,7 +63,9 @@ const pointModule = {
             try {
                 commit('SET_LOADING_POINT')
                 const res = await
-                    axios.get(`${API_BASE_URL}Points/Paging?pageSize=${state.pageSizespoint}&pageNumber=${state.pageNumberpoint}&subjectId=${state.subjectId}&teacherId=${state.teacherId}&classroomId=${state.classroomId}`)
+                    axios.get(`${API_BASE_URL}Points/Paging?pageSize=${state.pageSizespoint}
+                    &pageNumber=${state.pageNumberpoint}&studentId=${state.studentId}
+                    &subjectId=${state.subjectId}&teacherId=${state.teacherId}&semesterId=${state.semesterId}&schoolyearId=${state.SchoolyearId}`)
                 commit('SET_POINT', res.data.data)
                 commit('SET_TOTAL_PAGES_POINT', res.data.totalRecords)
                 commit('SET_ALLPAGE_POINT', res.data.totalPages);

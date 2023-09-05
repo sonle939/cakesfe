@@ -4,17 +4,38 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý tài khoản" :showform="SHOW_FORM_ACCOUNT" />
+        <HeaderContent text="Quản lý tài khoản" :showform="modeFormInsert" />
         <div class="search_table">
           <div class="search_filter">
-            <div class="search_list">
-              <i class="bx bx-search-alt-2"></i>
-              <input
-                type="text"
-                placeholder="Tìm kiếm trong danh sách"
-                v-model="searchCode"
-                @keydown.enter="setFilteraccountcode(searchCode)"
-              />
+            <div class="search_check">
+              <div class="search_list">
+                <i class="bx bx-search-alt-2"></i>
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm trong danh sách"
+                  v-model="searchCode"
+                  @keydown.enter="setFilteraccountcode(searchCode)"
+                />
+              </div>
+              <div class="checked_data" v-show="trueChecked">
+                <h3>
+                  Đã chọn tất cả
+                  <p>{{ checkAmount }}</p>
+                </h3>
+                <h3 @click="uncheckItemsaccount">Bỏ chọn</h3>
+                <VButton
+                  text="Xác nhận thông tin"
+                  class="btn_info"
+                  leftIcon="bx bx-check-circle remove_icon"
+                />
+                <VButton
+                  text="Xóa"
+                  leftIcon="fa fa-times remove_icon"
+                  class="remove_btn"
+                  @click="deleteMultipleaccount(selectedItems)"
+                />
+                <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
+              </div>
             </div>
             <div class="filter_item">
               <div class="dropdown">
@@ -90,7 +111,6 @@
                       type="checkbox"
                       class="option-input"
                       v-model="data.isChecked"
-                      @click="delItemCheck(data.AccountId)"
                     />
                     {{ data.AccountCode }}
                   </td>
@@ -111,11 +131,15 @@
                     <div class="control_table">
                       <span
                         content="Cập nhật"
+                        @click="modeFormUpdate(data)"
                         v-tippy="{ arrow: true, arrowType: 'round' }"
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span content="Xóa" v-tippy
+                      <span
+                        content="Xóa"
+                        v-tippy
+                        @click="deleteaccount(data.AccountId)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -153,6 +177,7 @@ import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import FAccountVue from "../components/Form/FAccount.vue";
 import Loading from "../components/Loading.vue";
+import VButton from "../components/Button/VButton.vue";
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -183,6 +208,7 @@ export default {
       "checkAmount",
       "trueChecked",
       "loadingaccount",
+      "selectedItems",
     ]),
   },
   methods: {
@@ -209,6 +235,8 @@ export default {
       "SET_FILTER_ROLE",
       "SET_FILTER_ACCOUNTCODE",
       "SET_LOADING_ACCOUNT",
+      "UPDATE_MODE_ACCOUNT",
+      "ADD_MODE_ACCOUNT",
     ]),
     ...mapActions([
       "setPageNumberaccount",
@@ -217,7 +245,30 @@ export default {
       "toggleAllSelection",
       "setFilterrole",
       "setFilteraccountcode",
+      "getIDaccount",
+      "uncheckItemsaccount",
+      "deleteaccount",
+      "deleteMultipleaccount",
+      "getteacherAll",
+      "getStudentAll",
     ]),
+    modeFormUpdate(data) {
+      try {
+        this.UPDATE_MODE_ACCOUNT();
+        this.getIDaccount(data);
+        this.SHOW_FORM_ACCOUNT();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    modeFormInsert() {
+      try {
+        this.ADD_MODE_ACCOUNT();
+        this.SHOW_FORM_ACCOUNT();
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   components: {
     Navbar,
@@ -226,9 +277,12 @@ export default {
     AdminPaginnation,
     FAccountVue,
     Loading,
+    VButton,
   },
   mounted() {
     this.getaccount();
+    this.getStudentAll();
+    this.getteacherAll();
   },
 };
 </script>

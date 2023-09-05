@@ -9,6 +9,8 @@ const schoolyearmodule = {
         checkAllschoolyear: false,
         isshowschoolyear: false,
         selectedItemsschoolyear: [],
+        formModeschoolyear: false,
+        schoolyearmaxcode: null
     },
     getters: {
         getByIdschoolyear: state => state.getByIdschoolyear,
@@ -17,6 +19,8 @@ const schoolyearmodule = {
         loadingschoolyear: state => state.loadingschoolyear,
         checkAllschoolyear: state => state.checkAllschoolyear,
         isCheckedschoolyear: state => state.schoolyear.isChecked,
+        formModeschoolyear: state => state.formModeschoolyear,
+        schoolyearmaxcode: state => state.schoolyearmaxcode,
         //dùng để đển số checkbox đã được chọn 
         checkAmountschoolyear: state => state.schoolyear.filter((item) => item.isChecked == true).length,
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
@@ -26,10 +30,11 @@ const schoolyearmodule = {
     actions: {
         async addschoolyear({ commit, dispatch }, newStaff) {
             try {
-                const res = await axios.post(`${API_BASE_URL}SchoolYear/`, newStaff)
+                const res = await axios.post(`${API_BASE_URL}Schoolyears/`, newStaff)
                 //commit('SETTEXTCHECK', res.data.notify)
                 commit('ADD_SCHOOLYEAR', newStaff)
                 dispatch("getschoolyear");
+                dispatch('getMaxCodeschoolyear')
                 console.log('aaa', res.data);
             } catch (error) {
                 console.log(error);
@@ -39,9 +44,10 @@ const schoolyearmodule = {
         async deleteschoolyear({ commit, dispatch }, SchoolYearId) {
             //commit('DELETE_TODO', id)
             try {
-                await axios.delete(`${API_BASE_URL}SchoolYear/${SchoolYearId}`)
+                await axios.delete(`${API_BASE_URL}Schoolyears/${SchoolYearId}`)
                 commit('DELETE_SCHOOLYEAR', SchoolYearId);
                 dispatch('getschoolyear');
+                dispatch('getMaxCodeschoolyear')
             } catch (error) {
                 console.log(error)
             }
@@ -49,12 +55,13 @@ const schoolyearmodule = {
         async deleteMultipleschoolyear({ commit, dispatch }, SchoolYearIds) {
             try {
                 // Gọi API để xóa employees
-                const response = await axios.delete(`${API_BASE_URL}SchoolYear`, { data: SchoolYearIds });
+                const response = await axios.delete(`${API_BASE_URL}Schoolyears`, { data: SchoolYearIds });
 
                 // Nếu xóa thành công, commit mutation để xóa employees khỏi state
                 if (response.status === 200) {
                     commit('DELETE_SCHOOLYEAR', SchoolYearIds);
                     dispatch('getschoolyear');
+                    dispatch('getMaxCodeschoolyear')
                 }
             } catch (error) {
                 console.log(error);
@@ -63,11 +70,12 @@ const schoolyearmodule = {
         async updateItemschoolyear({ commit, dispatch }, updateChild) {
             try {
                 const response =
-                    await axios.put(`${API_BASE_URL}SchoolYear/${updateChild.SchoolYearId}`,
+                    await axios.put(`${API_BASE_URL}Schoolyears/${updateChild.SchoolYearId}`,
                         updateChild);
                 commit('UPDATE_SCHOOLYEAR', response.data);
                 //  commit('SETUPDATECHECK', response.data.message)
                 dispatch('getschoolyear');
+                dispatch('getMaxCodeschoolyear')
             } catch (error) {
                 console.log(error);
             }
@@ -75,7 +83,7 @@ const schoolyearmodule = {
         async getschoolyear({ commit }) {
             try {
                 commit('SET_LOADING_SCHOOLYEAR')
-                const res = await axios.get(`${API_BASE_URL}SchoolYear`)
+                const res = await axios.get(`${API_BASE_URL}Schoolyears`)
                 commit('SET_SCHOOLYEAR', res.data)
             } catch (error) {
                 console.log(error)
@@ -90,7 +98,7 @@ const schoolyearmodule = {
          */
         async getIDschoolyear({ commit }, object) {
             try {
-                const response = await axios.get(`${API_BASE_URL}SchoolYear/${object.SchoolYearId}`)
+                const response = await axios.get(`${API_BASE_URL}Schoolyears/${object.SchoolYearId}`)
                 commit('GETBYIDSCHOOLYEAR', response.data)
             } catch (error) {
                 console.log(error)
@@ -99,6 +107,22 @@ const schoolyearmodule = {
         toggleAllSelectionschoolyear({ commit }) {
             try {
                 commit('SELECT_ALL_SCHOOLYEAR')
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        async getMaxCodeschoolyear({ commit }) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Schoolyears/SchoolyearCodeMax`)
+                commit('SET_MAXCODE_SCHOOLYEAR', response.data.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        uncheckItemsschoolyear({ commit }) {
+            try {
+                commit('UN_CHECK_SCHOOLYEAR')
             } catch (error) {
                 console.log(error);
             }
@@ -191,7 +215,42 @@ const schoolyearmodule = {
             } catch (error) {
                 console.log(error);
             }
-        }
+        },
+        UPDATE_MODE_SCHOOLYEAR(state) {
+            try {
+                state.formModeschoolyear = false;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        //tạo một hàm dùng để chuyển đổi từ add sang update vầ nguwopjc lại
+        ADD_MODE_SCHOOLYEAR(state) {
+            try {
+                state.formModeschoolyear = true
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        //DÙNG ĐỂ UN CHECK CÁC CHECKBOX ĐÃ ĐƯỢC CLICK
+        UN_CHECK_SCHOOLYEAR(state) {
+            try {
+                state.schoolyear.map((item) => {
+                    if (item.isChecked === true) {
+                        item.isChecked = false;
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        SET_MAXCODE_SCHOOLYEAR(state, schoolyearmaxcode) {
+            try {
+                state.schoolyearmaxcode = schoolyearmaxcode
+            } catch (error) {
+                console.log(error);
+            }
+        },
     }
 }
 export default schoolyearmodule;

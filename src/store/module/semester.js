@@ -9,6 +9,8 @@ const semestermodule = {
         checkAllsemester: false,
         isshowsemester: false,
         selectedItemssemester: [],
+        formModesemester: false,
+        semestermaxcode: null
     },
     getters: {
         getByIdsemester: state => state.getByIdsemester,
@@ -17,6 +19,8 @@ const semestermodule = {
         loadingsemester: state => state.loadingsemester,
         checkAllsemester: state => state.checkAllsemester,
         isCheckedsemester: state => state.semester.isChecked,
+        formModesemester: state => state.formModesemester,
+        semestermaxcode: state => state.semestermaxcode,
         //dùng để đển số checkbox đã được chọn 
         checkAmountsemester: state => state.semester.filter((item) => item.isChecked == true).length,
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
@@ -30,6 +34,7 @@ const semestermodule = {
                 //commit('SETTEXTCHECK', res.data.notify)
                 commit('ADD_SEMESTER', newStaff)
                 dispatch("getsemester");
+                dispatch('getMaxCodesemester');
                 console.log('aaa', res.data);
             } catch (error) {
                 console.log(error);
@@ -42,6 +47,7 @@ const semestermodule = {
                 await axios.delete(`${API_BASE_URL}Semesters/${SemesterId}`)
                 commit('DELETE_SEMESTER', SemesterId);
                 dispatch('getsemester');
+                dispatch('getMaxCodesemester');
             } catch (error) {
                 console.log(error)
             }
@@ -55,6 +61,7 @@ const semestermodule = {
                 if (response.status === 200) {
                     commit('DELETE_SEMESTER', SemesterIds);
                     dispatch('getsemester');
+                    dispatch('getMaxCodesemester');
                 }
             } catch (error) {
                 console.log(error);
@@ -68,6 +75,7 @@ const semestermodule = {
                 commit('UPDATE_SEMESTER', response.data);
                 //  commit('SETUPDATECHECK', response.data.message)
                 dispatch('getsemester');
+                dispatch('getMaxCodesemester');
             } catch (error) {
                 console.log(error);
             }
@@ -92,6 +100,22 @@ const semestermodule = {
         toggleAllSelectionsemester({ commit }) {
             try {
                 commit('SELECT_ALL_SEMESTER')
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        async getMaxCodesemester({ commit }) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Semesters/SemesterCodeMax`)
+                commit('SET_MAXCODE_SEMESTER', response.data.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        uncheckItemssemester({ commit }) {
+            try {
+                commit('UN_CHECK_SEMESTER')
             } catch (error) {
                 console.log(error);
             }
@@ -186,7 +210,42 @@ const semestermodule = {
             } catch (error) {
                 console.log(error);
             }
-        }
+        },
+        //tạo một hàm dùng để chuyển đổi từ add sang update vầ nguwopjc lại
+        ADD_MODE_SEMESTER(state) {
+            try {
+                state.formModesemester = true
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        UPDATE_MODE_SEMESTER(state) {
+            try {
+                state.formModesemester = false;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        //DÙNG ĐỂ UN CHECK CÁC CHECKBOX ĐÃ ĐƯỢC CLICK
+        UN_CHECK_SEMESTER(state) {
+            try {
+                state.semester.map((item) => {
+                    if (item.isChecked === true) {
+                        item.isChecked = false;
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        SET_MAXCODE_SEMESTER(state, semestermaxcode) {
+            try {
+                state.semestermaxcode = semestermaxcode
+            } catch (error) {
+                console.log(error);
+            }
+        },
     }
 }
 export default semestermodule;

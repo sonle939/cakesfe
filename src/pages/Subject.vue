@@ -4,13 +4,35 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý môn học" :showform="SHOW_FORM_SUBJECT" />
+        <HeaderContent text="Quản lý môn học" :showform="modeFormInsert" />
         <div class="search_table">
           <div class="search_filter">
-            <div class="search_list">
-              <i class="bx bx-search-alt-2"></i>
-              <input type="text" placeholder="Tìm kiếm trong danh sách" />
+            <div class="search_check">
+              <div class="search_list">
+                <i class="bx bx-search-alt-2"></i>
+                <input type="text" placeholder="Tìm kiếm trong danh sách" />
+              </div>
+              <div class="checked_data" v-show="trueCheckedsubject">
+                <h3>
+                  Đã chọn tất cả
+                  <p>{{ checkAmountsubject }}</p>
+                </h3>
+                <h3 @click="uncheckItemsubject">Bỏ chọn</h3>
+                <VButton
+                  text="Xác nhận thông tin"
+                  class="btn_info"
+                  leftIcon="bx bx-check-circle remove_icon"
+                />
+                <VButton
+                  text="Xóa"
+                  leftIcon="fa fa-times remove_icon"
+                  class="remove_btn"
+                  @click="deleteMultiplesubject(selectedItemssubject)"
+                />
+                <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
+              </div>
             </div>
+
             <div class="filter_item">
               <div class="wrapper__i">
                 <div class="excel"></div>
@@ -75,12 +97,16 @@
                   <td style="width: 100px">
                     <div class="control_table">
                       <span
+                        @click="modeFormUpdate(data)"
                         content="Cập nhật"
                         v-tippy="{ arrow: true, arrowType: 'round' }"
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span content="Xóa" v-tippy
+                      <span
+                        content="Xóa"
+                        v-tippy
+                        @click="deletesubject(data.SubjectId)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -108,6 +134,7 @@ import HeaderContent from "@/components/content/Header.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import FSubjectVue from "../components/Form/FSubject.vue";
 import Loading from "../components/Loading.vue";
+import VButton from "../components/Button/VButton.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Subject",
@@ -119,18 +146,41 @@ export default {
       "checkAmountsubject",
       "trueCheckedsubject",
       "loadingsubject",
+      "selectedItemssubject",
     ]),
   },
   methods: {
-    ...mapActions(["getsubject", "toggleAllSelectionsubject"]),
-    ...mapMutations(["SELECTCHECKEDSUBJECT", "SHOW_FORM_SUBJECT"]),
-    delItemCheck(id) {
+    modeFormUpdate(data) {
       try {
-        this.SELECTCHECKEDSUBJECT(id);
+        this.UPDATE_MODE_SUBJECT();
+        this.getIDsubject(data);
+        this.SHOW_FORM_SUBJECT();
       } catch (error) {
         console.log(error);
       }
     },
+    modeFormInsert() {
+      try {
+        this.ADD_MODE_SUBJECT();
+        this.SHOW_FORM_SUBJECT();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    ...mapActions([
+      "getsubject",
+      "toggleAllSelectionsubject",
+      "getIDsubject",
+      "uncheckItemsubject",
+      "deleteMultiplesubject",
+      "deletesubject",
+    ]),
+    ...mapMutations([
+      "SELECTCHECKEDSUBJECT",
+      "SHOW_FORM_SUBJECT",
+      "UPDATE_MODE_SUBJECT",
+      "ADD_MODE_SUBJECT",
+    ]),
   },
   mounted() {
     this.getsubject();
@@ -141,6 +191,7 @@ export default {
     HeaderContent,
     FSubjectVue,
     Loading,
+    VButton,
   },
 };
 </script>

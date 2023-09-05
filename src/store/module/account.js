@@ -10,6 +10,8 @@ const accountModule = {
         checkAllaccount: false,
         isHide: false,
         isshowaccount: false,
+        formModeaccount: false,
+        accountmaxcode: null,
         selectedItems: [],
         teacherAll: [],
         studentAll: [],
@@ -34,6 +36,8 @@ const accountModule = {
         checkAllaccount: state => state.checkAllaccount,
         isCheckedaccount: state => state.account.isChecked,
         isshowaccount: state => state.isshowaccount,
+        accountmaxcode: state => state.accountmaxcode,
+        formModeaccount: state => state.formModeaccount,
         //dùng để đếm số lượng dữ liệu (phân trang)
         allAccount: state => state.account.length,
         showIsHideaccount: state => state.isHide,
@@ -87,6 +91,7 @@ const accountModule = {
                 //commit('SETTEXTCHECK', res.data.notify)
                 commit('ADD_ACCOUNT', newStaff)
                 dispatch('getaccount');
+                dispatch('getMaxCodeaccount');
                 console.log('aaa', res.data.notify);
             } catch (error) {
                 console.log(error);
@@ -99,6 +104,7 @@ const accountModule = {
                 await axios.delete(`${API_BASE_URL}Accounts/${AccountId}`)
                 commit('DELETE_ACCOUNT', AccountId);
                 dispatch('getaccount');
+                dispatch('getMaxCodeaccount');
             } catch (error) {
                 console.log(error)
             }
@@ -112,6 +118,7 @@ const accountModule = {
                 if (response.status === 200) {
                     commit('DELETE_ACCOUNT', AccountIds);
                     dispatch('getaccount');
+                    dispatch('getMaxCodeaccount');
                 }
             } catch (error) {
                 console.log(error);
@@ -125,6 +132,7 @@ const accountModule = {
                 commit('UPDATE_ACCOUNT', response.data);
                 //  commit('SETUPDATECHECK', response.data.message)
                 dispatch('getaccount');
+                dispatch('getMaxCodeaccount');
                 console.log('update', response.data.message);
             } catch (error) {
                 console.log(error);
@@ -165,6 +173,30 @@ const accountModule = {
                 dispatch('getaccount');
             } catch (error) {
                 console.error(error)
+            }
+        },
+        async getMaxCodeaccount({ commit }) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Accounts/AccountCodeMax`)
+                commit('SET_MAXCODE_ACCOUNT', response.data.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        uncheckItemsaccount({ commit }) {
+            try {
+                commit('UN_CHECK_ACCOUNT')
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        async getIDaccount({ commit }, object) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Accounts/${object.AccountId}`)
+                commit('GETBYID', response.data)
+            } catch (error) {
+                console.log(error)
             }
         },
     },
@@ -330,7 +362,42 @@ const accountModule = {
             } catch (error) {
                 console.log(error);
             }
-        }
+        },
+        //tạo một hàm dùng để chuyển đổi từ add sang update vầ nguwopjc lại
+        ADD_MODE_ACCOUNT(state) {
+            try {
+                state.formModeaccount = true
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        UPDATE_MODE_ACCOUNT(state) {
+            try {
+                state.formModeaccount = false;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        //DÙNG ĐỂ UN CHECK CÁC CHECKBOX ĐÃ ĐƯỢC CLICK
+        UN_CHECK_ACCOUNT(state) {
+            try {
+                state.account.map((item) => {
+                    if (item.isChecked === true) {
+                        item.isChecked = false;
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        SET_MAXCODE_ACCOUNT(state, accountmaxcode) {
+            try {
+                state.accountmaxcode = accountmaxcode
+            } catch (error) {
+                console.log(error);
+            }
+        },
     }
 }
 export default accountModule;

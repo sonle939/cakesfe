@@ -1,6 +1,28 @@
 <template>
   <div class="form_container" v-if="isshowsubject">
-    <form class="subject_form">
+    <div class="notify_error" v-if="checkForm">
+      <div class="error_wrapper">
+        <div class="error_text">
+          <h1>Dữ liệu không hợp lệ</h1>
+          <i class="bx bx-x" @click="handleClose"></i>
+        </div>
+        <ul>
+          <li v-for="(erro, index) in error" :key="index">
+            <i class="bx bxs-error"></i>
+            {{ erro }}
+          </li>
+        </ul>
+        <div class="error_btn">
+          <button @click="handleClose">Đồng ý</button>
+        </div>
+      </div>
+    </div>
+    <form
+      class="subject_form"
+      @submit.prevent="onSubmitAdd"
+      novalidate="true"
+      v-if="formModesubject === true"
+    >
       <div class="info_title">
         <div class="title_left">
           <h1>Thêm mới môn học</h1>
@@ -13,39 +35,156 @@
       <div class="info_property">
         <label class="slabel"
           >Mã môn học
-          <input type="text" class="sinput" placeholder="mã môn học" />
+          <input
+            type="text"
+            class="sinput"
+            placeholder="mã môn học"
+            v-model="formData.SubjectCode"
+          />
         </label>
         <label class="slabel"
           >Tên môn học
-          <input type="text" class="sinput" placeholder="tên môn học" />
+          <input
+            type="text"
+            class="sinput"
+            placeholder="tên môn học"
+            v-model="formData.SubjectName"
+          />
         </label>
       </div>
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_SUBJECT" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu" />
-          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+          <VButton text="Cất" @click="build = true" class="btn_phu" />
+          <VButton
+            type="submit"
+            @click="build = false"
+            class="ml-8"
+            text="Cất và thêm"
+          />
+        </div>
+      </div>
+    </form>
+    <form
+      class="subject_form"
+      @submit.prevent="onSubmitUpdate"
+      novalidate="true"
+      v-else-if="formModesubject === false"
+    >
+      <div class="info_title">
+        <div class="title_left">
+          <h1>Cập nhật môn học</h1>
+        </div>
+        <div class="title_close">
+          <i class="bx bx-help-circle"></i>
+          <i class="bx bx-x" @click="SHOW_FORM_SUBJECT"></i>
+        </div>
+      </div>
+      <div class="info_property">
+        <label class="slabel"
+          >Mã môn học
+          <input
+            type="text"
+            class="sinput"
+            placeholder="mã môn học"
+            v-model="getByIdsubject.SubjectCode"
+          />
+        </label>
+        <label class="slabel"
+          >Tên môn học
+          <input
+            type="text"
+            class="sinput"
+            placeholder="tên môn học"
+            v-model="getByIdsubject.SubjectName"
+          />
+        </label>
+      </div>
+      <div class="info_btn">
+        <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_SUBJECT" />
+        <div class="btn_wp">
+          <VButton text="Cất" @click="build = true" class="btn_phu" />
+          <VButton
+            type="submit"
+            @click="build = true"
+            class="ml-8"
+            text="Cất và thêm"
+          />
         </div>
       </div>
     </form>
   </div>
 </template>
     
-    <script>
-import { mapGetters, mapMutations } from "vuex";
+<script>
+import { reactive, ref } from "vue";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import VButton from "../Button/VButton.vue";
+import { v4 as uuidv4 } from "uuid";
 export default {
   name: "FSubject",
-  data() {
+  setup() {
+    const formData = reactive({
+      SubjectCode: "",
+      SubjectName: "",
+    });
+    const checkForm = ref(false);
+    const error = ref([]);
+    const build = ref(false);
     return {
       isOpen: false,
       selectedOption: null,
+      formData,
+      checkForm,
+      error,
+      build,
     };
   },
+
   computed: {
-    ...mapGetters(["isshowsubject"]),
+    ...mapGetters([
+      "isshowsubject",
+      "subjectmaxCode",
+      "formModesubject",
+      "getByIdsubject",
+      "subject",
+    ]),
+    maxId() {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      return (this.formData = {
+        ...this.formData,
+        SubjectCode: this.subjectmaxCode,
+      });
+    },
+    subjectList() {
+      return this.subject
+        .filter((item) => item.SubjectId !== this.getByIdsubject.SubjectId)
+        .map((employee) => {
+          return employee.SubjectCode;
+        });
+    },
   },
   methods: {
+    checkCodeSubject(code) {
+      try {
+        if (this.subjectList.includes(code)) {
+          console.log(code);
+          return true;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    handleClose() {
+      try {
+        this.checkForm = !this.checkForm;
+        this.error = [];
+      } catch (error) {
+        console.log(error);
+      }
+    },
     toggleDropdown() {
       this.isOpen = !this.isOpen;
     },
@@ -53,7 +192,111 @@ export default {
       this.selectedOption = options;
       this.isOpen = false;
     },
+    validateFormAdd() {
+      try {
+        let isValid = true;
+        switch (true) {
+          case this.subject.findIndex(
+            (ele) => ele.SubjectCode === this.formData.SubjectCode
+          ) !== -1:
+            isValid = false;
+            this.error.push("Mã nhân viên nhập bị trùng");
+            break;
+          case this.formData.SubjectCode.trim() === "":
+            isValid = false;
+            this.error.push("Vui lòng nhập mã môn học");
+            break;
+          case this.formData.SubjectName.trim() === "":
+            isValid = false;
+            this.error.push("Vui lòng nhập tên môn học");
+            break;
+          case this.formData.SubjectName.length < 5:
+            isValid = false;
+            this.error.push("Tên môn học phải lớn hơn 5 kí tự");
+            break;
+          default:
+            break;
+        }
+        return isValid;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    validateFormUpdate() {
+      try {
+        let isValid = true;
+        switch (true) {
+          case this.checkCodeSubject(this.getByIdsubject.SubjectCode):
+            isValid = false;
+            this.error.push("Mã lớp học bị trùng");
+            break;
+          case this.getByIdsubject.SubjectCode.trim() === "":
+            isValid = false;
+            this.error.push("Mã môn học không được để trống");
+            break;
+          // case this.checkCodeStaff(this.getById.EmployeeCode):
+          //   isValid = false;
+          //   this.error.push(enumrource.DIALOG_CONTROL.staffCodeForever);
+          //   break;
+          case this.getByIdsubject.SubjectName.trim() === "":
+            isValid = false;
+            this.error.push("Tên môn học không được để trống");
+            break;
+          case this.getByIdsubject.SubjectName.length < 5:
+            isValid = false;
+            this.error.push("Tên môn học phải lớn hơn 5 kí tự");
+            break;
+          default:
+            break;
+        }
+        return isValid;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    onSubmitAdd() {
+      try {
+        this.checkForm = true;
+        if (this.validateFormAdd()) {
+          this.addsubject({
+            SubjectId: uuidv4(),
+            SubjectCode: this.formData.SubjectCode,
+            SubjectName: this.formData.SubjectName,
+            isChecked: false,
+          });
+          // reset formData
+          this.formData = { SubjectCode: this.subjectmaxCode };
+          this.SHOW_FORM_SUBJECT();
+          this.checkForm = false;
+          return false;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    onSubmitUpdate() {
+      try {
+        this.checkForm = true;
+        if (this.validateFormUpdate()) {
+          this.getByIdsubject.IsChecked = false;
+          this.updateItemsubject(this.getByIdsubject);
+          this.SHOW_FORM_SUBJECT();
+          this.checkForm = false;
+          return false;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     ...mapMutations(["SHOW_FORM_SUBJECT"]),
+    ...mapActions(["getMaxCodeSubject", "addsubject", "updateItemsubject"]),
+  },
+  beforeUpdate() {
+    this.maxId;
+  },
+  mounted() {
+    this.maxId;
+    this.getMaxCodeSubject();
   },
   components: {
     VButton,

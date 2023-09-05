@@ -1,6 +1,28 @@
 <template>
   <div class="form_container" v-if="isshowaccount">
-    <form class="account_form">
+    <div class="notify_error" v-if="checkForm">
+      <div class="error_wrapper">
+        <div class="error_text">
+          <h1>Dữ liệu không hợp lệ</h1>
+          <i class="bx bx-x" @click="handleClose"></i>
+        </div>
+        <ul>
+          <li v-for="(erro, index) in error" :key="index">
+            <i class="bx bxs-error"></i>
+            {{ erro }}
+          </li>
+        </ul>
+        <div class="error_btn">
+          <button @click="handleClose">Đồng ý</button>
+        </div>
+      </div>
+    </div>
+    <form
+      class="account_form"
+      @submit.prevent="onSubmitAdd"
+      novalidate="true"
+      v-if="formModeaccount === true"
+    >
       <div class="info_title">
         <div class="title_left">
           <h1>Thêm mới tài khoản</h1>
@@ -13,70 +35,23 @@
       <div class="info_property">
         <label class="slabel"
           >Mã tài khoản
-          <input type="text" class="sinput" placeholder="mã lớp học" />
+          <input
+            type="text"
+            class="sinput"
+            placeholder="mã lớp học"
+            v-model="formData.AccountCode"
+          />
         </label>
         <label class="slabel"
           >Mật khẩu
-          <input type="text" class="sinput" placeholder="tên lớp học" />
+          <input
+            type="text"
+            class="sinput"
+            placeholder="tên lớp học"
+            v-model="formData.PassWord"
+          />
         </label>
-        <label class="slabel" @click="toggleDropdownstudent">
-          Thông tin học sinh
-          <div class="dropdown" style="margin-top: 8px">
-            <input
-              type="text"
-              v-model="selectedOptionstudent"
-              placeholder="Chọn giá trị lọc"
-            />
-            <i
-              @click="toggleDropdownstudent"
-              :class="
-                isOpenstudent
-                  ? 'bx bx-chevron-down active'
-                  : 'bx bx-chevron-down'
-              "
-            ></i>
-            <div class="overlaylist" v-show="isOpenstudent">
-              <ul ref="list">
-                <li
-                  v-for="data in filteredStudent"
-                  :key="data.StudentId"
-                  @click="selectOptionstudent(data.StudentName)"
-                >
-                  {{ data.StudentName }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </label>
-        <label class="slabel" @click="toggleDropdownteacher">
-          Thông tin giáo viên
-          <div class="dropdown" style="margin-top: 8px">
-            <input
-              type="text"
-              v-model="selectedOptionteacher"
-              placeholder="Chọn giá trị lọc"
-            />
-            <i
-              @click="toggleDropdownteacher"
-              :class="
-                isOpensteacher
-                  ? 'bx bx-chevron-down active'
-                  : 'bx bx-chevron-down'
-              "
-            ></i>
-            <div class="overlaylist" v-show="isOpensteacher">
-              <ul ref="list">
-                <li
-                  v-for="data in filteredTeacher"
-                  :key="data.TeacherId"
-                  @click="selectOptionteacher(data.TeacherName)"
-                >
-                  {{ data.TeacherName }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </label>
+        <!--loai tai khoan-->
         <label class="slabel" @click="toggleDropdown">
           Loại tài khoản
           <div class="dropdown" style="margin-top: 8px">
@@ -104,6 +79,215 @@
             </div>
           </div>
         </label>
+        <!--hoc sinh-->
+        <label class="slabel" @click="toggleDropdownstudent">
+          Thông tin học sinh
+          <div class="dropdown" style="margin-top: 8px; width: 475px">
+            <input
+              type="text"
+              v-model="selectedOptionstudent"
+              placeholder="Chọn giá trị lọc"
+            />
+            <i
+              @click="toggleDropdownstudent"
+              :class="
+                isOpenstudent
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpenstudent"
+              style="width: 475px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in filteredStudent"
+                  :key="data.StudentId"
+                  @click="selectOptionstudent(data.StudentId, data.StudentName)"
+                >
+                  {{ data.StudentName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+        <!--giao vien-->
+        <label class="slabel" @click="toggleDropdownteacher">
+          Thông tin giáo viên
+          <div class="dropdown" style="margin-top: 8px; width: 475px">
+            <input
+              type="text"
+              v-model="selectedOptionteacher"
+              placeholder="Chọn giá trị lọc"
+            />
+            <i
+              @click="toggleDropdownteacher"
+              :class="
+                isOpensteacher
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpensteacher"
+              style="width: 475px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in filteredTeacher"
+                  :key="data.TeacherId"
+                  @click="selectOptionteacher(data.TeacherId, data.TeacherName)"
+                >
+                  {{ data.TeacherName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+      </div>
+      <div class="info_btn">
+        <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_ACCOUNT" />
+        <div class="btn_wp">
+          <VButton text="Cất" class="btn_phu" />
+          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+        </div>
+      </div>
+    </form>
+    <form
+      class="account_form"
+      @submit.prevent="onSubmitUpdate"
+      novalidate="true"
+      v-if="formModeaccount === false"
+    >
+      <div class="info_title">
+        <div class="title_left">
+          <h1>Cập nhật tài khoản</h1>
+        </div>
+        <div class="title_close">
+          <i class="bx bx-help-circle"></i>
+          <i class="bx bx-x" @click="SHOW_FORM_ACCOUNT"></i>
+        </div>
+      </div>
+      <div class="info_property">
+        <label class="slabel"
+          >Mã tài khoản
+          <input
+            type="text"
+            class="sinput"
+            placeholder="mã tài khoản"
+            v-model="getById.AccountCode"
+          />
+        </label>
+        <label class="slabel"
+          >Mật khẩu
+          <input
+            type="text"
+            class="sinput"
+            placeholder="mật khẩu"
+            v-model="getById.Password"
+          />
+        </label>
+        <!--loai tai khoan-->
+        <label class="slabel" @click="toggleDropdownUpdate">
+          Loại tài khoản
+          <div class="dropdown" style="margin-top: 8px">
+            <input
+              type="text"
+              v-model="getById.Role"
+              placeholder="Chọn giá trị lọc"
+            />
+            <i
+              @click="toggleDropdownUpdate"
+              :class="
+                isOpenUpdate
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div class="overlaylist" v-show="isOpenUpdate">
+              <ul ref="list">
+                <li
+                  v-for="data in selectedRoles"
+                  :key="data.id"
+                  @click="selectOptionUpdate(data.name)"
+                >
+                  {{ data.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+        <!--hoc sinh-->
+        <label class="slabel" @click="toggleDropdownstudentUpdate">
+          Thông tin học sinh
+          <div class="dropdown" style="margin-top: 8px; width: 475px">
+            <input
+              type="text"
+              v-model="getById.StudentId"
+              placeholder="Chọn giá trị lọc"
+            />
+            <i
+              @click="toggleDropdownstudentUpdate"
+              :class="
+                isOpenstudentUpdate
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpenstudentUpdate"
+              style="width: 475px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in filteredStudent"
+                  :key="data.StudentId"
+                  @click="selectOptionstudent(data.StudentId, data.StudentName)"
+                >
+                  {{ data.StudentName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+        <!--giao vien-->
+        <label class="slabel" @click="toggleDropdownteacherUpdate">
+          Thông tin giáo viên
+          <div class="dropdown" style="margin-top: 8px; width: 475px">
+            <input
+              type="text"
+              v-model="getById.TeacherId"
+              placeholder="Chọn giá trị lọc"
+            />
+            <i
+              @click="toggleDropdownteacherUpdate"
+              :class="
+                isOpensteacherUpdate
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpensteacherUpdate"
+              style="width: 475px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in filteredTeacher"
+                  :key="data.TeacherId"
+                  @click="selectOptionteacher(data.TeacherId, data.TeacherName)"
+                >
+                  {{ data.TeacherName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
       </div>
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_ACCOUNT" />
@@ -117,18 +301,43 @@
 </template>
   
   <script>
+import { reactive, ref } from "vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import VButton from "../Button/VButton.vue";
+import { v4 as uuidv4 } from "uuid";
 export default {
   name: "FClassroom",
-  data() {
+  setup() {
+    const isOpen = ref(false);
+    const isOpenUpdate = ref(false);
+    const isOpenstudent = ref(false);
+    const isOpensteacher = ref(false);
+    const isOpenstudentUpdate = ref(false);
+    const isOpensteacherUpdate = ref(false);
+    //hoc sinh
+    const selectedOptionstudent = ref("");
+    //teacher
+    const selectedOptionteacher = ref("");
+    //role
+    const selectedOption = ref("");
+    const formData = reactive({
+      AccountCode: "",
+      PassWord: "",
+      StudentId: "",
+      TeacherId: "",
+      Role: "",
+    });
     return {
-      isOpen: false,
-      isOpenstudent: false,
-      isOpensteacher: false,
-      selectedOptionstudent: "",
-      selectedOptionteacher: "",
-      selectedOption: "",
+      formData,
+      isOpen,
+      isOpenUpdate,
+      isOpenstudent,
+      isOpenstudentUpdate,
+      isOpensteacher,
+      isOpensteacherUpdate,
+      selectedOptionstudent,
+      selectedOptionteacher,
+      selectedOption,
       selectedRoles: [
         { id: 1, name: "admin" },
         { id: 2, name: "teacher" },
@@ -149,34 +358,205 @@ export default {
         data.StudentName.toLowerCase().includes(keyword)
       );
     },
-    ...mapGetters(["account", "studentAll", "teacherAll", "isshowaccount"]),
+    maxId() {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      return (this.formData = {
+        ...this.formData,
+        AccountCode: this.accountmaxcode,
+      });
+    },
+    AccountList() {
+      return this.account
+        .filter((item) => item.AccountId !== this.getById.AccountId)
+        .map((employee) => {
+          return employee.AccountCode;
+        });
+    },
+    ...mapGetters([
+      "account",
+      "studentAll",
+      "teacherAll",
+      "isshowaccount",
+      "formModeaccount",
+      "accountmaxcode",
+      "getById",
+    ]),
   },
   methods: {
     toggleDropdown() {
       this.isOpen = !this.isOpen;
     },
-    toggleDropdownstudent() {
-      this.isOpenstudent = !this.isOpenstudent;
-    },
-    toggleDropdownteacher() {
-      this.isOpensteacher = !this.isOpensteacher;
+    toggleDropdownUpdate() {
+      this.isOpenUpdate = !this.isOpenUpdate;
     },
     selectOption(options) {
       this.selectedOption = options;
       this.isOpen = false;
     },
-    selectOptionstudent(options) {
+    selectOptionUpdate(options) {
+      this.selectedOption = options;
+      this.isOpenUpdate = false;
+    },
+    toggleDropdownstudent() {
+      this.isOpenstudent = !this.isOpenstudent;
+    },
+    toggleDropdownstudentUpdate() {
+      this.isOpenstudentUpdate = !this.isOpenstudentUpdate;
+    },
+    toggleDropdownteacher() {
+      this.isOpensteacher = !this.isOpensteacher;
+    },
+    toggleDropdownteacherUpdate() {
+      this.isOpensteacherUpdate = !this.isOpensteacherUpdate;
+    },
+    selectOptionstudent(id, options) {
+      this.formData.StudentId = id;
       this.selectedOptionstudent = options;
       this.isOpenstudent = false;
     },
-    selectOptionteacher(options) {
+    selectOptionteacher(id, options) {
+      this.formData.TeacherId = id;
       this.selectedOptionteacher = options;
       this.isOpensteacher = false;
     },
-    ...mapActions(["getaccount", "getStudentAll", "getteacherAll"]),
+    checkCodeAccount(code) {
+      try {
+        if (this.AccountList.includes(code)) {
+          console.log(code);
+          return true;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    handleClose() {
+      try {
+        this.checkForm = !this.checkForm;
+        this.error = [];
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    validateFormAdd() {
+      try {
+        let isValid = true;
+        switch (true) {
+          case this.account.findIndex(
+            (ele) => ele.AccountCode === this.formData.AccountCode
+          ) !== -1:
+            isValid = false;
+            this.error.push("Mã tài khoản nhập bị trùng");
+            break;
+          case this.formData.AccountCode.trim() === "":
+            isValid = false;
+            this.error.push("Vui lòng nhập mã tài khoản");
+            break;
+          case this.formData.PassWord.trim() === "":
+            isValid = false;
+            this.error.push("Vui lòng nhập mật khẩu");
+            break;
+          case this.selectedOption == null:
+            isValid = false;
+            this.error.push("Vui lòng chọn quyền tài khoản");
+            break;
+          case this.formData.PassWord.length < 9:
+            isValid = false;
+            this.error.push("Mật khẩu phải lớn hơn 8 kí tự");
+            break;
+          default:
+            break;
+        }
+        return isValid;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    validateFormUpdate() {
+      try {
+        let isValid = true;
+        switch (true) {
+          case this.checkCodeAccount(this.getById.AccountCode):
+            isValid = false;
+            this.error.push("Mã tài khoản bị trùng");
+            break;
+          case this.getById.AccountCode.trim() === "":
+            isValid = false;
+            this.error.push("Mã tài khoản không được để trống");
+            break;
+          case this.getById.Password.trim() === "":
+            isValid = false;
+            this.error.push("Mật khẩu không được để trống");
+            break;
+          case this.getById.Password.length < 9:
+            isValid = false;
+            this.error.push("Mật khẩu phải lớn hơn 8 kí tự");
+            break;
+          default:
+            break;
+        }
+        return isValid;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    onSubmitAdd() {
+      try {
+        this.checkForm = true;
+        if (this.validateFormAdd()) {
+          this.addaccount({
+            AccountId: uuidv4(),
+            AccountCode: this.formData.AccountCode,
+            PassWord: this.formData.PassWord,
+            StudentId: this.formData.StudentId,
+            TeacherId: this.formData.TeacherId,
+            Role: this.selectedOption,
+            isChecked: false,
+          });
+          // reset formData
+          this.formData = { AccountCode: this.accountmaxcode };
+          this.selectedOption = null;
+          this.selectedOptionstudent = null;
+          this.selectedOptionteacher = null;
+          this.SHOW_FORM_ACCOUNT();
+          this.checkForm = false;
+          return false;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    onSubmitUpdate() {
+      try {
+        this.checkForm = true;
+        if (this.validateFormUpdate()) {
+          this.getById.IsChecked = false;
+          this.updateItemaccount(this.getById);
+          this.SHOW_FORM_ACCOUNT();
+          this.checkForm = false;
+          return false;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    ...mapActions([
+      "getaccount",
+      "getStudentAll",
+      "getteacherAll",
+      "getMaxCodeaccount",
+      "updateItemaccount",
+      "addaccount",
+    ]),
     ...mapMutations(["SHOW_FORM_ACCOUNT"]),
   },
+  beforeUpdate() {
+    this.maxId;
+  },
   mounted() {
+    this.maxId;
+    this.getMaxCodeaccount();
     this.getaccount();
     this.getStudentAll();
     this.getteacherAll();

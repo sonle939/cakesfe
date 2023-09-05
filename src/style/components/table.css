@@ -75,12 +75,18 @@ table td:first-child {
   border-bottom: 0px solid #e0e0e0;
   border-left: 0px solid;
 }
+table td:first-child {
+  background-color: white;
+}
 table th:last-child,
 table td:last-child {
   position: sticky;
   right: 0;
   border-left: 1px solid #e0e0e0;
   padding-right: 10px;
+}
+table td:last-child {
+  background-color: white;
 }
 .control_table {
   display: flex;
@@ -145,4 +151,35 @@ table td {
   letter-spacing: 1px;
   color: #1f1f1f;
   margin-top: 20px;
+}
+.checked_data {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+  animation: aniOver 0.6s ease-in;
+}
+
+.checked_data h3 {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f1f1f;
+  cursor: pointer;
+}
+.checked_data h3:nth-child(2) {
+  color: #b80000;
+  font-weight: 700;
+  margin-left: 16px;
+  margin-right: 25px;
+}
+.checked_data p {
+  font-size: 14px;
+  font-weight: bold;
+  margin-left: 6px;
+  color: #171b2a;
+}
+.search_check {
+  display: flex;
+  align-items: center;
 }

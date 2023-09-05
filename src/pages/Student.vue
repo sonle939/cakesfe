@@ -4,17 +4,38 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý học sinh" :showform="SHOW_FORM_STUDENT" />
+        <HeaderContent text="Quản lý học sinh" :showform="modeFormInsert" />
         <div class="search_table">
           <div class="search_filter">
-            <div class="search_list">
-              <i class="bx bx-search-alt-2"></i>
-              <input
-                type="text"
-                placeholder="Tìm kiếm trong danh sách"
-                v-model="searchtext"
-                @keydown.enter="setFilterstudentcodestudent(searchtext)"
-              />
+            <div class="search_check">
+              <div class="search_list">
+                <i class="bx bx-search-alt-2"></i>
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm trong danh sách"
+                  v-model="searchtext"
+                  @keydown.enter="setFilterstudentcodestudent(searchtext)"
+                />
+              </div>
+              <div class="checked_data" v-show="trueCheckedstudent">
+                <h3>
+                  Đã chọn tất cả
+                  <p>{{ checkAmountstudent }}</p>
+                </h3>
+                <h3 @click="uncheckItemsstudent">Bỏ chọn</h3>
+                <VButton
+                  text="Xác nhận thông tin"
+                  class="btn_info"
+                  leftIcon="bx bx-check-circle remove_icon"
+                />
+                <VButton
+                  text="Xóa"
+                  leftIcon="fa fa-times remove_icon"
+                  class="remove_btn"
+                  @click="deleteMultiplestudent(selectedItemsstudent)"
+                />
+                <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
+              </div>
             </div>
             <div class="filter_item">
               <div class="dropdown">
@@ -151,11 +172,15 @@
                     <div class="control_table">
                       <span
                         content="Cập nhật"
+                        @click="modeFormUpdate(data)"
                         v-tippy="{ arrow: true, arrowType: 'round' }"
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span content="Xóa" v-tippy
+                      <span
+                        content="Xóa"
+                        v-tippy
+                        @click="deletestudent(data.StudentId)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -195,6 +220,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import { format } from "date-fns";
 import FStudentVue from "../components/Form/FStudent.vue";
 import Loading from "../components/Loading.vue";
+import VButton from "../components/Button/VButton.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Student",
@@ -212,6 +238,7 @@ export default {
     AdminPaginnation,
     FStudentVue,
     Loading,
+    VButton,
   },
   methods: {
     toggleDropdown() {
@@ -234,6 +261,8 @@ export default {
       "HIDESTUDENT",
       "SELECTCHECKEDSTUDENT",
       "SHOW_FORM_STUDENT",
+      "UPDATE_MODE_STUDENT",
+      "ADD_MODE_STUDENT",
     ]),
     ...mapActions([
       "setPageNumberstudent",
@@ -243,9 +272,30 @@ export default {
       "getclassroomstudent",
       "setFilterstudentcodestudent",
       "setFilterclassroomidstudent",
+      "getIDstudent",
+      "uncheckItemsstudent",
+      "deleteMultiplestudent",
+      "deletestudent",
     ]),
     formattedDate(data) {
       return format(new Date(data), "dd/MM/yyyy");
+    },
+    modeFormUpdate(data) {
+      try {
+        this.UPDATE_MODE_STUDENT();
+        this.getIDstudent(data);
+        this.SHOW_FORM_STUDENT();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    modeFormInsert() {
+      try {
+        this.ADD_MODE_STUDENT();
+        this.SHOW_FORM_STUDENT();
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
   computed: {
@@ -262,6 +312,7 @@ export default {
       "trueCheckedstudent",
       "classroomstudent",
       "loadingstudent",
+      "selectedItemsstudent",
     ]),
   },
   mounted() {

@@ -4,13 +4,35 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý khối lớp" :showform="SHOW_FORM_GRADE" />
+        <HeaderContent text="Quản lý khối lớp" :showform="modeFormInsert" />
         <div class="search_table">
           <div class="search_filter">
-            <div class="search_list">
-              <i class="bx bx-search-alt-2"></i>
-              <input type="text" placeholder="Tìm kiếm trong danh sách" />
+            <div class="search_check">
+              <div class="search_list">
+                <i class="bx bx-search-alt-2"></i>
+                <input type="text" placeholder="Tìm kiếm trong danh sách" />
+              </div>
+              <div class="checked_data" v-show="trueCheckedgrade">
+                <h3>
+                  Đã chọn tất cả
+                  <p>{{ checkAmountgrade }}</p>
+                </h3>
+                <h3 @click="uncheckItemsgrade">Bỏ chọn</h3>
+                <VButton
+                  text="Xác nhận thông tin"
+                  class="btn_info"
+                  leftIcon="bx bx-check-circle remove_icon"
+                />
+                <VButton
+                  text="Xóa"
+                  leftIcon="fa fa-times remove_icon"
+                  class="remove_btn"
+                  @click="deleteMultiplegrade(selectedItemsgrade)"
+                />
+                <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
+              </div>
             </div>
+
             <div class="filter_item">
               <div class="wrapper__i">
                 <div class="excel"></div>
@@ -76,11 +98,15 @@
                     <div class="control_table">
                       <span
                         content="Cập nhật"
+                        @click="modeFormUpdate(data)"
                         v-tippy="{ arrow: true, arrowType: 'round' }"
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span content="Xóa" v-tippy
+                      <span
+                        content="Xóa"
+                        v-tippy
+                        @click="deletegrade(data.GradeId)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -108,6 +134,8 @@ import HeaderContent from "@/components/content/Header.vue";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import FGrade from "../components/Form/FGrade.vue";
 import Loading from "../components/Loading.vue";
+import VButton from "../components/Button/VButton.vue";
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Grade",
@@ -119,18 +147,41 @@ export default {
       "trueCheckedgrade",
       "grade",
       "loadinggrade",
+      "selectedItemsgrade",
     ]),
   },
   methods: {
-    ...mapActions(["toggleAllSelectiongrade", "getGrade"]),
-    ...mapMutations(["SELECTCHECKEDGRADE", "SHOW_FORM_GRADE"]),
-    delItemCheck(id) {
+    modeFormUpdate(data) {
       try {
-        this.SELECTCHECKED(id);
+        this.UPDATE_MODE_GRADE();
+        this.getIDgrade(data);
+        this.SHOW_FORM_GRADE();
       } catch (error) {
         console.log(error);
       }
     },
+    modeFormInsert() {
+      try {
+        this.ADD_MODE_GRADE();
+        this.SHOW_FORM_GRADE();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    ...mapActions([
+      "toggleAllSelectiongrade",
+      "getGrade",
+      "getIDgrade",
+      "uncheckItemsgrade",
+      "deleteMultiplegrade",
+      "deletegrade",
+    ]),
+    ...mapMutations([
+      "SELECTCHECKEDGRADE",
+      "SHOW_FORM_GRADE",
+      "ADD_MODE_GRADE",
+      "UPDATE_MODE_GRADE",
+    ]),
   },
   mounted() {
     this.getGrade();
@@ -141,6 +192,7 @@ export default {
     HeaderContent,
     FGrade,
     Loading,
+    VButton,
   },
 };
 </script>

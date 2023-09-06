@@ -207,8 +207,8 @@
               placeholder="ngày sinh"
               :value="
                 selectedOption === 'student'
-                  ? getByIdstudent.DateOfBirth
-                  : getByIdteacher.DateOfBirth
+                  ? formattedDateOfBirthStudent
+                  : formattedDateOfBirthTeacher
               "
               disabled
             />
@@ -336,7 +336,11 @@
                   v-for="data in filteredStudent"
                   :key="data.StudentId"
                   @click="
-                    selectOptionstudentUpdate(data.StudentId, data.StudentName)
+                    selectOptionstudentUpdate(
+                      data,
+                      data.StudentId,
+                      data.StudentName
+                    )
                   "
                 >
                   {{ data.StudentName }}
@@ -375,7 +379,11 @@
                   v-for="data in filteredTeacher"
                   :key="data.TeacherId"
                   @click="
-                    selectOptionteacherUpdate(data.TeacherId, data.TeacherName)
+                    selectOptionteacherUpdate(
+                      data,
+                      data.TeacherId,
+                      data.TeacherName
+                    )
                   "
                 >
                   {{ data.TeacherName }}
@@ -384,6 +392,68 @@
             </div>
           </div>
         </label>
+        <div class="isShowInfoaccount" v-if="isShowInfo">
+          <label class="slabel"
+            >Mã thông tin
+            <input
+              type="text"
+              class="sinput click_none"
+              style="width: 215px"
+              placeholder="mã thông tin"
+              :value="
+                getById.Role === 'student'
+                  ? getByIdstudent.StudentCode
+                  : getByIdteacher.TeacherCode
+              "
+              disabled
+            />
+          </label>
+          <label class="slabel"
+            >Tên tài khoản
+            <input
+              type="text"
+              class="sinput click_none"
+              style="width: 215px"
+              placeholder="tên tài khoản"
+              :value="
+                getById.Role === 'student'
+                  ? getByIdstudent.StudentName
+                  : getByIdteacher.TeacherName
+              "
+              disabled
+            />
+          </label>
+          <label class="slabel"
+            >Ngày sinh chủ tài khoản
+            <input
+              type="text"
+              class="sinput click_none"
+              style="width: 150px"
+              placeholder="ngày sinh"
+              :value="
+                getById.Role === 'student'
+                  ? formattedDateOfBirthStudent
+                  : formattedDateOfBirthTeacher
+              "
+              disabled
+            />
+          </label>
+          <label class="slabel"
+            >Địa chỉ
+            <input
+              type="text"
+              class="sinput click_none"
+              style="width: 280px"
+              placeholder="địa chỉ"
+              :value="
+                getById.Role === 'student'
+                  ? getByIdstudent.Address
+                  : getByIdteacher.Address
+              "
+              disabled
+            />
+          </label>
+        </div>
       </div>
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_ACCOUNT" />
@@ -484,7 +554,34 @@ export default {
         return this.studentAll;
       }
     },
-
+    formattedDateOfBirthStudent: {
+      get() {
+        // Chuyển đổi từ ISO 8601 sang "yyyy-MM-dd"
+        const isoDate = new Date(this.getByIdstudent.DateOfBirth);
+        const year = isoDate.getFullYear();
+        const month = String(isoDate.getMonth() + 1).padStart(2, "0");
+        const day = String(isoDate.getDate()).padStart(2, "0");
+        return `${day}-${month}-${year}`;
+      },
+      set(value) {
+        // Khi người dùng thay đổi giá trị trong input, chuyển đổi lại định dạng
+        this.getByIdstudent.DateOfBirth = value;
+      },
+    },
+    formattedDateOfBirthTeacher: {
+      get() {
+        // Chuyển đổi từ ISO 8601 sang "yyyy-MM-dd"
+        const isoDate = new Date(this.getByIdteacher.DateOfBirth);
+        const year = isoDate.getFullYear();
+        const month = String(isoDate.getMonth() + 1).padStart(2, "0");
+        const day = String(isoDate.getDate()).padStart(2, "0");
+        return `${day}-${month}-${year}`;
+      },
+      set(value) {
+        // Khi người dùng thay đổi giá trị trong input, chuyển đổi lại định dạng
+        this.getByIdteacher.DateOfBirth = value;
+      },
+    },
     maxId() {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       return (this.formData = {
@@ -523,6 +620,7 @@ export default {
       this.isOpen = false;
     },
     selectOptionUpdate(options) {
+      this.getById.Role = options;
       this.selectedOption = options;
       this.isOpenUpdate = false;
     },
@@ -545,10 +643,12 @@ export default {
       this.isOpenstudent = false;
       this.isShowInfo = !this.isShowInfo;
     },
-    selectOptionstudentUpdate(id, options) {
+    selectOptionstudentUpdate(data, id, options) {
+      this.getIDstudent(data);
       this.getById.StudentId = id;
       this.getById.StudentName = options;
       this.isOpenstudentUpdate = false;
+      this.isShowInfo = true;
     },
     selectOptionteacher(data, id, options) {
       this.getIDteacher(data);
@@ -557,10 +657,12 @@ export default {
       this.isOpensteacher = false;
       this.isShowInfo = !this.isShowInfo;
     },
-    selectOptionteacherUpdate(id, options) {
+    selectOptionteacherUpdate(data, id, options) {
+      this.getIDteacher(data);
       this.getById.TeacherId = id;
       this.getById.TeacherName = options;
       this.isOpensteacherUpdate = false;
+      this.isShowInfo = true;
     },
     checkCodeAccount(code) {
       try {
@@ -572,6 +674,11 @@ export default {
         }
       } catch (error) {
         console.log(error);
+      }
+    },
+    checkAndToggleInfo() {
+      if (this.selectedOptionteacher.trim() === "") {
+        this.isShowInfo = false;
       }
     },
     handleClose() {
@@ -713,6 +820,29 @@ export default {
     this.getaccount();
     this.getStudentAll();
     this.getteacherAll();
+  },
+  watch: {
+    //theo dõi nếu hai biến thành null thì lập tức cho ẩn đi phần thông tin cá nhân
+    selectedOptionteacher(newValue) {
+      if (newValue.trim() === "") {
+        this.isShowInfo = false;
+      }
+    },
+    selectedOptionstudent(newValue) {
+      if (newValue.trim() === "") {
+        this.isShowInfo = false;
+      }
+    },
+    "getById.TeacherName"(newValue) {
+      if (newValue === "") {
+        this.isShowInfo = false;
+      }
+    },
+    "getById.StudentName"(newValue) {
+      if (newValue === "") {
+        this.isShowInfo = false;
+      }
+    },
   },
   components: {
     VButton,

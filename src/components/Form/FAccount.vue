@@ -38,7 +38,7 @@
           <input
             type="text"
             class="sinput"
-            placeholder="mã lớp học"
+            placeholder="mã tài khoản"
             v-model="formData.AccountCode"
           />
         </label>
@@ -47,7 +47,7 @@
           <input
             type="text"
             class="sinput"
-            placeholder="tên lớp học"
+            placeholder="mật khẩu"
             v-model="formData.PassWord"
           />
         </label>
@@ -70,7 +70,7 @@
               <ul ref="list">
                 <li
                   v-for="data in selectedRoles"
-                  :key="data.í"
+                  :key="data.id"
                   @click="selectOption(data.name)"
                 >
                   {{ data.name }}
@@ -80,7 +80,16 @@
           </div>
         </label>
         <!--hoc sinh-->
-        <label class="slabel" @click="toggleDropdownstudent">
+        <label
+          :class="
+            selectedOption === 'teacher' ||
+            selectedOption === 'admin' ||
+            selectedOption === ''
+              ? 'slabel click_none'
+              : 'slabel'
+          "
+          @click="toggleDropdownstudent"
+        >
           Thông tin học sinh
           <div class="dropdown" style="margin-top: 8px; width: 475px">
             <input
@@ -105,7 +114,9 @@
                 <li
                   v-for="data in filteredStudent"
                   :key="data.StudentId"
-                  @click="selectOptionstudent(data.StudentId, data.StudentName)"
+                  @click="
+                    selectOptionstudent(data, data.StudentId, data.StudentName)
+                  "
                 >
                   {{ data.StudentName }}
                 </li>
@@ -114,7 +125,14 @@
           </div>
         </label>
         <!--giao vien-->
-        <label class="slabel" @click="toggleDropdownteacher">
+        <label
+          :class="
+            selectedOption === 'student' || selectedOption === ''
+              ? 'slabel click_none'
+              : 'slabel'
+          "
+          @click="toggleDropdownteacher"
+        >
           Thông tin giáo viên
           <div class="dropdown" style="margin-top: 8px; width: 475px">
             <input
@@ -139,7 +157,9 @@
                 <li
                   v-for="data in filteredTeacher"
                   :key="data.TeacherId"
-                  @click="selectOptionteacher(data.TeacherId, data.TeacherName)"
+                  @click="
+                    selectOptionteacher(data, data.TeacherId, data.TeacherName)
+                  "
                 >
                   {{ data.TeacherName }}
                 </li>
@@ -147,6 +167,68 @@
             </div>
           </div>
         </label>
+        <div class="isShowInfoaccount" v-if="isShowInfo">
+          <label class="slabel"
+            >Mã thông tin
+            <input
+              type="text"
+              class="sinput click_none"
+              style="width: 215px"
+              placeholder="mã thông tin"
+              :value="
+                selectedOption === 'student'
+                  ? getByIdstudent.StudentCode
+                  : getByIdteacher.TeacherCode
+              "
+              disabled
+            />
+          </label>
+          <label class="slabel"
+            >Tên tài khoản
+            <input
+              type="text"
+              class="sinput click_none"
+              style="width: 215px"
+              placeholder="tên tài khoản"
+              :value="
+                selectedOption === 'student'
+                  ? getByIdstudent.StudentName
+                  : getByIdteacher.TeacherName
+              "
+              disabled
+            />
+          </label>
+          <label class="slabel"
+            >Ngày sinh chủ tài khoản
+            <input
+              type="text"
+              class="sinput click_none"
+              style="width: 150px"
+              placeholder="ngày sinh"
+              :value="
+                selectedOption === 'student'
+                  ? getByIdstudent.DateOfBirth
+                  : getByIdteacher.DateOfBirth
+              "
+              disabled
+            />
+          </label>
+          <label class="slabel"
+            >Địa chỉ
+            <input
+              type="text"
+              class="sinput click_none"
+              style="width: 280px"
+              placeholder="địa chỉ"
+              :value="
+                selectedOption === 'student'
+                  ? getByIdstudent.Address
+                  : getByIdteacher.Address
+              "
+              disabled
+            />
+          </label>
+        </div>
       </div>
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_ACCOUNT" />
@@ -187,7 +269,7 @@
             type="text"
             class="sinput"
             placeholder="mật khẩu"
-            v-model="getById.Password"
+            v-model="getById.PassWord"
           />
         </label>
         <!--loai tai khoan-->
@@ -221,12 +303,19 @@
           </div>
         </label>
         <!--hoc sinh-->
-        <label class="slabel" @click="toggleDropdownstudentUpdate">
+        <label
+          :class="
+            getById.Role == 'teacher' || getById.Role == 'admin'
+              ? 'slabel click_none'
+              : 'slabel'
+          "
+          @click="toggleDropdownstudentUpdate"
+        >
           Thông tin học sinh
           <div class="dropdown" style="margin-top: 8px; width: 475px">
             <input
               type="text"
-              v-model="getById.StudentId"
+              v-model="getById.StudentName"
               placeholder="Chọn giá trị lọc"
             />
             <i
@@ -246,7 +335,9 @@
                 <li
                   v-for="data in filteredStudent"
                   :key="data.StudentId"
-                  @click="selectOptionstudent(data.StudentId, data.StudentName)"
+                  @click="
+                    selectOptionstudentUpdate(data.StudentId, data.StudentName)
+                  "
                 >
                   {{ data.StudentName }}
                 </li>
@@ -255,12 +346,15 @@
           </div>
         </label>
         <!--giao vien-->
-        <label class="slabel" @click="toggleDropdownteacherUpdate">
+        <label
+          :class="getById.Role === 'student' ? 'slabel click_none' : 'slabel'"
+          @click="toggleDropdownteacherUpdate"
+        >
           Thông tin giáo viên
           <div class="dropdown" style="margin-top: 8px; width: 475px">
             <input
               type="text"
-              v-model="getById.TeacherId"
+              v-model="getById.TeacherName"
               placeholder="Chọn giá trị lọc"
             />
             <i
@@ -280,7 +374,9 @@
                 <li
                   v-for="data in filteredTeacher"
                   :key="data.TeacherId"
-                  @click="selectOptionteacher(data.TeacherId, data.TeacherName)"
+                  @click="
+                    selectOptionteacherUpdate(data.TeacherId, data.TeacherName)
+                  "
                 >
                   {{ data.TeacherName }}
                 </li>
@@ -308,6 +404,7 @@ import { v4 as uuidv4 } from "uuid";
 export default {
   name: "FClassroom",
   setup() {
+    const isShowInfo = ref(false);
     const isOpen = ref(false);
     const isOpenUpdate = ref(false);
     const isOpenstudent = ref(false);
@@ -327,7 +424,14 @@ export default {
       TeacherId: "",
       Role: "",
     });
+    const checkForm = ref(false);
+    const error = ref([]);
+    const build = ref(false);
     return {
+      isShowInfo,
+      checkForm,
+      error,
+      build,
       formData,
       isOpen,
       isOpenUpdate,
@@ -346,18 +450,41 @@ export default {
     };
   },
   computed: {
+    // filteredTeacher() {
+    //   const keyword = this.selectedOptionteacher.toLowerCase();
+    //   return this.teacherAll.filter((data) =>
+    //     data.TeacherName.toLowerCase().includes(keyword)
+    //   );
+    // },
+    // filteredStudent() {
+    //   const keyword = this.selectedOptionstudent.toLowerCase();
+    //   return this.studentAll.filter((data) =>
+    //     data.StudentName.toLowerCase().includes(keyword)
+    //   );
+    // },
     filteredTeacher() {
-      const keyword = this.selectedOptionteacher.toLowerCase();
-      return this.teacherAll.filter((data) =>
-        data.TeacherName.toLowerCase().includes(keyword)
-      );
+      if (this.selectedOptionteacher) {
+        const keyword = this.selectedOptionteacher.toLowerCase();
+        return this.teacherAll.filter((data) =>
+          data.TeacherName.toLowerCase().includes(keyword)
+        );
+      } else {
+        // Trả về toàn bộ danh sách giáo viên nếu selectedOptionteacher là null
+        return this.teacherAll;
+      }
     },
     filteredStudent() {
-      const keyword = this.selectedOptionstudent.toLowerCase();
-      return this.studentAll.filter((data) =>
-        data.StudentName.toLowerCase().includes(keyword)
-      );
+      if (this.selectedOptionstudent) {
+        const keyword = this.selectedOptionstudent.toLowerCase();
+        return this.studentAll.filter((data) =>
+          data.StudentName.toLowerCase().includes(keyword)
+        );
+      } else {
+        // Trả về toàn bộ danh sách sinh viên nếu selectedOptionstudent là null
+        return this.studentAll;
+      }
     },
+
     maxId() {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       return (this.formData = {
@@ -380,6 +507,8 @@ export default {
       "formModeaccount",
       "accountmaxcode",
       "getById",
+      "getByIdteacher",
+      "getByIdstudent",
     ]),
   },
   methods: {
@@ -409,15 +538,29 @@ export default {
     toggleDropdownteacherUpdate() {
       this.isOpensteacherUpdate = !this.isOpensteacherUpdate;
     },
-    selectOptionstudent(id, options) {
+    selectOptionstudent(data, id, options) {
+      this.getIDstudent(data);
       this.formData.StudentId = id;
       this.selectedOptionstudent = options;
       this.isOpenstudent = false;
+      this.isShowInfo = !this.isShowInfo;
     },
-    selectOptionteacher(id, options) {
+    selectOptionstudentUpdate(id, options) {
+      this.getById.StudentId = id;
+      this.getById.StudentName = options;
+      this.isOpenstudentUpdate = false;
+    },
+    selectOptionteacher(data, id, options) {
+      this.getIDteacher(data);
       this.formData.TeacherId = id;
       this.selectedOptionteacher = options;
       this.isOpensteacher = false;
+      this.isShowInfo = !this.isShowInfo;
+    },
+    selectOptionteacherUpdate(id, options) {
+      this.getById.TeacherId = id;
+      this.getById.TeacherName = options;
+      this.isOpensteacherUpdate = false;
     },
     checkCodeAccount(code) {
       try {
@@ -461,7 +604,7 @@ export default {
             isValid = false;
             this.error.push("Vui lòng chọn quyền tài khoản");
             break;
-          case this.formData.PassWord.length < 9:
+          case this.formData.PassWord.length <= 8:
             isValid = false;
             this.error.push("Mật khẩu phải lớn hơn 8 kí tự");
             break;
@@ -485,11 +628,11 @@ export default {
             isValid = false;
             this.error.push("Mã tài khoản không được để trống");
             break;
-          case this.getById.Password.trim() === "":
+          case this.getById.PassWord.trim() === "":
             isValid = false;
             this.error.push("Mật khẩu không được để trống");
             break;
-          case this.getById.Password.length < 9:
+          case this.getById.PassWord.length < 9:
             isValid = false;
             this.error.push("Mật khẩu phải lớn hơn 8 kí tự");
             break;
@@ -505,6 +648,11 @@ export default {
       try {
         this.checkForm = true;
         if (this.validateFormAdd()) {
+          if (this.formData.StudentId !== "") {
+            this.formData.TeacherId = null;
+          } else if (this.formData.TeacherId !== "") {
+            this.formData.StudentId = null;
+          }
           this.addaccount({
             AccountId: uuidv4(),
             AccountCode: this.formData.AccountCode,
@@ -516,9 +664,11 @@ export default {
           });
           // reset formData
           this.formData = { AccountCode: this.accountmaxcode };
+          this.isShowInfo = false;
           this.selectedOption = null;
           this.selectedOptionstudent = null;
           this.selectedOptionteacher = null;
+          location.reload();
           this.SHOW_FORM_ACCOUNT();
           this.checkForm = false;
           return false;
@@ -535,6 +685,7 @@ export default {
           this.updateItemaccount(this.getById);
           this.SHOW_FORM_ACCOUNT();
           this.checkForm = false;
+          location.reload();
           return false;
         }
       } catch (error) {
@@ -548,6 +699,8 @@ export default {
       "getMaxCodeaccount",
       "updateItemaccount",
       "addaccount",
+      "getIDstudent",
+      "getIDteacher",
     ]),
     ...mapMutations(["SHOW_FORM_ACCOUNT"]),
   },
@@ -604,7 +757,7 @@ export default {
   font-size: 34px;
 }
 .account_form {
-  height: 40%;
+  height: auto;
   width: 60%;
   background-color: #fff;
   border-radius: 4px;
@@ -617,5 +770,9 @@ export default {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+}
+.isShowInfoaccount {
+  display: flex;
+  align-items: center;
 }
 </style>

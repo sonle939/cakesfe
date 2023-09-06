@@ -111,6 +111,7 @@
                       type="checkbox"
                       class="option-input"
                       v-model="data.isChecked"
+                      @click="SELECTCHECKED(data.AccountId)"
                     />
                     {{ data.AccountCode }}
                   </td>

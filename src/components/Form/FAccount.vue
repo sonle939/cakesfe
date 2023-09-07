@@ -458,7 +458,7 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_ACCOUNT" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu" />
+          <VButton text="Cất" @click="this.toastUpdate()" class="btn_phu" />
           <VButton type="submit" class="ml-8" text="Cất và thêm" />
         </div>
       </div>
@@ -471,6 +471,7 @@ import { reactive, ref } from "vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import VButton from "../Button/VButton.vue";
 import { v4 as uuidv4 } from "uuid";
+import { createToast } from "mosha-vue-toastify";
 export default {
   name: "FClassroom",
   setup() {
@@ -497,7 +498,37 @@ export default {
     const checkForm = ref(false);
     const error = ref([]);
     const build = ref(false);
+    const toast = () => {
+      createToast(
+        {
+          title: "Tài khoản",
+          description: "Thêm mới thành công",
+        },
+        {
+          type: "success",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
+    const toastUpdate = () => {
+      createToast(
+        {
+          title: "Tài khoản",
+          description: "Cập nhât thành công",
+        },
+        {
+          type: "warning",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
     return {
+      toast,
+      toastUpdate,
       isShowInfo,
       checkForm,
       error,
@@ -769,13 +800,13 @@ export default {
             Role: this.selectedOption,
             isChecked: false,
           });
+          this.toast();
           // reset formData
           this.formData = { AccountCode: this.accountmaxcode };
           this.isShowInfo = false;
           this.selectedOption = null;
           this.selectedOptionstudent = null;
           this.selectedOptionteacher = null;
-          location.reload();
           this.SHOW_FORM_ACCOUNT();
           this.checkForm = false;
           return false;
@@ -792,7 +823,6 @@ export default {
           this.updateItemaccount(this.getById);
           this.SHOW_FORM_ACCOUNT();
           this.checkForm = false;
-          location.reload();
           return false;
         }
       } catch (error) {

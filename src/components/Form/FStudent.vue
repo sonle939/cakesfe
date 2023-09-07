@@ -307,12 +307,41 @@
     <script>
 import { reactive, ref } from "vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import { createToast } from "mosha-vue-toastify";
 import VButton from "../Button/VButton.vue";
 import VRadio from "../Input/VRadio.vue";
 import { v4 as uuidv4 } from "uuid";
 export default {
   name: "FClassroom",
   setup() {
+    const toast = () => {
+      createToast(
+        {
+          title: "Học sinh",
+          description: "Thêm mới thành công",
+        },
+        {
+          type: "success",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
+    const toastUpdate = () => {
+      createToast(
+        {
+          title: "Học sinh",
+          description: "Cập nhât thành công",
+        },
+        {
+          type: "warning",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
     const isOpen = ref(false);
     const selectedOption = ref("");
     const isOpenUpdate = ref(false);
@@ -336,6 +365,8 @@ export default {
       checkForm,
       error,
       build,
+      toast,
+      toastUpdate,
     };
   },
   computed: {
@@ -494,6 +525,7 @@ export default {
           this.formData = { StudentCode: this.studentmaxcode };
           this.selectedOption = null;
           this.SHOW_FORM_STUDENT();
+          this.toast();
           this.checkForm = false;
           return false;
         }
@@ -508,6 +540,7 @@ export default {
           this.getByIdstudent.IsChecked = false;
           this.updateItemstudent(this.getByIdstudent);
           this.SHOW_FORM_STUDENT();
+          this.toastUpdate();
           this.checkForm = false;
           return false;
         }

@@ -111,6 +111,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import VButton from "../Button/VButton.vue";
 import { v4 as uuidv4 } from "uuid";
 import { reactive, ref } from "vue";
+import { createToast } from "mosha-vue-toastify";
 export default {
   name: "FSchoolyear",
   setup() {
@@ -121,6 +122,34 @@ export default {
     const checkForm = ref(false);
     const error = ref([]);
     const build = ref(false);
+    const toast = () => {
+      createToast(
+        {
+          title: "Năm học",
+          description: "Thêm mới thành công",
+        },
+        {
+          type: "success",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
+    const toastUpdate = () => {
+      createToast(
+        {
+          title: "Năm học",
+          description: "Cập nhât thành công",
+        },
+        {
+          type: "warning",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
     return {
       isOpen: false,
       selectedOption: null,
@@ -128,6 +157,8 @@ export default {
       checkForm,
       error,
       build,
+      toast,
+      toastUpdate,
     };
   },
   computed: {
@@ -254,6 +285,7 @@ export default {
           // reset formData
           this.formData = { SchoolYearCode: this.schoolyearmaxcode };
           this.SHOW_FORM_SCHOOLYEAR();
+          this.toast();
           this.checkForm = false;
           return false;
         }
@@ -268,6 +300,7 @@ export default {
           this.getByIdschoolyear.IsChecked = false;
           this.updateItemschoolyear(this.getByIdschoolyear);
           this.SHOW_FORM_SCHOOLYEAR();
+          this.toastUpdate();
           this.checkForm = false;
           return false;
         }

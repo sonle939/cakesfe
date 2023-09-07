@@ -27,7 +27,10 @@
                   text="Xóa"
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
-                  @click="deleteMultiplegrade(selectedItemsgrade)"
+                  @click="
+                    deleteMultiplegrade(selectedItemsgrade);
+                    toast();
+                  "
                 />
                 <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
@@ -106,7 +109,10 @@
                       <span
                         content="Xóa"
                         v-tippy
-                        @click="deletegrade(data.GradeId)"
+                        @click="
+                          deletegrade(data.GradeId);
+                          toast();
+                        "
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -135,11 +141,28 @@ import { mapGetters, mapActions, mapMutations } from "vuex";
 import FGrade from "../components/Form/FGrade.vue";
 import Loading from "../components/Loading.vue";
 import VButton from "../components/Button/VButton.vue";
-
+import { createToast } from "mosha-vue-toastify";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Grade",
-  data() {},
+  setup() {
+    const toast = () => {
+      createToast(
+        {
+          title: "Khối lớp",
+          description: "Xóa bỏ thành công",
+        },
+        {
+          type: "danger",
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
+    return {
+      toast,
+    };
+  },
   computed: {
     ...mapGetters([
       "checkAllgrade",

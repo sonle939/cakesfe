@@ -111,6 +111,7 @@ import { reactive, ref } from "vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import VButton from "../Button/VButton.vue";
 import { v4 as uuidv4 } from "uuid";
+import { createToast } from "mosha-vue-toastify";
 export default {
   name: "FGrade",
   setup() {
@@ -121,6 +122,34 @@ export default {
     const checkForm = ref(false);
     const error = ref([]);
     const build = ref(false);
+    const toast = () => {
+      createToast(
+        {
+          title: "Khối lớp",
+          description: "Thêm mới thành công",
+        },
+        {
+          type: "success",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
+    const toastUpdate = () => {
+      createToast(
+        {
+          title: "Khối lớp",
+          description: "Cập nhât thành công",
+        },
+        {
+          type: "warning",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
     return {
       isOpen: false,
       selectedOption: null,
@@ -128,6 +157,8 @@ export default {
       checkForm,
       error,
       build,
+      toast,
+      toastUpdate,
     };
   },
   computed: {
@@ -252,6 +283,7 @@ export default {
           // reset formData
           this.formData = { GradeCode: this.grademaxcode };
           this.SHOW_FORM_GRADE();
+          this.toast();
           this.checkForm = false;
           return false;
         }
@@ -266,6 +298,7 @@ export default {
           this.getByIdgrade.IsChecked = false;
           this.updateItemgrade(this.getByIdgrade);
           this.SHOW_FORM_GRADE();
+          this.toastUpdate();
           this.checkForm = false;
           return false;
         }

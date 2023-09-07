@@ -32,7 +32,10 @@
                   text="Xóa"
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
-                  @click="deleteMultipleaccount(selectedItems)"
+                  @click="
+                    deleteMultipleaccount(selectedItems);
+                    toast();
+                  "
                 />
                 <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
@@ -140,7 +143,10 @@
                       <span
                         content="Xóa"
                         v-tippy
-                        @click="deleteaccount(data.AccountId)"
+                        @click="
+                          deleteaccount(data.AccountId);
+                          toast();
+                        "
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -178,13 +184,28 @@ import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import FAccountVue from "../components/Form/FAccount.vue";
 import Loading from "../components/Loading.vue";
+import { createToast } from "mosha-vue-toastify";
 import VButton from "../components/Button/VButton.vue";
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Account",
   data() {
+    const toast = () => {
+      createToast(
+        {
+          title: "Tài khoản",
+          description: "Xóa bỏ thành công",
+        },
+        {
+          type: "danger",
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
     return {
+      toast,
       isOpen: false,
       selectedOption: null,
       selectedRoles: [

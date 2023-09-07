@@ -121,6 +121,7 @@ import { reactive, ref } from "vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import VButton from "../Button/VButton.vue";
 import { v4 as uuidv4 } from "uuid";
+import { createToast } from "mosha-vue-toastify";
 export default {
   name: "FSubject",
   setup() {
@@ -128,6 +129,34 @@ export default {
       SubjectCode: "",
       SubjectName: "",
     });
+    const toast = () => {
+      createToast(
+        {
+          title: "Môn học",
+          description: "Thêm mới thành công",
+        },
+        {
+          type: "success",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
+    const toastUpdate = () => {
+      createToast(
+        {
+          title: "Môn học",
+          description: "Cập nhât thành công",
+        },
+        {
+          type: "warning",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
     const checkForm = ref(false);
     const error = ref([]);
     const build = ref(false);
@@ -138,6 +167,8 @@ export default {
       checkForm,
       error,
       build,
+      toast,
+      toastUpdate,
     };
   },
 
@@ -266,6 +297,7 @@ export default {
           });
           // reset formData
           this.formData = { SubjectCode: this.subjectmaxCode };
+          this.toast();
           this.SHOW_FORM_SUBJECT();
           this.checkForm = false;
           return false;
@@ -281,6 +313,7 @@ export default {
           this.getByIdsubject.IsChecked = false;
           this.updateItemsubject(this.getByIdsubject);
           this.SHOW_FORM_SUBJECT();
+          this.toastUpdate();
           this.checkForm = false;
           return false;
         }

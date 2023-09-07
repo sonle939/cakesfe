@@ -32,7 +32,10 @@
                   text="Xóa"
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
-                  @click="deleteMultiplestudent(selectedItemsstudent)"
+                  @click="
+                    deleteMultiplestudent(selectedItemsstudent);
+                    toast();
+                  "
                 />
                 <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
@@ -180,7 +183,10 @@
                       <span
                         content="Xóa"
                         v-tippy
-                        @click="deletestudent(data.StudentId)"
+                        @click="
+                          deletestudent(data.StudentId);
+                          toast();
+                        "
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -221,11 +227,26 @@ import { format } from "date-fns";
 import FStudentVue from "../components/Form/FStudent.vue";
 import Loading from "../components/Loading.vue";
 import VButton from "../components/Button/VButton.vue";
+import { createToast } from "mosha-vue-toastify";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Student",
   data() {
+    const toast = () => {
+      createToast(
+        {
+          title: "Học sinh",
+          description: "Xóa bỏ thành công",
+        },
+        {
+          type: "danger",
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
     return {
+      toast,
       isOpen: false,
       selectedOption: null,
       searchtext: "",

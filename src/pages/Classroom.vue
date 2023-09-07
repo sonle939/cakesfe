@@ -27,7 +27,10 @@
                   text="Xóa"
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
-                  @click="deleteMultipleclassroom(selectedItemsclassroom)"
+                  @click="
+                    deleteMultipleclassroom(selectedItemsclassroom);
+                    toast();
+                  "
                 />
                 <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
@@ -132,7 +135,10 @@
                       <span
                         content="Xóa"
                         v-tippy
-                        @click="deleteclassroom(data.ClassRoomId)"
+                        @click="
+                          deleteclassroom(data.ClassRoomId);
+                          toast();
+                        "
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -161,11 +167,26 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import FClassroom from "../components/Form/FClassroom.vue";
 import Loading from "../components/Loading.vue";
 import VButton from "../components/Button/VButton.vue";
+import { createToast } from "mosha-vue-toastify";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Classroom",
   data() {
+    const toast = () => {
+      createToast(
+        {
+          title: "Lớp học",
+          description: "Xóa bỏ thành công",
+        },
+        {
+          type: "danger",
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
     return {
+      toast,
       isOpen: false,
       selectedOption: null,
     };

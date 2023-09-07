@@ -249,6 +249,7 @@
             class="sinput"
             style="width: 100%"
             placeholder="địa chỉ giáo viên"
+            v-model="formData.Address"
           />
         </label>
       </div>
@@ -516,6 +517,7 @@
       <script>
 import { reactive, ref } from "vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import { createToast } from "mosha-vue-toastify";
 import VButton from "../Button/VButton.vue";
 import VRadio from "../Input/VRadio.vue";
 import { v4 as uuidv4 } from "uuid";
@@ -557,7 +559,37 @@ export default {
       Collaborate: "",
       Standard: "",
     });
+    const toast = () => {
+      createToast(
+        {
+          title: "Giáo viên",
+          description: "Thêm mới thành công",
+        },
+        {
+          type: "success",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
+    const toastUpdate = () => {
+      createToast(
+        {
+          title: "Giáo viên",
+          description: "Cập nhât thành công",
+        },
+        {
+          type: "warning",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
     return {
+      toast,
+      toastUpdate,
       checkForm,
       error,
       build,
@@ -805,6 +837,7 @@ export default {
           this.formData = { TeacherCode: this.teachermaxcode };
           this.selectedOptions = null;
           this.selectedOptionsClassroomId = null;
+          this.toast();
           this.selectedOptionsCollaborate = null;
           this.selectedOptionsStandard = null;
           this.SHOW_FORM_TEACHER();
@@ -822,6 +855,7 @@ export default {
           this.getByIdteacher.IsChecked = false;
           this.updateItemteacher(this.getByIdteacher);
           this.SHOW_FORM_TEACHER();
+          this.toastUpdate();
           this.checkForm = false;
           return false;
         }

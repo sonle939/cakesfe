@@ -167,6 +167,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import VButton from "../Button/VButton.vue";
 import { v4 as uuidv4 } from "uuid";
 import { reactive, ref } from "vue";
+import { createToast } from "mosha-vue-toastify";
 export default {
   name: "FClassroom",
   setup() {
@@ -181,6 +182,34 @@ export default {
     const isOpen = ref(false);
     const isOpenUpdate = ref(false);
     const selectedOption = ref(null);
+    const toast = () => {
+      createToast(
+        {
+          title: "Lớp học",
+          description: "Thêm mới thành công",
+        },
+        {
+          type: "success",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
+    const toastUpdate = () => {
+      createToast(
+        {
+          title: "Lớp học",
+          description: "Cập nhât thành công",
+        },
+        {
+          type: "warning",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
     return {
       isOpen,
       isOpenUpdate,
@@ -189,6 +218,8 @@ export default {
       checkForm,
       error,
       build,
+      toast,
+      toastUpdate,
     };
   },
   computed: {
@@ -331,6 +362,7 @@ export default {
           this.formData = { ClassRoomCode: this.classroommaxcode };
           this.selectedOption = null;
           this.SHOW_FORM_CLASSROOM();
+          this.toast();
           this.checkForm = false;
           return false;
         }
@@ -345,6 +377,7 @@ export default {
           this.getByIdClassroom.IsChecked = false;
           this.updateItemclassroom(this.getByIdClassroom);
           this.SHOW_FORM_CLASSROOM();
+          this.toastUpdate();
           this.checkForm = false;
           return false;
         }

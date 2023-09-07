@@ -27,7 +27,10 @@
                   text="Xóa"
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
-                  @click="deleteMultiplesubject(selectedItemssubject)"
+                  @click="
+                    deleteMultiplesubject(selectedItemssubject);
+                    toast();
+                  "
                 />
                 <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
@@ -106,7 +109,10 @@
                       <span
                         content="Xóa"
                         v-tippy
-                        @click="deletesubject(data.SubjectId)"
+                        @click="
+                          deletesubject(data.SubjectId);
+                          toast();
+                        "
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -135,10 +141,28 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import FSubjectVue from "../components/Form/FSubject.vue";
 import Loading from "../components/Loading.vue";
 import VButton from "../components/Button/VButton.vue";
+import { createToast } from "mosha-vue-toastify";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Subject",
-  data() {},
+  setup() {
+    const toast = () => {
+      createToast(
+        {
+          title: "Môn học",
+          description: "Xóa bỏ thành công",
+        },
+        {
+          type: "danger",
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
+    return {
+      toast,
+    };
+  },
   computed: {
     ...mapGetters([
       "subject",

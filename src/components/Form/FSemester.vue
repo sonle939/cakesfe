@@ -108,6 +108,7 @@
   
   <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import { createToast } from "mosha-vue-toastify";
 import VButton from "../Button/VButton.vue";
 import { v4 as uuidv4 } from "uuid";
 import { reactive, ref } from "vue";
@@ -121,6 +122,34 @@ export default {
     const checkForm = ref(false);
     const error = ref([]);
     const build = ref(false);
+    const toast = () => {
+      createToast(
+        {
+          title: "Học kỳ",
+          description: "Thêm mới thành công",
+        },
+        {
+          type: "success",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
+    const toastUpdate = () => {
+      createToast(
+        {
+          title: "Học kỳ",
+          description: "Cập nhât thành công",
+        },
+        {
+          type: "warning",
+          timeout: 5000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
     return {
       isOpen: false,
       selectedOption: null,
@@ -128,6 +157,8 @@ export default {
       checkForm,
       error,
       build,
+      toast,
+      toastUpdate,
     };
   },
   computed: {
@@ -252,6 +283,7 @@ export default {
           // reset formData
           this.formData = { SemesterCode: this.semestermaxcode };
           this.SHOW_FORM_SEMESTER();
+          this.toast();
           this.checkForm = false;
           return false;
         }
@@ -266,6 +298,7 @@ export default {
           this.getByIdsemester.IsChecked = false;
           this.updateItemsemester(this.getByIdsemester);
           this.SHOW_FORM_SEMESTER();
+          this.toastUpdate();
           this.checkForm = false;
           return false;
         }

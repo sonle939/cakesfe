@@ -14,6 +14,8 @@ const timetableModule = {
         isHidetimetable: false,
         isshowtimetable: false,
         selectedItemstimetable: [],
+        formModetimetable: false,
+        timetablemaxcode: null,
 
         //phan trang
         pageSizestimetable: 15, // số lượng item trên một trang
@@ -35,6 +37,8 @@ const timetableModule = {
         loadingtimetable: state => state.loadingtimetable,
         checkAlltimetable: state => state.checkAlltimetable,
         isCheckedtimetable: state => state.timetable.isChecked,
+        formModetimetable: state => state.formModetimetable,
+        timetablemaxcode: state => state.timetablemaxcode,
         //dùng để đếm số lượng dữ liệu (phân trang)
         allTimetable: state => state.timetable.length,
         showIsHidetimetable: state => state.isHidetimetable,
@@ -56,7 +60,7 @@ const timetableModule = {
             try {
                 commit('SET_LOADING_TIMETABLE')
                 const res = await
-                    axios.get(`${API_BASE_URL}Students/Paging?pageSize=${state.pageSizestimetable}&pageNumber=${state.pageNumbertimetable}&subjectId=${state.subjectId}&teacherId=${state.teacherId}&classroomId=${state.classroomId}`)
+                    axios.get(`${API_BASE_URL}TimeTables/Paging?pageSize=${state.pageSizestimetable}&pageNumber=${state.pageNumbertimetable}&subjectId=${state.subjectId}&teacherId=${state.teacherId}&classroomId=${state.classroomId}`)
                 commit('SET_TIMETABLE', res.data.data)
                 commit('SET_TOTAL_PAGES_TIMETABLE', res.data.totalRecords)
                 commit('SET_ALLPAGE_TIMETABLE', res.data.totalPages);
@@ -78,6 +82,7 @@ const timetableModule = {
                 //commit('SETTEXTCHECK', res.data.notify)
                 commit('ADD_TIMETABLE', newStaff)
                 dispatch('gettimetable');
+                dispatch('getMaxCodetimetable')
                 console.log('aaa', res.data.notify);
             } catch (error) {
                 console.log(error);
@@ -90,6 +95,7 @@ const timetableModule = {
                 await axios.delete(`${API_BASE_URL}TimeTables/${TimeTableId}`)
                 commit('DELETE_TIMETABLE', TimeTableId);
                 dispatch('gettimetable');
+                dispatch('getMaxCodetimetable')
             } catch (error) {
                 console.log(error)
             }
@@ -103,6 +109,7 @@ const timetableModule = {
                 if (response.status === 200) {
                     commit('DELETE_TIMETABLE', TimeTableIds);
                     dispatch('gettimetable');
+                    dispatch('getMaxCodetimetable')
                 }
             } catch (error) {
                 console.log(error);
@@ -116,6 +123,7 @@ const timetableModule = {
                 commit('UPDATE_TIMETABLE', response.data);
                 //  commit('SETUPDATECHECK', response.data.message)
                 dispatch('gettimetable');
+                dispatch('getMaxCodetimetable')
                 console.log('update', response.data.message);
             } catch (error) {
                 console.log(error);
@@ -165,6 +173,46 @@ const timetableModule = {
         setPageNumbertimetable({ commit, dispatch }, currentPage) {
             commit('SET_PAGE_NUMBER_TIMETABLE', currentPage)
             dispatch('gettimetable')
+        },
+        async getMaxCodetimetable({ commit }) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}TimeTables/TimeTableCodeMax`)
+                commit('SET_MAXCODE_TIMETABLE', response.data.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        uncheckItemstimetable({ commit }) {
+            try {
+                commit('UN_CHECK_TIMETABLE')
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        async setFilterclassroomidtimetable({ commit, dispatch }, filter) {
+            try {
+                commit('FILTER_CLASSROOMID_TIMETABLE', filter);
+                dispatch('gettimetable');
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        async setFiltersubjectidtimetable({ commit, dispatch }, filter) {
+            try {
+                commit('FILTER_SUBJECTID_TIMETABLE', filter);
+                dispatch('gettimetable');
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        async setFilterteacheridtimetable({ commit, dispatch }, filter) {
+            try {
+                commit('FILTER_TEACHERID_TIMETABLE', filter);
+                dispatch('gettimetable');
+            } catch (error) {
+                console.error(error)
+            }
         },
 
     },
@@ -321,7 +369,62 @@ const timetableModule = {
             } catch (error) {
                 console.log(error);
             }
-        }
+        },
+        ADD_MODE_TIMETABLE(state) {
+            try {
+                state.formModetimetable = true
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        UPDATE_MODE_TIMETABLE(state) {
+            try {
+                state.formModetimetable = false;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        //DÙNG ĐỂ UN CHECK CÁC CHECKBOX ĐÃ ĐƯỢC CLICK
+        UN_CHECK_TIMETABLE(state) {
+            try {
+                state.timetable.map((item) => {
+                    if (item.isChecked === true) {
+                        item.isChecked = false;
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        SET_MAXCODE_TIMETABLE(state, timetablemaxcode) {
+            try {
+                state.timetablemaxcode = timetablemaxcode
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        FILTER_CLASSROOMID_TIMETABLE(state, classroomId) {
+            try {
+                state.classroomId = classroomId;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        FILTER_SUBJECTID_TIMETABLE(state, subjectId) {
+            try {
+                state.subjectId = subjectId;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        FILTER_TEACHERID_TIMETABLE(state, teacherId) {
+            try {
+                state.teacherId = teacherId;
+            } catch (error) {
+                console.log(error);
+            }
+        },
     }
 }
 export default timetableModule;

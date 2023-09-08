@@ -854,12 +854,12 @@ export default {
   watch: {
     //theo dõi nếu hai biến thành null thì lập tức cho ẩn đi phần thông tin cá nhân
     selectedOptionteacher(newValue) {
-      if (newValue.trim() === "") {
+      if (newValue === null || newValue.trim() === "") {
         this.isShowInfo = false;
       }
     },
     selectedOptionstudent(newValue) {
-      if (newValue.trim() === "") {
+      if (newValue === null || newValue.trim() === "") {
         this.isShowInfo = false;
       }
     },

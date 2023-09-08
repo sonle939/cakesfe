@@ -571,7 +571,7 @@ export default {
 };
 </script>
     
-    <style scoped>
+<style scoped>
 .form_container {
   position: fixed;
   top: 0;

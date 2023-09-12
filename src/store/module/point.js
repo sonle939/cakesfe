@@ -5,6 +5,7 @@ const API_BASE_URL = 'https://localhost:7199/api/v2/';
 const pointModule = {
     state: {
         point: [],
+        pointAll: [],
         studentpoint: [],
         subjectpoint: [],
         teacherpoint: [],
@@ -16,7 +17,7 @@ const pointModule = {
         isHidepoint: false,
         isshowpoint: false,
         selectedItemspoint: [],
-
+        formModepoint: false,
 
         //phan trang
         pageSizespoint: 15, // số lượng item trên một trang
@@ -32,6 +33,7 @@ const pointModule = {
     },
     getters: {
         point: state => state.point,
+        pointAll: state => state.pointAll,
         isshowpoint: state => state.isshowpoint,
         getByIdpoint: state => state.getByIdpoint,
         studentpoint: state => state.studentpoint,
@@ -130,6 +132,14 @@ const pointModule = {
                 console.log(error);
             }
         },
+        async getAllpoint({ commit }) {
+            try {
+                const res = await axios.get(`${API_BASE_URL}Points`)
+                commit('SET_POINT_ALL', res.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
         async getstudentpoint({ commit }) {
             try {
                 const res = await axios.get(`${API_BASE_URL}Students`)
@@ -191,6 +201,14 @@ const pointModule = {
             commit('SET_PAGE_NUMBER_POINT', currentPage)
             dispatch('getpoint')
         },
+        uncheckItemspoint({ commit }) {
+            try {
+                commit('UN_CHECK_POINT')
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
 
     },
     //MUTATIONS DÙNG ĐỂ THAO TÁC(thay doi trang thai state) VỚI STATE TRONG STORE
@@ -206,6 +224,13 @@ const pointModule = {
         SET_POINT(state, point) {
             try {
                 state.point = point;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        SET_POINT_ALL(state, pointAll) {
+            try {
+                state.pointAll = pointAll;
             } catch (error) {
                 console.log(error);
             }
@@ -360,7 +385,34 @@ const pointModule = {
             } catch (error) {
                 console.log(error);
             }
-        }
+        },
+        ADD_MODE_POINT(state) {
+            try {
+                state.formModepoint = true
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        UPDATE_MODE_POINT(state) {
+            try {
+                state.formModepoint = false;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        //DÙNG ĐỂ UN CHECK CÁC CHECKBOX ĐÃ ĐƯỢC CLICK
+        UN_CHECK_POINT(state) {
+            try {
+                state.point.map((item) => {
+                    if (item.isChecked === true) {
+                        item.isChecked = false;
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        },
     }
 }
 export default pointModule;

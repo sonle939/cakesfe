@@ -212,3 +212,15 @@ button {
 .dl-none {
   display: none;
 }
+.dropdown_wrapper {
+  display: flex;
+  align-items: center;
+}
+.dropdown_item {
+  display: flex;
+  align-items: center;
+}
+.dropdown_item p {
+  margin-right: 10px;
+  font-weight: 400;
+}

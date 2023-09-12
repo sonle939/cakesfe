@@ -5,9 +5,11 @@ const API_BASE_URL = 'https://localhost:7199/api/v2/';
 const teacherModule = {
     state: {
         teacher: [],
+
         subjectteacher: [],
         classroomteacher: [],
         getByIdteacher: [],
+        idloginteacher: [],
         loadingteacher: false,
         checkAllteacher: false,
         isHideteacher: false,
@@ -27,6 +29,7 @@ const teacherModule = {
     },
     getters: {
         teacher: state => state.teacher,
+        idloginteacher: state => state.idloginteacher,
         isshowteacher: state => state.isshowteacher,
         getByIdteacher: state => state.getByIdteacher,
         subjectteacher: state => state.subjectteacher,
@@ -69,6 +72,14 @@ const teacherModule = {
             try {
                 const response = await axios.get(`${API_BASE_URL}Teachers/${object.TeacherId}`)
                 commit('GETBYIDTEACHER', response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async IDloginteacher({ commit }, object) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Teachers/${object.teacherId}`)
+                commit('IDLOGINTEACHER', response.data)
             } catch (error) {
                 console.log(error)
             }
@@ -199,6 +210,14 @@ const teacherModule = {
         GETBYIDTEACHER(state, data) {
             try {
                 state.getByIdteacher = data
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        IDLOGINTEACHER(state, data) {
+            try {
+                state.idloginteacher = data
             } catch (error) {
                 console.log(error);
             }

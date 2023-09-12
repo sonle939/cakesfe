@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 import SignIn from '../components/auth/SignIn.vue';
-import SignUp from '../components/auth/SignUp.vue';
+import ForgotPassword from '../components/auth/ForgotPassword.vue';
 import Admin from '../components/users/Admin.vue';
 import User from '../components/users/User.vue';
 import Classroom from '../pages/Classroom.vue';
@@ -20,8 +20,8 @@ const routes = [
         component: SignIn
     },
     {
-        path: '/signup',
-        component: SignUp
+        path: '/forgot',
+        component: ForgotPassword
     },
     {
         path: '/admin',

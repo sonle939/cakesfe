@@ -329,7 +329,7 @@ export default {
       "pageNumberstudent",
       "totalPagesstudent",
       "checkAllstudent",
-      "checkAmountstudent",
+      "checkAmountstudent", 
       "trueCheckedstudent",
       "classroomstudent",
       "loadingstudent",

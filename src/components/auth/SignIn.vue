@@ -9,33 +9,54 @@
           Chào mừng bạn trở lại! Hãy cùng tiếp tục hành trình khám phá tri thức.
         </h1>
         <p>
-          Nếu bạn chưa có tài khoản thì bạn hãy
-          <router-link class="color_signin" to="/signup">Đăng kí</router-link>
+          Nếu bạn muốn sử dụng phần mềm trên điện thoại hãy quét mã
+          <router-link class="color_signin" to="/forgot">Tại đây</router-link>
         </p>
         <img src="../../assets/qr-login-34.png" alt="" class="img_qr" />
       </div>
       <img src="../../assets/bg34-1.png" class="hh_icon" />
-      <form class="form_wrapper">
+      <form
+        class="form_wrapper"
+        @submit.prevent="loginform()"
+        novalidate="true"
+      >
         <div class="form_signin">
-          <label>
-            <i class="bx bx-user-circle"></i>
-            <input
-              type="text"
-              name="input"
-              placeholder="Vui lòng nhập tên đăng nhập..."
-            />
-          </label>
-          <label>
-            <i class="bx bx-lock"></i>
-            <input
-              type="password"
-              name="input"
-              placeholder="Vui lòng nhập mật khẩu..."
-            />
-            <i class="bx bx-low-vision" style="margin-right: 0"></i>
-          </label>
+          <div class="signin_item">
+            <label
+              :class="validateaccountcode ? 'label bd_error mb_0' : 'label'"
+            >
+              <i class="bx bx-user-circle"></i>
+              <input
+                type="text"
+                name="input"
+                placeholder="Vui lòng nhập tên đăng nhập..."
+                v-model="formData.accountCode"
+                @change="SET_USERNAME(formData.accountCode)"
+              />
+            </label>
+            <p v-if="validateaccountcode">Vui lòng nhập tên đăng nhập</p>
+          </div>
+          <div class="signin_item">
+            <label :class="validatepassword ? 'label bd_error mb_0' : 'label'">
+              <i class="bx bx-lock"></i>
+              <input
+                name="input"
+                placeholder="Vui lòng nhập mật khẩu..."
+                v-model="formData.passWood"
+                :type="showPassword ? 'text' : 'password'"
+                @change="SET_PASSWORD(formData.passWood)"
+              />
+              <i
+                :class="showPassword ? 'fa fa-eye' : 'fa fa-eye-slash'"
+                aria-hidden="true"
+                style="margin-right: 0"
+                @click="togglePasswordVisibility"
+              ></i>
+            </label>
+            <p v-if="validatepassword">Vui lòng nhập mật khẩu</p>
+          </div>
         </div>
-        <a href="#">Quên mật khẩu ?</a>
+        <router-link to="/forgot">Quên mật khẩu ?</router-link>
         <button>Đăng nhập</button>
         <div class="social">
           <div class="social_line">
@@ -59,12 +80,20 @@
 </template>
   
   <script>
-import { ref } from "vue";
+import { reactive, ref } from "vue";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "SignIn",
   setup() {
+    const showPassword = ref(false);
     const changeAuth = ref("login");
+    const formData = reactive({
+      accountCode: "",
+      passWood: "",
+    });
+    const validateaccountcode = ref(false);
+    const validatepassword = ref(false);
     const handleAuth = () => {
       if (changeAuth.value === "login") {
         changeAuth.value = "signup";
@@ -73,9 +102,53 @@ export default {
       }
     };
     return {
+      formData,
+      showPassword,
       changeAuth,
       handleAuth,
+      validateaccountcode,
+      validatepassword,
     };
+  },
+  computed: {
+    ...mapGetters(["login"]),
+  },
+  methods: {
+    validateInputs() {
+      let isValid = true;
+      // Kiểm tra điều kiện cho tên đăng nhập
+      if (this.formData.accountCode.trim() === "") {
+        isValid = false;
+        this.validateaccountcode = true;
+      } else if (this.formData.accountCode !== "") {
+        this.validateaccountcode = false;
+      }
+      if (this.formData.passWood.trim() === "") {
+        isValid = false;
+        this.validatepassword = true;
+      } else if (this.formData.passWood !== "") {
+        this.validatepassword = false;
+      }
+      return isValid;
+    },
+    togglePasswordVisibility() {
+      // Khi người dùng nhấp vào biểu tượng "eye", thay đổi trạng thái hiển thị mật khẩu
+      this.showPassword = !this.showPassword;
+    },
+    async loginform() {
+      try {
+        if (this.validateInputs()) {
+          this.Loginaccount({
+            username: this.formData.accountCode,
+            password: this.formData.passWood,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    ...mapMutations(["SET_USERNAME", "SET_PASSWORD"]),
+    ...mapActions(["Loginaccount", "IDloginstudent"]),
   },
 };
 </script>

@@ -1,11 +1,17 @@
 import axios from "axios";
-
+import router from '../../routers/index';
+import studentModule from "./student";
+import teacherModule from "./teacher";
 const API_BASE_URL = 'https://localhost:7199/api/v2/';
+
 
 const accountModule = {
     state: {
         account: [],
         getById: [],
+        login: [],
+        username: '',
+        password: '',
         loadingaccount: false,
         checkAllaccount: false,
         isHide: false,
@@ -26,6 +32,9 @@ const accountModule = {
     },
     getters: {
         account: state => state.account,
+        login: state => state.login,
+        username: state => state.username,
+        password: state => state.password,
         studentAll: state => state.studentAll,
         teacherAll: state => state.teacherAll,
         getById: state => state.getById,
@@ -199,12 +208,69 @@ const accountModule = {
                 console.log(error)
             }
         },
+        async Loginaccount({ commit }, object) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Accounts/Login?AccountCode=${object.username}&PassWord=${object.password}`);
+
+                if (response.data.user.accountId === "00000000-0000-0000-0000-000000000000") {
+                    // Display a login failure message or handle it as needed
+                    console.log("Login failed");
+                    alert('Tài khoản hoặc mật khẩu nhập sai');
+                } else {
+                    // Commit the user data to your Vuex store
+                    commit('GETBYLOGIN', response.data.user);
+
+                    if (response.data.user.studentId === null) {
+                        // Redirect to /admin
+                        router.push('/admin/student');
+                        teacherModule.actions.IDloginteacher({ commit }, response.data.user);
+                    }
+                    if (response.data.user.teacherId === null) {
+                        // Redirect to /user
+                        router.push('/user').then(async () => {
+                            // Chuyển hướng thành công, sau đó gọi action từ module studentModule
+                            await studentModule.actions.IDloginstudent({ commit }, response.data.user);
+                        });
+                    }
+
+                    alert('Đăng nhập thành công');
+                }
+            } catch (error) {
+                console.log(error);
+                // Handle network or other errors here
+            }
+        }
+
     },
     //MUTATIONS DÙNG ĐỂ THAO TÁC(thay doi trang thai state) VỚI STATE TRONG STORE
     mutations: {
         GETBYID(state, data) {
             try {
                 state.getById = data
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        GETBYLOGIN(state, login) {
+            try {
+                state.login = login
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        SET_USERNAME(state, username) {
+            try {
+                state.username = username
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        SET_PASSWORD(state, password) {
+            try {
+                state.password = password
             } catch (error) {
                 console.log(error);
             }

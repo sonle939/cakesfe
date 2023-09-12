@@ -1,0 +1,153 @@
+.navbar_user img {
+  width: 280px;
+  object-fit: cover;
+}
+.tab {
+  width: 100%;
+  height: 100%;
+  display: none;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.tab.active {
+  display: block;
+  opacity: 1;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tabs li {
+  width: 200px;
+  margin: 0 25px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.tab-button {
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.tab-button.active {
+  border-bottom: 2px solid #778cec;
+  color: black;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.tab-button:hover {
+  border-bottom: 2px solid #778cec;
+  color: black;
+}
+
+/* Thêm các lớp biểu tượng (icon) của Boxicons vào .bx để tạo biểu tượng */
+.iconuser {
+  font-size: 20px;
+  margin-right: 5px;
+  color: #778cec;
+}
+
+/*thong tin ca nhan*/
+.info_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 54.5rem;
+  background-color: #dadada;
+  position: relative;
+}
+.info_wrapper img {
+  position: fixed;
+  top: 109px;
+  left: 91px;
+  width: 200px;
+  object-fit: cover;
+  transform: rotate(-31deg);
+  z-index: 99;
+}
+/* .info_content {
+  height: 70%;
+  width: 80%;
+  background-color: white;
+  border-radius: 20px;
+  padding: 20px;
+} */
+
+.form_container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  transition: all 0.3s ease-in;
+}
+.info_title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  position: relative;
+}
+.title_close {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: -22px;
+  top: -22px;
+}
+.title_close i {
+  font-size: 24px;
+  color: #666666;
+  margin-right: 10px;
+}
+.title_close i:nth-child(2) {
+  margin-right: 0;
+  font-size: 34px;
+}
+.student_form {
+  height: 80%;
+  width: 80%;
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 30px;
+  padding-bottom: 20px;
+  animation: aniForm 0.6s linear;
+  position: relative;
+}
+.info_property {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+/**radio button */
+
+.sex_wrapper {
+  margin-left: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.sex_wrapper p {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.sex_input {
+  display: flex;
+  align-items: center;
+}
+.sex_item {
+  display: flex;
+  align-items: center;
+  margin-right: 30px;
+  height: 36px;
+}

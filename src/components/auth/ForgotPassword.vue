@@ -82,7 +82,7 @@
 import { ref } from "vue";
 
 export default {
-  name: "SignUp",
+  name: "ForgotPassword",
   setup() {
     const changeAuth = ref("login");
     const handleAuth = () => {

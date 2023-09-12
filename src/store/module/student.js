@@ -7,6 +7,7 @@ const studentModule = {
         student: [],
         classroomstudent: [],
         getByIdstudent: [],
+        idloginstudent: null,
         loadingstudent: false,
         checkAllstudent: false,
         isHidestudent: false,
@@ -28,6 +29,7 @@ const studentModule = {
         student: state => state.student,
         isshowstudent: state => state.isshowstudent,
         getByIdstudent: state => state.getByIdstudent,
+        idloginstudent: state => state.idloginstudent,
         classroomstudent: state => state.classroomstudent,
         loadingstudent: state => state.loadingstudent,
         checkAllstudent: state => state.checkAllstudent,
@@ -67,6 +69,14 @@ const studentModule = {
             try {
                 const response = await axios.get(`${API_BASE_URL}Students/${object.StudentId}`)
                 commit('GETBYIDSTUDENT', response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async IDloginstudent({ commit }, object) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Students/${object.studentId}`)
+                commit('IDLOGINSTUDENT', response.data)
             } catch (error) {
                 console.log(error)
             }
@@ -193,6 +203,14 @@ const studentModule = {
         GETBYIDSTUDENT(state, data) {
             try {
                 state.getByIdstudent = data
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        IDLOGINSTUDENT(state, data) {
+            try {
+                state.idloginstudent = data
             } catch (error) {
                 console.log(error);
             }

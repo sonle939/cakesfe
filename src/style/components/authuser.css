@@ -114,7 +114,7 @@
   padding: 24px;
   margin-left: 30px;
 }
-.form_wrapper label {
+.form_signin .label {
   display: flex;
   align-items: center;
   font-weight: 700;
@@ -127,20 +127,27 @@
   height: 45px;
   padding: 0 12px;
 }
-.form_wrapper label i {
+.form_signin .label.bd_error {
+  border: 1px solid #e61d1d;
+}
+.form_signin .label.mb_0 {
+  margin-bottom: 0;
+}
+
+.form_signin .label i {
   margin-right: 12px;
 }
-.form_wrapper input {
+.form_signin input {
   height: 100%;
   border: none;
   width: 100%;
   font-size: 14px;
   font-weight: 500;
 }
-.form_wrapper label:hover {
+.form_signin label:hover {
   background-color: #e6e6e6;
 }
-.form_wrapper input:hover {
+.form_signin input:hover {
   background-color: #e6e6e6;
 }
 .form_wrapper a {
@@ -148,9 +155,6 @@
   font-size: 20px;
   line-height: 23.8px;
   margin-bottom: 20px;
-}
-.form_wrapper a:hover {
-  background-color: #1e3155;
 }
 
 .form_wrapper button {
@@ -206,4 +210,10 @@
 }
 .social_item i {
   font-size: 24px;
+}
+
+.signin_item p {
+  margin-top: 5px;
+  margin-bottom: 24px;
+  color: #e61d1d;
 }

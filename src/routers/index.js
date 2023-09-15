@@ -14,10 +14,15 @@ import Student from '../pages/Student.vue';
 import Subject from '../pages/Subject.vue';
 import Teacher from '../pages/Teacher.vue';
 import TimeTable from '../pages/TimeTable.vue';
+import Information from '../pages/Information.vue';
 const routes = [
     {
         path: '/',
         component: SignIn
+    },
+    {
+        path: '/information',
+        component: Information
     },
     {
         path: '/forgot',

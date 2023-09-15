@@ -75,12 +75,17 @@
 .right_image {
   display: flex;
   align-items: center;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   position: relative;
+  background-color: #f7f7fa;
+  padding: 5px;
 }
 .right_image i {
-  font-size: 24px;
+  font-size: 20px;
+}
+.right_image i:nth-child(1) {
+  height: 10px;
 }
 .right_image_overlist {
   position: absolute;
@@ -131,6 +136,7 @@
 }
 .text_right {
   margin-right: 8px;
+  text-align: left !important;
 }
 .text_right h2 {
   color: #1d1d1d;
@@ -139,6 +145,7 @@
   font-weight: bold;
 }
 .text_right p {
+  text-transform: capitalize;
   color: #041434;
   font-weight: 400;
   font-size: 13px;

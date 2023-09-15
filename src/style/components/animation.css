@@ -8,6 +8,28 @@
     opacity: 1;
   }
 }
+@keyframes leftAnimation {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes leftImage {
+  from {
+    transform: translateX(2%);
+    width: 100%;
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    width: 20%;
+    opacity: 1;
+  }
+}
 @keyframes aniHeight {
   from {
     opacity: 0;
@@ -123,5 +145,34 @@
   100% {
     opacity: 1;
     height: 163px;
+  }
+}
+
+/* ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+  from {
+    background: #5264ae;
+  }
+  to {
+    width: 0;
+    background: transparent;
+  }
+}
+@-moz-keyframes inputHighlighter {
+  from {
+    background: #5264ae;
+  }
+  to {
+    width: 0;
+    background: transparent;
+  }
+}
+@keyframes inputHighlighter {
+  from {
+    background: #5264ae;
+  }
+  to {
+    width: 0;
+    background: transparent;
   }
 }

@@ -55,8 +55,13 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_GRADE" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu" />
-          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+          <VButton text="Cất" @click="build = false" class="btn_phu" />
+          <VButton
+            type="submit"
+            @click="build = true"
+            class="ml-8"
+            text="Cất và thêm"
+          />
         </div>
       </div>
     </form>
@@ -98,8 +103,7 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_GRADE" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu" />
-          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+          <VButton type="submit" class="ml-8" text="Cập nhât dữ liệu" />
         </div>
       </div>
     </form>
@@ -281,8 +285,11 @@ export default {
             isChecked: false,
           });
           // reset formData
+
           this.formData = { GradeCode: this.grademaxcode };
-          this.SHOW_FORM_GRADE();
+          if (this.build === false) {
+            this.SHOW_FORM_GRADE();
+          }
           this.toast();
           this.checkForm = false;
           return false;

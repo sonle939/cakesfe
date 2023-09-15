@@ -2,7 +2,7 @@
   <div :class="hide ? 'sidebar' : 'sidebar active'">
     <ul :class="hide ? '' : 'sidebar ul active'">
       <li
-        v-for="item in dataSideBar"
+        v-for="item in filteredSideBar"
         :key="item.id"
         :class="hide ? 'sidebar ul li' : 'sidebar ul li active'"
       >
@@ -69,6 +69,7 @@ export default {
       selectedItemId: 2,
       switchValue: false,
       switchValue1: false,
+      dataRole: "",
       dataSideBar: [
         {
           id: 1,
@@ -133,6 +134,23 @@ export default {
       ],
     };
   },
+  computed: {
+    filteredSideBar() {
+      if (this.dataRole === "admin") {
+        return this.dataSideBar; // Trả về tất cả các mục cho admin
+      } else if (this.dataRole === "teacher") {
+        // Lọc mục thời gian, điểm và lớp học cho giáo viên
+        return this.dataSideBar.filter(
+          (item) =>
+            item.name === "Học sinh" ||
+            item.name === "Bảng điểm" ||
+            item.name === "Lớp học"
+        );
+      } else {
+        return []; // Trả về mảng rỗng cho các vai trò khác
+      }
+    },
+  },
   methods: {
     toggleSwitch() {
       this.switchValue = !this.switchValue;
@@ -148,6 +166,18 @@ export default {
         console.log(error);
       }
     },
+    loadDataRole() {
+      const userDataString = sessionStorage.getItem("roleData");
+      console.log(userDataString);
+
+      if (userDataString) {
+        try {
+          this.dataRole = userDataString;
+        } catch (error) {
+          console.error("Lỗi khi chuyển đổi dữ liệu từ sessionStorage:", error);
+        }
+      }
+    },
     /**
      * 
      * @param {NGƯỜI COMMENT(GHI CHÚ CODE): LÊ XUÂN SƠN(MF1589)
@@ -161,6 +191,9 @@ export default {
         console.log(error);
       }
     },
+  },
+  mounted() {
+    this.loadDataRole();
   },
 };
 </script>

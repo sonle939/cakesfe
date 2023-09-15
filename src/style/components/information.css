@@ -1,0 +1,87 @@
+.datainfomation {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+.information_left {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100%;
+  opacity: 0;
+  animation-name: leftImage;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  animation-delay: 0.3s;
+}
+.information_left video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.information_left h3 {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+}
+
+.information_icon {
+  position: absolute;
+  top: 8%;
+  left: 5%;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  border: 1px solid #e7e7e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.information_icon i {
+  color: #0d0c22;
+  font-size: 30px;
+}
+.infomation_right {
+  height: 100vh;
+  width: 100%;
+  opacity: 0;
+  animation-name: leftAnimation;
+  animation-duration: 2.5s;
+  animation-fill-mode: forwards;
+  animation-delay: 0.6s;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.infomation_right form {
+  display: flex;
+  align-items: center;
+  width: 900px;
+  flex-wrap: wrap;
+  margin-left: 160px;
+}
+.information_des {
+  margin-left: 160px;
+}
+.information_des h2 {
+  color: #0d0c22;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 29px;
+}
+.information_des p {
+  width: 350px;
+  line-height: 20px;
+  margin-top: 20px;
+}
+.information_btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  padding-right: 40px;
+}

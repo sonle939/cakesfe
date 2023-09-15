@@ -34,13 +34,13 @@
 }
 
 .tab-button.active {
-  border-bottom: 2px solid #778cec;
+  border-bottom: 2px solid #041434;
   color: black;
   transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 
 .tab-button:hover {
-  border-bottom: 2px solid #778cec;
+  border-bottom: 2px solid #041434;
   color: black;
 }
 
@@ -48,85 +48,60 @@
 .iconuser {
   font-size: 20px;
   margin-right: 5px;
-  color: #778cec;
+  color: #041434;
 }
 
 /*thong tin ca nhan*/
 .info_wrapper {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 54.5rem;
-  background-color: #dadada;
-  position: relative;
-}
-.info_wrapper img {
-  position: fixed;
-  top: 109px;
-  left: 91px;
-  width: 200px;
-  object-fit: cover;
-  transform: rotate(-31deg);
-  z-index: 99;
-}
-/* .info_content {
-  height: 70%;
-  width: 80%;
-  background-color: white;
-  border-radius: 20px;
-  padding: 20px;
-} */
-
-.form_container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   height: 100%;
   width: 100%;
-  transition: all 0.3s ease-in;
 }
-.info_title {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
+
+.info_left {
   position: relative;
+  top: 0;
+  left: 0;
+  height: calc(100vh - 102px);
+  width: 100%;
+  opacity: 0;
+  animation-name: leftImage;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  animation-delay: 0.3s;
 }
-.title_close {
-  display: flex;
-  align-items: center;
+.info_left video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.info_left h3 {
   position: absolute;
-  right: -22px;
-  top: -22px;
+  top: 25px;
+  left: 25px;
 }
-.title_close i {
-  font-size: 24px;
-  color: #666666;
-  margin-right: 10px;
+
+.info_right {
+  height: calc(100vh - 102px);
+  width: 100%;
+  opacity: 0;
+  animation-name: leftAnimation;
+  animation-duration: 2.5s;
+  animation-fill-mode: forwards;
+  animation-delay: 0.6s;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
 }
-.title_close i:nth-child(2) {
-  margin-right: 0;
-  font-size: 34px;
-}
-.student_form {
-  height: 80%;
-  width: 80%;
-  background-color: #fff;
-  border-radius: 4px;
-  padding: 30px;
-  padding-bottom: 20px;
-  animation: aniForm 0.6s linear;
-  position: relative;
-}
-.info_property {
+
+.info_right form {
   display: flex;
   align-items: center;
+  width: 900px;
   flex-wrap: wrap;
+  margin-left: 160px;
 }
 /**radio button */
 
@@ -150,4 +125,44 @@
   align-items: center;
   margin-right: 30px;
   height: 36px;
+}
+
+/*thoi khoa biẻu*/
+/* CSS cho bảng */
+.timetable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.timetable th,
+.timetable td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+
+.timetable th {
+  background-color: #f2f2f2;
+}
+
+.timetable td {
+  background-color: #fff;
+}
+
+/* CSS cho các ô lịch học */
+.timetable td {
+  position: relative;
+}
+
+.timetable td::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 128, 255, 0.2); /* Màu nền cho ô lịch học */
+  border: 2px solid #0080ff; /* Viền cho ô lịch học */
 }

@@ -27,50 +27,57 @@
         <template v-if="activeTab === index">
           <div v-if="tab.type === 'table'">
             <div class="info_wrapper">
-              <img src="../../assets/eduis-rocket.png" alt="" />
-              <form class="student_form">
-                <div class="info_title" style="margin-bottom: 0px">
-                  <div class="title_left">
-                    <h1>Thông tin của bạn</h1>
-                  </div>
+              <div class="info_left">
+                <video autoPlay loop muted>
+                  <source src="../../assets/astronauts_Dribbble.mp4" />
+                </video>
+                <h3>@Brilliant</h3>
+              </div>
+              <div class="info_right">
+                <div class="information_des">
+                  <h2>Thông tin cá nhân của bạn</h2>
+                  <p>
+                    Hiển thị đầy đủ thông tin về tài khoản và có quyền chỉnh sửa
+                    các thông tin cần thiết
+                  </p>
                 </div>
-                <div class="info_property">
-                  <label class="slabel"
-                    >Mã học sinh
+                <form @submit.prevent="onSubmitUpdate" novalidate="true">
+                  <label class="slabel">
+                    Mã học sinh
                     <input
                       type="text"
                       class="sinput"
-                      style="width: 315px"
-                      placeholder="mã học sinh"
+                      style="width: 250px; height: 56px; border-radius: 12px"
                       v-model="userData.StudentCode"
+                      placeholder="mã học sinh"
                       disabled
                     />
                   </label>
-                  <label class="slabel"
-                    >Tên học sinh
+                  <label class="slabel">
+                    Tên giáo viên
                     <input
                       type="text"
                       class="sinput"
-                      style="width: 315px"
+                      style="width: 250px; height: 56px; border-radius: 12px"
                       placeholder="tên học sinh"
                       v-model="userData.StudentName"
                     />
                   </label>
-                  <label class="slabel"
-                    >Ngày sinh
+                  <label class="slabel">
+                    Ngày sinh
                     <input
                       type="date"
                       class="sinput"
-                      style="width: 315px"
+                      style="width: 250px; height: 56px; border-radius: 12px"
                       v-model="formattedDateOfBirth"
                     />
                   </label>
-                  <label class="slabel"
-                    >Địa chỉ email
+                  <label class="slabel">
+                    Địa chỉ email
                     <input
                       type="text"
                       class="sinput"
-                      style="width: 315px"
+                      style="width: 400px; height: 56px; border-radius: 12px"
                       placeholder="email..."
                       v-model="userData.Email"
                     />
@@ -116,44 +123,81 @@
                       </div>
                     </div>
                   </div>
-                  <label class="slabel" style="margin-left: 110px">
-                    Thông tin lớp học
-                    <div class="dropdown" style="margin-top: 8px">
-                      <input
-                        type="text"
-                        v-model="userData.ClassRoomName"
-                        placeholder="Chọn lớp học"
-                        disabled
-                      />
-                    </div>
-                  </label>
-                  <label class="slabel" style="width: 100%"
-                    >Địa chỉ học sinh
+                  <label class="slabel">
+                    Học sinh của lớp
                     <input
                       type="text"
                       class="sinput"
-                      style="width: 100%"
+                      style="width: 840px; height: 56px; border-radius: 12px"
+                      placeholder="học sinh lớp"
+                      v-model="userData.ClassRoomName"
+                      disabled
+                    />
+                  </label>
+                  <label class="slabel">
+                    Địa chỉ của bạn
+                    <input
+                      type="text"
+                      class="sinput"
+                      style="width: 840px; height: 56px; border-radius: 12px"
                       placeholder="địa chỉ học sinh"
                       v-model="userData.Address"
                     />
                   </label>
-                </div>
-                <div class="info_btn" style="margin-bottom: 20px">
-                  <div class="btn_wp">
-                    <VButton text="Hủy" class="btn_phu" />
-                    <VButton type="submit" class="ml-8" text="Cập nhật" />
+                  <div class="information_btn">
+                    <VButton
+                      text="Cập nhật thông tin"
+                      class="btn_info"
+                      leftIcon="bx bx-check-circle remove_icon"
+                      style="
+                        height: 56px;
+                        width: 200px;
+                        border-radius: 30px;
+                        background-color: #0d0c22;
+                        color: aliceblue;
+                      "
+                    />
                   </div>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
           </div>
           <div v-else-if="tab.type === 'input'">
             <!-- Nội dung tab kiểu input -->
-            <input type="text" v-model="tab.inputValue" />
+          </div>
+          <div v-else-if="tab.type === 'text'">
+            <table class="timetable">
+              <thead>
+                <tr>
+                  <th>Thời gian</th>
+                  <th>Thứ 2</th>
+                  <th>Thứ 3</th>
+                  <th>Thứ 4</th>
+                  <th>Thứ 5</th>
+                  <th>Thứ 6</th>
+                  <th>Thứ 7</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(time, index) in timimgtable" :key="index">
+                  <td>{{ time }}</td>
+                  <td>{{ scheduleTable[0][index] }}</td>
+                  <td>{{ scheduleTable[1][index] }}</td>
+                  <td>{{ scheduleTable[2][index] }}</td>
+                  <td>{{ scheduleTable[3][index] }}</td>
+                  <td>{{ scheduleTable[4][index] }}</td>
+                  <td>{{ scheduleTable[5][index] }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
           <div v-else>
-            {{ userData.StudentName }}
-            <!-- Nội dung tab kiểu văn bản -->
+            <!-- Nội dung tab kiểu input -->
+            <input
+              type="text"
+              v-model="tab.inputValue"
+              placeholder="danh sach lop hoc"
+            />
           </div>
         </template>
       </div>
@@ -167,6 +211,7 @@ import Navbar from "../Navbar.vue";
 import { mapActions, mapGetters } from "vuex";
 import VRadio from "../Input/VRadio.vue";
 import VButton from "../Button/VButton.vue";
+import { createToast } from "mosha-vue-toastify";
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -174,6 +219,21 @@ export default {
   setup() {
     const activeTab = ref(0);
     const userData = ref([]);
+    const timimgtable = ref([
+      "8:00 - 9:00",
+      "9:00 - 10:00",
+      "10:00 - 11:00",
+      "11:00 - 12:00",
+      "12:00 - 13:00",
+    ]);
+    const scheduleTable = ref([
+      ["Môn 1", "Môn 2", "Môn 3", "Môn 4", "Môn 5"],
+      ["Môn 6", "Môn 7", "Môn 8", "Môn 9", "Môn 10"],
+      ["Môn 11", "Môn 12", "Môn 13", "Môn 14", "Môn 15"],
+      ["Môn 16", "Môn 17", "Môn 18", "Môn 19", "Môn 20"],
+      ["Môn 21", "Môn 22", "Môn 23", "Môn 24", "Môn 25"],
+      ["Môn 26", "Môn 27", "Môn 28", "Môn 29", "Môn 30"],
+    ]);
     const tabs = ref([
       { label: "Thông tin cá nhân", type: "table", icon: "bx-badge-check" },
       {
@@ -183,19 +243,41 @@ export default {
         icon: "bx-medal",
       },
       {
-        label: "Thông tin lớp học",
+        label: "Thời khóa biểu",
         type: "text",
         content: "This is some text content.",
         icon: "bx-book",
       },
+      {
+        label: "Danh sách lớp",
+        type: "tablelop",
+        content: "This is some text content.",
+        icon: "bxs-layer",
+      },
     ]);
-
+    const toastUpdate = () => {
+      createToast(
+        {
+          title: "Thông tin cá nhân",
+          description: "Cập nhât thành công",
+        },
+        {
+          type: "warning",
+          timeout: 2500,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
     const changeTab = (index) => {
       activeTab.value = index;
     };
 
     return {
       activeTab,
+      timimgtable,
+      scheduleTable,
+      toastUpdate,
       tabs,
       changeTab,
       userData,
@@ -219,10 +301,29 @@ export default {
     },
   },
   methods: {
+    validateFormUpdate() {
+      try {
+        let isValid = true;
+        switch (true) {
+          case this.userData.StudentName.trim() === "":
+            isValid = false;
+            this.error.push("Tên học sinh không được để trống");
+            break;
+          case this.userData.StudentName.length < 5:
+            isValid = false;
+            this.error.push("Tên học sinh phải lớn hơn 5 kí tự");
+            break;
+          default:
+            break;
+        }
+        return isValid;
+      } catch (error) {
+        console.log(error);
+      }
+    },
     ...mapActions(["updateItemstudent", "IDloginstudent", "getstudent"]),
     async loadUserDataFromSessionStorage() {
       const userDataString = sessionStorage.getItem("idloginstudentData");
-      console.log(userDataString);
 
       if (userDataString) {
         try {
@@ -238,6 +339,23 @@ export default {
         "idloginstudentData",
         JSON.stringify(idloginstudentData)
       );
+    },
+    onSubmitUpdate() {
+      try {
+        if (this.validateFormUpdate()) {
+          this.userData.IsChecked = false;
+          this.updateItemstudent(this.userData);
+          this.toastUpdate();
+          const idloginstudentData = this.userData; // Đảm bảo bạn đã có dữ liệu từ idloginstudent
+          sessionStorage.setItem(
+            "idloginstudentData",
+            JSON.stringify(idloginstudentData)
+          );
+          return false;
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
   components: {

@@ -24,14 +24,21 @@
           <img src="../assets/avt.jpg" alt="" />
         </div>
         <div class="text_right">
-          <h2>Lê Xuân Sơn</h2>
-          <p>Adminisator</p>
+          <h2>{{ userData.StudentName }}</h2>
+          <h2>{{ teaadmin.TeacherName }}</h2>
+          <p>{{ dataRole }}isator</p>
         </div>
-        <i class="bx bx-chevron-down"></i>
+        <div class="right_icon" style="display: flex; flex-direction: column">
+          <i class="bx bx-chevron-up"></i>
+          <i class="bx bx-chevron-down"></i>
+        </div>
         <div class="right_image_overlist" v-if="isshowOverlaylist">
-          <div class="overlaylist_item">
+          <div
+            class="overlaylist_item"
+            v-if="dataRole === 'admin' || dataRole === 'teacher'"
+          >
             <i class="bx bx-info-circle"></i>
-            <p>Thông tin cá nhân</p>
+            <router-link to="/information">Thông tin cá nhân</router-link>
           </div>
           <div class="overlaylist_item" @click="delDataUserlogin()">
             <i class="bx bx-log-out-circle"></i>
@@ -51,6 +58,9 @@ export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Navbar",
   setup() {
+    const userData = ref([]);
+    const teaadmin = ref([]);
+    const dataRole = ref("");
     const toastSuccess = () => {
       createToast(
         {
@@ -81,22 +91,92 @@ export default {
     const handleShow = () => {
       isshowOverlaylist.value = !isshowOverlaylist.value;
     };
+
     return {
       isshowOverlaylist,
+      userData,
+      teaadmin,
+      dataRole,
       handleShow,
       toastError,
       toastSuccess,
     };
   },
   computed: {
-    ...mapGetters(["idloginstudent"]),
+    ...mapGetters(["idloginstudent", "idloginteacher"]),
   },
   methods: {
     delDataUserlogin() {
       sessionStorage.clear();
     },
+    async loadUserDataFromSessionStorage() {
+      const userDataString = sessionStorage.getItem("idloginstudentData");
+      const userDataString1 = sessionStorage.getItem("roleData");
+      console.log(userDataString);
+      console.log(userDataString1);
+
+      if (userDataString) {
+        try {
+          this.userData = JSON.parse(userDataString);
+        } catch (error) {
+          console.error("Lỗi khi chuyển đổi dữ liệu từ sessionStorage:", error);
+        }
+      }
+    },
+    async loadAdminAndTeacher() {
+      const userDataString = sessionStorage.getItem("idloginteacherData");
+      const userDataString1 = sessionStorage.getItem("roleData");
+      console.log(userDataString);
+      console.log(userDataString1);
+
+      if (userDataString) {
+        try {
+          this.teaadmin = JSON.parse(userDataString);
+        } catch (error) {
+          console.error("Lỗi khi chuyển đổi dữ liệu từ sessionStorage:", error);
+        }
+      }
+    },
+    loadDataRole() {
+      const userDataString = sessionStorage.getItem("roleData");
+      console.log(userDataString);
+
+      if (userDataString) {
+        try {
+          this.dataRole = userDataString;
+        } catch (error) {
+          console.error("Lỗi khi chuyển đổi dữ liệu từ sessionStorage:", error);
+        }
+      }
+    },
   },
-  mounted() {},
+  mounted() {
+    this.loadUserDataFromSessionStorage();
+    this.loadAdminAndTeacher();
+    this.loadDataRole();
+  },
+  watch: {
+    idloginstudent(newVal) {
+      if (newVal && newVal.length !== null) {
+        const idloginstudentData = newVal;
+        sessionStorage.setItem(
+          "idloginstudentData",
+          JSON.stringify(idloginstudentData)
+        );
+      }
+      this.loadUserDataFromSessionStorage();
+    },
+    idloginteacher(newVal) {
+      if (newVal && newVal.length !== null) {
+        const idloginteacherData = newVal;
+        sessionStorage.setItem(
+          "idloginteacherData",
+          JSON.stringify(idloginteacherData)
+        );
+      }
+      this.loadAdminAndTeacher();
+    },
+  },
 };
 </script>
 

@@ -224,13 +224,15 @@ const accountModule = {
                         // Redirect to /admin
                         router.push('/admin/student');
                         teacherModule.actions.IDloginteacher({ commit }, response.data.user);
+                        sessionStorage.setItem('roleData', response.data.user.role);
                     }
                     if (response.data.user.teacherId === null) {
                         // Redirect to /user
-                        router.push('/user').then(async () => {
-                            // Chuyển hướng thành công, sau đó gọi action từ module studentModule
-                            await studentModule.actions.IDloginstudent({ commit }, response.data.user);
-                        });
+                        router.push('/user');
+                        // Chuyển hướng thành công, sau đó gọi action từ module studentModule
+                        studentModule.actions.IDloginstudent({ commit }, response.data.user);
+                        sessionStorage.setItem('roleData', response.data.user.role);
+
                     }
 
                     alert('Đăng nhập thành công');

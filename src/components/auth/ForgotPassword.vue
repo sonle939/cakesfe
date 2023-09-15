@@ -14,65 +14,54 @@
       </div>
       <img src="../../assets/bg34-1.png" class="hh_icon" />
       <form class="form_wrapper">
-        <div class="form_signup">
-          <label>
-            <i class="bx bxs-group"></i>
-            <input
-              type="text"
-              name="input"
-              placeholder="Vui lòng nhập họ và tên..."
-            />
+        <div class="form_signin">
+          <label class="label" v-if="isSendEmail">
+            <i class="fa fa-envelope" aria-hidden="true"></i>
+            <input type="text" name="input" placeholder="Vui lòng nhập email" />
           </label>
-          <label>
-            <i class="bx bx-envelope"></i>
-            <input
-              type="text"
-              name="input"
-              placeholder="Vui lòng nhập Email..."
-            />
-          </label>
-          <label>
-            <i class="bx bx-lock-alt"></i>
-            <input
-              type="text"
-              name="input"
-              placeholder="Vui lòng nhập mật khẩu..."
-            />
-          </label>
-          <label>
-            <i class="bx bx-current-location"></i>
-            <input
-              type="text"
-              name="input"
-              placeholder="Vui lòng nhập địa chỉ..."
-            />
-          </label>
-          <label>
-            <i class="bx bx-phone-call"></i>
-            <input
-              type="text"
-              name="input"
-              placeholder="Vui lòng nhập số điện thoại..."
-            />
-          </label>
-        </div>
-        <button>Đăng kí</button>
-        <div class="social">
-          <div class="social_line">
-            <h3>Or Continue with</h3>
-          </div>
-          <div class="social_list">
-            <div class="social_item">
-              <i class="bx bxl-google"></i>
-            </div>
-            <div class="social_item">
-              <i class="bx bxl-facebook-circle"></i>
-            </div>
-            <div class="social_item">
-              <i class="bx bxl-instagram-alt"></i>
+          <div class="verify_form" v-if="isCodeVerify">
+            <h3>Vui lòng nhập mã gồm 4 chữ số được gửi</h3>
+            <div class="verify_container">
+              <input type="text" class="label input" style="width: 40px" />
+              <input type="text" class="label input" style="width: 40px" />
+              <input type="text" class="label input" style="width: 40px" />
+              <input type="text" class="label input" style="width: 40px" />
             </div>
           </div>
+          <div class="changepass_form" v-if="isChangepassword">
+            <label class="label">
+              <i class="fa fa-link" aria-hidden="true"></i>
+              <input
+                type="text"
+                name="input"
+                placeholder="Vui lòng nhập mật khẩu mới"
+              />
+            </label>
+            <label class="label">
+              <i class="fa fa-flickr" aria-hidden="true"></i>
+              <input type="text" name="input" placeholder="Xác nhân mật khẩu" />
+            </label>
+          </div>
         </div>
+        <button
+          v-if="isSendEmail"
+          @click="
+            isSendEmail = false;
+            isCodeVerify = true;
+          "
+        >
+          Gửi mã
+        </button>
+        <button
+          v-if="isCodeVerify"
+          @click="
+            isChangepassword = true;
+            isCodeVerify = false;
+          "
+        >
+          Xác minh mã
+        </button>
+        <button v-if="isChangepassword">Cập nhật mật khẩu</button>
       </form>
     </div>
   </div>
@@ -85,6 +74,9 @@ export default {
   name: "ForgotPassword",
   setup() {
     const changeAuth = ref("login");
+    const isSendEmail = ref(true);
+    const isCodeVerify = ref(false);
+    const isChangepassword = ref(false);
     const handleAuth = () => {
       if (changeAuth.value === "login") {
         changeAuth.value = "signup";
@@ -94,6 +86,9 @@ export default {
     };
     return {
       changeAuth,
+      isSendEmail,
+      isCodeVerify,
+      isChangepassword,
       handleAuth,
     };
   },

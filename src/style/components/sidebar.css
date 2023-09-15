@@ -4,6 +4,7 @@
   width: 250px;
   padding: 20px;
   transition: width 0.3s;
+  position: relative;
 }
 .sidebar.active {
   width: 60px;
@@ -93,8 +94,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 100%;
-  margin-top: 300px;
+  position: absolute;
+  bottom: 0;
 }
 .sidebar_control.active {
   align-items: center;
@@ -106,6 +107,7 @@
 .switch_wrapper .text {
   color: #404040;
   position: relative;
+  z-index: 99;
 }
 .switch_wrapper .text::before {
   content: "";

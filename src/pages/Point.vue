@@ -549,22 +549,33 @@ export default {
     ]),
   },
   // beforeUpdate() {
-  //   this.showValueDrop();
+  //   this.showValueDropSemester();
   // },
+  // updated() {
+  //   this.showValueDropSemester();
+  // },
+  beforeMount() {
+    this.showValueDropSemester();
+    this.showValueDropSchoolyear();
+    this.showValueDropSubject();
+    this.showValueDrop();
+  },
   mounted() {
-    this.getAllpoint();
+    //this.getAllpoint();
     this.getClassRoom();
     this.getGradeclassroom();
     this.getsubject();
-    this.showValueDrop();
-    this.showValueDropSemester();
-    this.showValueDropSubject();
     this.getschoolyear();
     this.getsemester();
-    this.showValueDropSchoolyear();
-    // this.selectedOptionclassroom =
-    //   this.filteredGradeClass[this.filteredGradeClass.length - 1].ClassRoomName;
-    // // Lấy ra phần tử cuối cùng trong danh sách đã lọc
+  },
+  watch: {
+    selectedOptionsemester(newValue) {
+      if (newValue) {
+        // Nếu selectedOptionsemester rỗng, gán giá trị cuối cùng trong mảng semester cho nó
+        this.selectedOptionsemester =
+          this.semester[this.semester.length - 1].SemesterName;
+      }
+    },
   },
   components: {
     Navbar,

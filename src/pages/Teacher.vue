@@ -108,7 +108,6 @@
                   <th style="min-width: 155px">Email</th>
                   <th style="min-width: 170px">Giới tính</th>
                   <th style="min-width: 155px">Chuyên môn</th>
-                  <th style="min-width: 155px">Dạy lớp</th>
                   <th style="min-width: 155px">Tình trạng công tác</th>
                   <th style="min-width: 155px">Trình độ</th>
                   <th style="min-width: 170px">Địa chỉ</th>
@@ -166,11 +165,6 @@
                   <td class="text_left">
                     <tippy :content="data.SubjectName">
                       {{ data.SubjectName }}
-                    </tippy>
-                  </td>
-                  <td class="text_left">
-                    <tippy :content="data.ClassRoomName">
-                      {{ data.ClassRoomName }}
                     </tippy>
                   </td>
                   <td class="text_left">

@@ -138,47 +138,9 @@
             </div>
           </div>
         </label>
-        <label class="slabel" @click="toggleDropdownsClassroomId">
-          Thông tin lớp dạy
-          <div class="dropdown" style="margin-top: 8px; width: 315px">
-            <input
-              type="text"
-              v-model="selectedOptionsClassroomId"
-              placeholder="Chọn thông tin lớp dạy"
-            />
-            <i
-              @click="toggleDropdownsClassroomId"
-              :class="
-                isOpensClassroomId
-                  ? 'bx bx-chevron-down active'
-                  : 'bx bx-chevron-down'
-              "
-            ></i>
-            <div
-              class="overlaylist"
-              v-show="isOpensClassroomId"
-              style="width: 315px"
-            >
-              <ul ref="list">
-                <li
-                  v-for="data in classroomteacher"
-                  :key="data.ClassRoomId"
-                  @click="
-                    selectOptionsClassroomId(
-                      data.ClassRoomId,
-                      data.ClassRoomName
-                    )
-                  "
-                >
-                  {{ data.ClassRoomName }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </label>
         <label class="slabel" @click="toggleDropdownsCollaborate">
           Tình trạng công tác
-          <div class="dropdown" style="margin-top: 8px; width: 315px">
+          <div class="dropdown" style="margin-top: 8px; width: 495px">
             <input
               type="text"
               v-model="selectedOptionsCollaborate"
@@ -211,7 +173,7 @@
         </label>
         <label class="slabel" @click="toggleDropdownsStandard">
           Trình độ giáo viên
-          <div class="dropdown" style="margin-top: 8px; width: 315px">
+          <div class="dropdown" style="margin-top: 8px; width: 495px">
             <input
               type="text"
               v-model="selectedOptionsStandard"
@@ -388,47 +350,9 @@
             </div>
           </div>
         </label>
-        <label class="slabel" @click="toggleDropdownsClassroomIdUpdate">
-          Thông tin lớp dạy
-          <div class="dropdown" style="margin-top: 8px; width: 315px">
-            <input
-              type="text"
-              v-model="getByIdteacher.ClassRoomName"
-              placeholder="Chọn lớp dạy "
-            />
-            <i
-              @click="toggleDropdownsClassroomIdUpdate"
-              :class="
-                isOpensClassroomIdUpdate
-                  ? 'bx bx-chevron-down active'
-                  : 'bx bx-chevron-down'
-              "
-            ></i>
-            <div
-              class="overlaylist"
-              v-show="isOpensClassroomIdUpdate"
-              style="width: 315px"
-            >
-              <ul ref="list">
-                <li
-                  v-for="data in classroomteacher"
-                  :key="data.ClassRoomId"
-                  @click="
-                    selectOptionsClassroomIdUpdate(
-                      data.ClassRoomId,
-                      data.ClassRoomName
-                    )
-                  "
-                >
-                  {{ data.ClassRoomName }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </label>
         <label class="slabel" @click="toggleDropdownsCollaborateUpdate">
           Tình trạng công tác
-          <div class="dropdown" style="margin-top: 8px; width: 315px">
+          <div class="dropdown" style="margin-top: 8px; width: 495px">
             <input
               type="text"
               v-model="getByIdteacher.Collaborate"
@@ -461,7 +385,7 @@
         </label>
         <label class="slabel" @click="toggleDropdownsStandardUpdate">
           Trình độ giáo viên
-          <div class="dropdown" style="margin-top: 8px; width: 315px">
+          <div class="dropdown" style="margin-top: 8px; width: 495px">
             <input
               type="text"
               v-model="getByIdteacher.Standard"
@@ -526,7 +450,6 @@ export default {
   setup() {
     const isOpens = ref(false);
     const isOpensStandard = ref(false);
-    const isOpensClassroomId = ref(false);
     const isOpensCollaborate = ref(false);
     const isOpensUpdate = ref(false);
     const isOpensStandardUpdate = ref(false);
@@ -534,7 +457,6 @@ export default {
     const isOpensCollaborateUpdate = ref(false);
     const selectedOptions = ref("");
     const selectedOptionsStandard = ref("");
-    const selectedOptionsClassroomId = ref("");
     const selectedOptionsCollaborate = ref("");
     const Collaborate = reactive([
       { id: 1, CollaborateName: "Hợp đồng" },
@@ -597,7 +519,6 @@ export default {
       Collaborate,
       Standard,
       isOpens,
-      isOpensClassroomId,
       isOpensCollaborate,
       isOpensStandard,
       isOpensUpdate,
@@ -605,7 +526,6 @@ export default {
       isOpensCollaborateUpdate,
       isOpensStandardUpdate,
       selectedOptions,
-      selectedOptionsClassroomId,
       selectedOptionsCollaborate,
       selectedOptionsStandard,
     };
@@ -668,12 +588,6 @@ export default {
     toggleDropdownsCollaborateUpdate() {
       this.isOpensCollaborateUpdate = !this.isOpensCollaborateUpdate;
     },
-    toggleDropdownsClassroomId() {
-      this.isOpensClassroomId = !this.isOpensClassroomId;
-    },
-    toggleDropdownsClassroomIdUpdate() {
-      this.isOpensClassroomIdUpdate = !this.isOpensClassroomIdUpdate;
-    },
     selectOptions(id, options) {
       this.formData.SubjectId = id;
       this.selectedOptions = options;
@@ -692,16 +606,6 @@ export default {
     selectOptionsStandardUpdate(options) {
       this.getByIdteacher.Standard = options;
       this.isOpensStandardUpdate = false;
-    },
-    selectOptionsClassroomId(id, options) {
-      this.formData.ClassRoomId = id;
-      this.selectedOptionsClassroomId = options;
-      this.isOpensClassroomId = false;
-    },
-    selectOptionsClassroomIdUpdate(id, options) {
-      this.getByIdteacher.ClassRoomId = id;
-      this.getByIdteacher.ClassRoomName = options;
-      this.isOpensClassroomIdUpdate = false;
     },
     selectOptionsCollaborate(options) {
       this.formData.Collaborate = options;

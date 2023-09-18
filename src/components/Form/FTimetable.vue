@@ -51,15 +51,38 @@
             v-model="formData.DayLearn"
           />
         </label>
-        <label class="slabel"
-          >Giờ bắt đầu
-          <input
-            type="text"
-            class="sinput"
-            style="width: 150px"
-            v-model="formData.TimeStart"
-            placeholder="Nhập giờ học"
-          />
+        <label class="slabel" @click="toggleDropdowntimestart">
+          Giờ bắt đầu
+          <div class="dropdown" style="margin-top: 8px; width: 150px">
+            <input
+              type="text"
+              v-model="selectedOptiontimestart"
+              placeholder="Chọn giá trị lọc"
+            />
+            <i
+              @click="toggleDropdowntimestart"
+              :class="
+                isOpentimestart
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpentimestart"
+              style="width: 150px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in optionTime"
+                  :key="data.id"
+                  @click="selectOptiontimestart(data.name)"
+                >
+                  {{ data.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
         </label>
         <label class="slabel"
           >Giờ kết thúc
@@ -67,8 +90,9 @@
             type="text"
             class="sinput"
             style="width: 150px"
-            v-model="formData.TimeEnd"
-            placeholder="Nhập giờ kết thúc"
+            v-model="filterTimeEnd"
+            placeholder="giờ kết thúc"
+            disabled
           />
         </label>
         <label class="slabel" @click="toggleDropdownsubject">
@@ -211,14 +235,38 @@
             v-model="getByIdtimetable.DayLearn"
           />
         </label>
-        <label class="slabel"
-          >Giờ bắt đầu
-          <input
-            type="text"
-            class="sinput"
-            style="width: 150px"
-            v-model="getByIdtimetable.TimeStart"
-          />
+        <label class="slabel" @click="toggleDropdowntimestartUpdate">
+          Giờ bắt đầu
+          <div class="dropdown" style="margin-top: 8px; width: 150px">
+            <input
+              type="text"
+              v-model="getByIdtimetable.TimeStart"
+              placeholder="Chọn giá trị lọc"
+            />
+            <i
+              @click="toggleDropdowntimestartUpdate"
+              :class="
+                isOpentimestartUpdate
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpentimestartUpdate"
+              style="width: 150px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in optionTime"
+                  :key="data.id"
+                  @click="selectOptiontimestartUpdate(data.name)"
+                >
+                  {{ data.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
         </label>
         <label class="slabel"
           >Giờ kết thúc
@@ -226,7 +274,7 @@
             type="text"
             class="sinput"
             style="width: 150px"
-            v-model="getByIdtimetable.TimeEnd"
+            v-model="filterTimeEndUpdate"
           />
         </label>
         <label class="slabel" @click="toggleDropdownsubjectUpdate">
@@ -395,6 +443,8 @@ export default {
       TimeStart: "",
       TimeEnd: "",
     });
+    const isOpentimestart = ref(false);
+    const isOpentimestartUpdate = ref(false);
     const isOpenclassroom = ref(false);
     const isOpenssubject = ref(false);
     const isOpensteacher = ref(false);
@@ -404,10 +454,13 @@ export default {
     const selectedOptionsubject = ref("");
     const selectedOptionteacher = ref("");
     const selectedOptionclassroom = ref("");
-    const selectedRoles = ref([
-      { id: 1, name: "admin" },
-      { id: 2, name: "teacher" },
-      { id: 3, name: "student" },
+    const selectedOptiontimestart = ref("");
+    const optionTime = ref([
+      { id: 1, name: "7h00p" },
+      { id: 2, name: "7h50p" },
+      { id: 3, name: "9h05p" },
+      { id: 4, name: "9h55p" },
+      { id: 5, name: "10h45p" },
     ]);
     return {
       toast,
@@ -416,28 +469,80 @@ export default {
       error,
       build,
       formData,
+      isOpentimestart,
       isOpenclassroom,
       isOpenssubject,
       isOpensteacher,
       isOpenclassroomUpdate,
+      isOpentimestartUpdate,
       isOpenssubjectUpdate,
       isOpensteacherUpdate,
       selectedOptionsubject,
       selectedOptionteacher,
       selectedOptionclassroom,
-      selectedRoles,
+      selectedOptiontimestart,
+      optionTime,
     };
   },
   computed: {
     filteredTeacher() {
       if (this.selectedOptionteacher) {
-        const keyword = this.selectedOptionteacher.toLowerCase();
+        const teacherKeyword = this.selectedOptionteacher.toLowerCase();
         return this.teachertimetable.filter((data) =>
-          data.TeacherName.toLowerCase().includes(keyword)
+          data.TeacherName.toLowerCase().includes(teacherKeyword)
+        );
+      } else if (this.selectedOptionsubject) {
+        const subjectKeyword = this.selectedOptionsubject.toLowerCase();
+        return this.teachertimetable.filter((data) =>
+          data.SubjectName.toLowerCase().includes(subjectKeyword)
         );
       } else {
-        // Trả về toàn bộ danh sách giáo viên nếu selectedOptionteacher là null
-        return this.teachertimetable;
+        // Trả về toàn bộ danh sách sinh viên nếu cả hai selectedOptionteacher và selectedOptionsubject đều là null
+        return this.classroom;
+      }
+    },
+    filterTimeEnd() {
+      if (this.selectedOptiontimestart == "7h00p") {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        return (this.formData.TimeEnd = "7h45p");
+      } else if (this.selectedOptiontimestart == "7h50p") {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        return (this.formData.TimeEnd = "8h35p");
+        // eslint-disable-next-line no-dupe-else-if
+      } else if (this.selectedOptiontimestart == "9h05p") {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        return (this.formData.TimeEnd = "9h50p");
+      } else if (this.selectedOptiontimestart == "9h55p") {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        return (this.formData.TimeEnd = "10h40p");
+      } else if (this.selectedOptiontimestart == "10h45p") {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        return (this.formData.TimeEnd = "11h40p");
+      } else {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        return (this.formData.TimeEnd = "giờ kết thúc");
+      }
+    },
+    filterTimeEndUpdate() {
+      if (this.getByIdtimetable.TimeStart == "7h00p") {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        return (this.getByIdtimetable.TimeEnd = "7h45p");
+      } else if (this.getByIdtimetable.TimeStart == "7h50p") {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        return (this.getByIdtimetable.TimeEnd = "8h35p");
+        // eslint-disable-next-line no-dupe-else-if
+      } else if (this.getByIdtimetable.TimeStart == "9h05p") {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        return (this.getByIdtimetable.TimeEnd = "9h50p");
+      } else if (this.getByIdtimetable.TimeStart == "9h55p") {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        return (this.getByIdtimetable.TimeEnd = "10h40p");
+      } else if (this.getByIdtimetable.TimeStart == "10h45p") {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        return (this.getByIdtimetable.TimeEnd = "11h40p");
+      } else {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        return (this.getByIdtimetable.TimeEnd = "giờ kết thúc");
       }
     },
     filteredSubject() {
@@ -505,6 +610,21 @@ export default {
     },
     toggleDropdownteacherUpdate() {
       this.isOpensteacherUpdate = !this.isOpensteacherUpdate;
+    },
+    toggleDropdowntimestart() {
+      this.isOpentimestart = !this.isOpentimestart;
+    },
+    toggleDropdowntimestartUpdate() {
+      this.isOpentimestartUpdate = !this.isOpentimestartUpdate;
+    },
+    selectOptiontimestart(options) {
+      this.formData.TimeStart = options;
+      this.selectedOptiontimestart = options;
+      this.isOpentimestart = false;
+    },
+    selectOptiontimestartUpdate(options) {
+      this.getByIdtimetable.TimeStart = options;
+      this.isOpentimestartUpdate = false;
     },
     selectOptionclassroom(id, options) {
       this.formData.ClassRoomId = id;

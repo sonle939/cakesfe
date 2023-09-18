@@ -214,6 +214,7 @@
                   <th style="min-width: 155px">ĐĐGGK</th>
                   <th style="min-width: 155px">ĐĐGCK</th>
                   <th style="min-width: 155px">ĐTBMK</th>
+                  <th style="min-width: 200px">Nhận xét</th>
                   <th style="min-width: 100px">Chức năng</th>
                 </tr>
               </thead>
@@ -548,13 +549,7 @@ export default {
       "SELECTCHECKEDPOINT",
     ]),
   },
-  // beforeUpdate() {
-  //   this.showValueDropSemester();
-  // },
-  // updated() {
-  //   this.showValueDropSemester();
-  // },
-  beforeMount() {
+  beforeUpdate() {
     this.showValueDropSemester();
     this.showValueDropSchoolyear();
     this.showValueDropSubject();
@@ -570,8 +565,7 @@ export default {
   },
   watch: {
     selectedOptionsemester(newValue) {
-      if (newValue) {
-        // Nếu selectedOptionsemester rỗng, gán giá trị cuối cùng trong mảng semester cho nó
+      if (newValue === "") {
         this.selectedOptionsemester =
           this.semester[this.semester.length - 1].SemesterName;
       }

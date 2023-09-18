@@ -3,118 +3,273 @@
     <form class="point_form">
       <div class="info_title">
         <div class="title_left">
-          <h1>Thêm mới điểm</h1>
+          <h1>Thêm mới điểm học sinh</h1>
         </div>
         <div class="title_close">
           <i class="bx bx-help-circle"></i>
           <i class="bx bx-x" @click="SHOW_FORM_POINT"></i>
         </div>
       </div>
-      <div class="info_property">
-        <label class="slabel">
-          <input type="text" class="sinput" placeholder="mã lớp học" />
-        </label>
-        <label class="slabel"
-          >Ngày học
-          <input type="text" class="sinput" placeholder="tên lớp học" />
-        </label>
-
-        <label class="slabel" @click="toggleDropdownsubject">
-          Thông tin môn học
-          <div class="dropdown" style="margin-top: 8px">
+      <div class="point_wrapper">
+        <div class="point_review">
+          <label class="slabel"
+            >ĐĐGTX1
             <input
               type="text"
-              v-model="selectedOptionsubject"
-              placeholder="Chọn giá trị lọc"
+              class="sinput"
+              placeholder="ĐĐGTX1"
+              style="width: 75px"
             />
-            <i
-              @click="toggleDropdownsubject"
-              :class="
-                isOpenssubject
-                  ? 'bx bx-chevron-down active'
-                  : 'bx bx-chevron-down'
-              "
-            ></i>
-            <div class="overlaylist" v-show="isOpenssubject">
-              <ul ref="list">
-                <li
-                  v-for="data in filteredSubject"
-                  :key="data.SubjectId"
-                  @click="selectOptionsubject(data.SubjectName)"
-                >
-                  {{ data.SubjectName }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </label>
-        <label class="slabel" @click="toggleDropdownteacher">
-          Thông tin giáo viên
-          <div class="dropdown" style="margin-top: 8px">
+          </label>
+          <label class="slabel"
+            >ĐĐGTX2
             <input
               type="text"
-              v-model="selectedOptionteacher"
-              placeholder="Chọn giá trị lọc"
+              class="sinput"
+              placeholder="ĐĐGTX2"
+              style="width: 75px"
             />
-            <i
-              @click="toggleDropdownteacher"
-              :class="
-                isOpensteacher
-                  ? 'bx bx-chevron-down active'
-                  : 'bx bx-chevron-down'
-              "
-            ></i>
-            <div class="overlaylist" v-show="isOpensteacher">
-              <ul ref="list">
-                <li
-                  v-for="data in filteredTeacher"
-                  :key="data.TeacherId"
-                  @click="selectOptionteacher(data.TeacherName)"
-                >
-                  {{ data.TeacherName }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </label>
-        <label
-          class="slabel"
-          @click="toggleDropdownclassroom"
-          style="margin-left: 24px"
-        >
-          Thông tin lớp học
-          <div class="dropdown" style="margin-top: 8px; width: 345px">
+          </label>
+          <label class="slabel"
+            >ĐĐGTX3
             <input
               type="text"
-              v-model="selectedOptionclassroom"
-              placeholder="Chọn lớp học"
+              class="sinput"
+              placeholder="ĐĐGTX3"
+              style="width: 75px"
             />
-            <i
-              @click="toggleDropdownclassroom"
-              :class="
-                isOpenclassroom
-                  ? 'bx bx-chevron-down active'
-                  : 'bx bx-chevron-down'
-              "
-            ></i>
-            <div
-              class="overlaylist"
-              v-show="isOpenclassroom"
-              style="width: 345px"
-            >
-              <ul ref="list">
-                <li
-                  v-for="data in filteredClassroom"
-                  :key="data.ClassRoomId"
-                  @click="selectOptionclassroom(data.ClassRoomName)"
-                >
-                  {{ data.ClassRoomName }}
-                </li>
-              </ul>
+          </label>
+          <label class="slabel"
+            >ĐĐGTX4
+            <input
+              type="text"
+              class="sinput"
+              placeholder="ĐĐGTX4"
+              style="width: 75px"
+            />
+          </label>
+          <label class="slabel"
+            >ĐĐGGK
+            <input
+              type="text"
+              class="sinput"
+              placeholder="ĐĐGGK"
+              style="width: 200px"
+            />
+          </label>
+          <label class="slabel"
+            >ĐĐGCK
+            <input
+              type="text"
+              class="sinput"
+              placeholder="ĐĐGCK"
+              style="width: 200px"
+            />
+          </label>
+          <label class="slabel"
+            >ĐTBMK
+            <input
+              type="text"
+              class="sinput"
+              placeholder="ĐTBMK"
+              style="width: 450px"
+            />
+          </label>
+        </div>
+        <div class="info_property">
+          <label class="slabel">
+            Mã điểm
+            <input
+              type="text"
+              class="sinput"
+              placeholder="mã nhập điểm"
+              style="width: 200px"
+            />
+          </label>
+          <label class="slabel" @click="toggleDropdownsubject">
+            Thông tin môn học
+            <div class="dropdown" style="margin-top: 8px; width: 200px">
+              <input
+                type="text"
+                v-model="selectedOptionsubject"
+                placeholder="Chọn giá trị lọc"
+              />
+              <i
+                @click="toggleDropdownsubject"
+                :class="
+                  isOpenssubject
+                    ? 'bx bx-chevron-down active'
+                    : 'bx bx-chevron-down'
+                "
+              ></i>
+              <div
+                class="overlaylist"
+                v-show="isOpenssubject"
+                style="width: 200px"
+              >
+                <ul ref="list">
+                  <li
+                    v-for="data in filteredSubject"
+                    :key="data.SubjectId"
+                    @click="selectOptionsubject(data.SubjectName)"
+                  >
+                    {{ data.SubjectName }}
+                  </li>
+                </ul>
+              </div>
             </div>
-          </div>
-        </label>
+          </label>
+          <label class="slabel" @click="toggleDropdownsemester">
+            Thông tin học kì
+            <div class="dropdown" style="margin-top: 8px; width: 200px">
+              <input
+                type="text"
+                v-model="selectedOptionsemester"
+                placeholder="Chọn giá trị lọc"
+              />
+              <i
+                @click="toggleDropdownsemester"
+                :class="
+                  isOpensteachersemester
+                    ? 'bx bx-chevron-down active'
+                    : 'bx bx-chevron-down'
+                "
+              ></i>
+              <div
+                class="overlaylist"
+                v-show="isOpensteachersemester"
+                style="width: 200px"
+              >
+                <ul ref="list">
+                  <li
+                    v-for="data in filteredSemester"
+                    :key="data.SemesterId"
+                    @click="selectOptionsemester(data.SemesterName)"
+                  >
+                    {{ data.SemesterName }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </label>
+          <label class="slabel" @click="toggleDropdownschoolyear">
+            Thông tin năm học
+            <div class="dropdown" style="margin-top: 8px; width: 200px">
+              <input
+                type="text"
+                v-model="selectedOptionSchoolyear"
+                placeholder="Chọn giá trị lọc"
+              />
+              <i
+                @click="toggleDropdownschoolyear"
+                :class="
+                  isOpenSchoolyear
+                    ? 'bx bx-chevron-down active'
+                    : 'bx bx-chevron-down'
+                "
+              ></i>
+              <div
+                class="overlaylist"
+                v-show="isOpenSchoolyear"
+                style="width: 200px"
+              >
+                <ul ref="list">
+                  <li
+                    v-for="data in filteredSchoolyear"
+                    :key="data.SchoolYearId"
+                    @click="selectOptionschoolyear(data.SchoolYearId)"
+                  >
+                    {{ data.SchoolYearName }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </label>
+          <label
+            class="slabel"
+            @click="toggleDropdownclassroom"
+            style="margin-left: 24px"
+          >
+            Thông tin lớp học
+            <div class="dropdown" style="margin-top: 8px; width: 200px">
+              <input
+                type="text"
+                v-model="selectedOptionclassroom"
+                placeholder="Chọn lớp học"
+              />
+              <i
+                @click="toggleDropdownclassroom"
+                :class="
+                  isOpenclassroom
+                    ? 'bx bx-chevron-down active'
+                    : 'bx bx-chevron-down'
+                "
+              ></i>
+              <div
+                class="overlaylist"
+                v-show="isOpenclassroom"
+                style="width: 200px"
+              >
+                <ul ref="list">
+                  <li
+                    v-for="data in filteredClassroom"
+                    :key="data.ClassRoomId"
+                    @click="selectOptionclassroom(data.ClassRoomName)"
+                  >
+                    {{ data.ClassRoomName }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </label>
+          <label
+            class="slabel"
+            @click="toggleDropdownsstudent"
+            style="margin-left: 24px"
+          >
+            Thông tin học sinh
+            <div class="dropdown" style="margin-top: 8px; width: 200px">
+              <input
+                type="text"
+                v-model="selectedOptionstudent"
+                placeholder="Chọn lớp học"
+              />
+              <i
+                @click="toggleDropdownsstudent"
+                :class="
+                  isOpenstudent
+                    ? 'bx bx-chevron-down active'
+                    : 'bx bx-chevron-down'
+                "
+              ></i>
+              <div
+                class="overlaylist"
+                v-show="isOpenstudent"
+                style="width: 200px"
+              >
+                <ul ref="list">
+                  <li
+                    v-for="data in filteredStudent"
+                    :key="data.StudentId"
+                    @click="selectOptionstudent(data.StudentName)"
+                  >
+                    {{ data.StudentName }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </label>
+        </div>
       </div>
+      <label class="slabel">
+        Nhận xét
+        <input
+          type="text"
+          class="sinput"
+          placeholder="nhận xét học sinh"
+          style="width: 97%"
+        />
+      </label>
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_POINT" />
         <div class="btn_wp">
@@ -127,49 +282,87 @@
 </template>
       
       <script>
+import { ref } from "vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import VButton from "../Button/VButton.vue";
 export default {
   name: "FPoint",
   data() {
+    const isOpenclassroom = ref(false);
+    const isOpenstudent = ref(false);
+    const isOpenSchoolyear = ref(false);
+    const isOpenssubject = ref(false);
+    const isOpensteachersemester = ref(false);
+    const selectedOptionclassroom = ref("");
+    const selectedOptionsemester = ref("");
+    const selectedOptionsubject = ref("");
+    const selectedOptionSchoolyear = ref("");
+    const selectedOptionstudent = ref("");
     return {
-      isOpenclassroom: false,
-      isOpenssubject: false,
-      isOpensteacher: false,
-      selectedOptionsubject: "",
-      selectedOptionteacher: "",
-      selectedOptionclassroom: "",
-      selectedRoles: [
-        { id: 1, name: "admin" },
-        { id: 2, name: "teacher" },
-        { id: 3, name: "student" },
-      ],
+      isOpenclassroom,
+      isOpenstudent,
+      isOpenssubject,
+      isOpensteachersemester,
+      isOpenSchoolyear,
+      selectedOptionsubject,
+      selectedOptionsemester,
+      selectedOptionstudent,
+      selectedOptionclassroom,
+      selectedOptionSchoolyear,
     };
   },
   computed: {
-    filteredTeacher() {
-      const keyword = this.selectedOptionteacher.toLowerCase();
-      return this.teachertimetable.filter((data) =>
-        data.TeacherName.toLowerCase().includes(keyword)
+    filteredSemester() {
+      const keyword = this.selectedOptionsemester.toLowerCase();
+      return this.semester.filter((data) =>
+        data.SemesterName.toLowerCase().includes(keyword)
       );
     },
     filteredSubject() {
       const keyword = this.selectedOptionsubject.toLowerCase();
-      return this.subjecttimetable.filter((data) =>
+      return this.subject.filter((data) =>
         data.SubjectName.toLowerCase().includes(keyword)
       );
     },
     filteredClassroom() {
-      const keyword = this.selectedOptionclassroom.toLowerCase();
-      return this.classroomtimetable.filter((data) =>
-        data.ClassRoomName.toLowerCase().includes(keyword)
+      if (this.selectedOptionclassroom) {
+        const keyword = this.selectedOptionclassroom.toLowerCase();
+        return this.classroom.filter((data) =>
+          data.ClassRoomName.toLowerCase().includes(keyword)
+        );
+      } else {
+        return this.classroom;
+      }
+    },
+    filteredStudent() {
+      if (this.selectedOptionstudent) {
+        const teacherKeyword = this.selectedOptionstudent.toLowerCase();
+        return this.studentAll.filter((data) =>
+          data.StudentName.toLowerCase().includes(teacherKeyword)
+        );
+      } else if (this.selectedOptionclassroom) {
+        const subjectKeyword = this.selectedOptionclassroom.toLowerCase();
+        return this.studentAll.filter((data) =>
+          data.ClassRoomName.toLowerCase().includes(subjectKeyword)
+        );
+      } else {
+        // Trả về toàn bộ danh sách sinh viên nếu cả hai selectedOptionteacher và selectedOptionsubject đều là null
+        return this.studentAll;
+      }
+    },
+    filteredSchoolyear() {
+      const keyword = this.selectedOptionSchoolyear.toLowerCase();
+      return this.schoolyear.filter((data) =>
+        data.SchoolYearName.toLowerCase().includes(keyword)
       );
     },
     ...mapGetters([
-      "subjecttimetable",
-      "teachertimetable",
-      "classroomtimetable",
+      "subject",
+      "studentAll",
+      "classroom",
       "isshowpoint",
+      "semester",
+      "schoolyear",
     ]),
   },
   methods: {
@@ -179,8 +372,14 @@ export default {
     toggleDropdownsubject() {
       this.isOpenssubject = !this.isOpenssubject;
     },
-    toggleDropdownteacher() {
-      this.isOpensteacher = !this.isOpensteacher;
+    toggleDropdownsemester() {
+      this.isOpensteachersemester = !this.isOpensteachersemester;
+    },
+    toggleDropdownschoolyear() {
+      this.isOpenSchoolyear = !this.isOpenSchoolyear;
+    },
+    toggleDropdownsstudent() {
+      this.isOpenstudent = !this.isOpenstudent;
     },
     selectOptionclassroom(options) {
       this.selectedOptionclassroom = options;
@@ -190,21 +389,33 @@ export default {
       this.selectedOptionsubject = options;
       this.isOpenssubject = false;
     },
-    selectOptionteacher(options) {
-      this.selectedOptionteacher = options;
-      this.isOpensteacher = false;
+    selectOptionsemester(options) {
+      this.selectedOptionsemester = options;
+      this.isOpensteachersemester = false;
+    },
+    selectOptionschoolyear(options) {
+      this.selectedOptionSchoolyear = options;
+      this.isOpenSchoolyear = false;
+    },
+    selectOptionstudent(options) {
+      this.selectedOptionstudent = options;
+      this.isOpenstudent = false;
     },
     ...mapActions([
-      "getsubjecttimetable",
-      "getteachertimetable",
-      "getclassroomtimetable",
+      "getsubject",
+      "getClassRoom",
+      "getsemester",
+      "getschoolyear",
+      "getStudentAll",
     ]),
     ...mapMutations(["SHOW_FORM_POINT"]),
   },
   mounted() {
-    this.getsubjecttimetable();
-    this.getteachertimetable();
-    this.getclassroomtimetable();
+    this.getsubject();
+    this.getsemester();
+    this.getClassRoom();
+    this.getschoolyear();
+    this.getStudentAll();
   },
   components: {
     VButton,
@@ -212,7 +423,7 @@ export default {
 };
 </script>
       
-      <style scoped>
+<style scoped>
 .form_container {
   position: fixed;
   top: 0;
@@ -249,8 +460,8 @@ export default {
   font-size: 34px;
 }
 .point_form {
-  height: 50%;
-  width: 60%;
+  height: 62%;
+  width: 58%;
   background-color: #fff;
   border-radius: 4px;
   padding: 30px;
@@ -262,5 +473,18 @@ export default {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  width: 50%;
+}
+.point_review {
+  display: flex;
+  align-items: center;
+  height: 200px;
+  flex-wrap: wrap;
+  width: 50%;
+  margin-bottom: 20px;
+}
+.point_wrapper {
+  display: flex;
+  flex-direction: row-reverse;
 }
 </style>

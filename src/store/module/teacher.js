@@ -91,6 +91,7 @@ const teacherModule = {
                 commit('ADD_TEACHER', newStaff)
                 dispatch('getteacher');
                 dispatch("getsubjectteacher");
+                dispatch("getMaxCodeteacher");
                 console.log('aaa', res.data.notify);
             } catch (error) {
                 console.log(error);

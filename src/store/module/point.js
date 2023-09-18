@@ -6,11 +6,6 @@ const pointModule = {
     state: {
         point: [],
         pointAll: [],
-        studentpoint: [],
-        subjectpoint: [],
-        teacherpoint: [],
-        semesterpoint: [],
-        schoolyearpoint: [],
         getByIdpoint: [],
         loadingpoint: false,
         checkAllpoint: false,
@@ -36,11 +31,6 @@ const pointModule = {
         pointAll: state => state.pointAll,
         isshowpoint: state => state.isshowpoint,
         getByIdpoint: state => state.getByIdpoint,
-        studentpoint: state => state.studentpoint,
-        subjectpoint: state => state.subjectpoint,
-        teacherpoint: state => state.teacherpoint,
-        semesterpoint: state => state.semesterpoint,
-        schoolyearpoint: state => state.schoolyearpoint,
         loadingpoint: state => state.loadingpoint,
         checkAllpoint: state => state.checkAllpoint,
         isCheckedpoint: state => state.point.isChecked,
@@ -140,46 +130,6 @@ const pointModule = {
                 console.log(error)
             }
         },
-        async getstudentpoint({ commit }) {
-            try {
-                const res = await axios.get(`${API_BASE_URL}Students`)
-                commit('SET_STUDENT_POINT', res.data)
-            } catch (error) {
-                console.log(error)
-            }
-        },
-        async getteachertimetable({ commit }) {
-            try {
-                const res = await axios.get(`${API_BASE_URL}Teachers`)
-                commit('SET_TEACHER_TIMETABLE', res.data)
-            } catch (error) {
-                console.log(error)
-            }
-        },
-        async getsubjecttimetable({ commit }) {
-            try {
-                const res = await axios.get(`${API_BASE_URL}Subjects`)
-                commit('SET_SUBJECT_TIMETABLE', res.data)
-            } catch (error) {
-                console.log(error)
-            }
-        },
-        async getsemesterpoint({ commit }) {
-            try {
-                const res = await axios.get(`${API_BASE_URL}Semesters`)
-                commit('SET_SEMESTER_POINT', res.data)
-            } catch (error) {
-                console.log(error)
-            }
-        },
-        async getschooltearpoint({ commit }) {
-            try {
-                const res = await axios.get(`${API_BASE_URL}SchoolYear`)
-                commit('SET_SCHOOLYEAR_POINT', res.data)
-            } catch (error) {
-                console.log(error)
-            }
-        },
         toggleAllSelectionpoint({ commit }) {
             try {
                 commit('SELECT_ALL_POINT')
@@ -264,41 +214,6 @@ const pointModule = {
                 console.log(error);
             }
 
-        },
-        SET_STUDENT_POINT(state, studentpoint) {
-            try {
-                state.studentpoint = studentpoint;
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        SET_TEACHER_POINT(state, teacherpoint) {
-            try {
-                state.teacherpoint = teacherpoint;
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        SET_SUBJECT_POINT(state, subjectpoint) {
-            try {
-                state.subjectpoint = subjectpoint;
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        SET_SEMESTER_POINT(state, semesterpoint) {
-            try {
-                state.semesterpoint = semesterpoint;
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        SET_SCHOOLYEAR_POINT(state, schoolyearpoint) {
-            try {
-                state.schoolyearpoint = schoolyearpoint;
-            } catch (error) {
-                console.log(error);
-            }
         },
         //SET THỜI GIAN HIỂN THỊ loadingpoint DỮ LIỆU
         SET_LOADING_POINT(state) {

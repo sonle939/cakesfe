@@ -109,6 +109,7 @@
                   </th>
                   <th style="min-width: 155px">Môn học</th>
                   <th style="min-width: 170px">Ngày học</th>
+                  <th style="min-width: 170px">Buổi học</th>
                   <th style="min-width: 155px">Giờ bắt đầu</th>
                   <th style="min-width: 170px">Giờ kết thúc</th>
                   <th style="min-width: 155px">Thời gian biểu của lớp</th>
@@ -141,6 +142,14 @@
                       v-tippy="{ interactive: true }"
                     >
                       {{ data.DayLearn }}
+                    </tippy>
+                  </td>
+                  <td class="text_left">
+                    <tippy
+                      :content="data.TimeType"
+                      v-tippy="{ interactive: true }"
+                    >
+                      {{ data.TimeType }}
                     </tippy>
                   </td>
                   <td class="text_left">

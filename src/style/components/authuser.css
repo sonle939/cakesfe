@@ -234,6 +234,10 @@
 .verify_container input {
   margin: 0 10px;
 }
+.verify_form p {
+  color: #e61d1d;
+  margin: 10px 0;
+}
 .verify_form input:focus {
   border: 1px solid #50b83c;
   outline: none;

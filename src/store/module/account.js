@@ -9,9 +9,12 @@ const accountModule = {
     state: {
         account: [],
         getById: [],
+        getByEmail: [],
         login: [],
         username: '',
         password: '',
+        codeCheck: '',
+        emailcodecheck: '',
         loadingaccount: false,
         checkAllaccount: false,
         isHide: false,
@@ -38,6 +41,9 @@ const accountModule = {
         studentAll: state => state.studentAll,
         teacherAll: state => state.teacherAll,
         getById: state => state.getById,
+        getByEmail: state => state.getByEmail,
+        codeCheck: state => state.codeCheck,
+        emailcodecheck: state => state.emailcodecheck,
         /**dung de loc theo dieu kien */
         role: state => state.role,
         accountCode: state => state.accountCode,
@@ -106,6 +112,18 @@ const accountModule = {
                 console.log(error);
             }
         },
+        async sendEmailCode({ commit, state }) {
+            try {
+                const res = await axios.post(`https://localhost:7199/api/SendEmail?emailInput=${state.emailcodecheck}`);
+                commit('CODECHECK', res.data.code);
+                // Hiển thị thông báo với mã ngẫu nhiên, res.data.code có chứa mã ngẫu nhiên
+                console.log('Random Code:', res.data.code);
+                // Tiếp tục xử lý tại đây, ví dụ: dispatch('getaccount');
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
         /**TẠO MỘT HÀM DÙNG ĐỂ XÓA DỮ LIỆU SỬ DỤNG ASYNC AWAIT VÀ AXIOS */
         async deleteaccount({ commit, dispatch }, AccountId) {
             //commit('DELETE_TODO', id)
@@ -208,6 +226,14 @@ const accountModule = {
                 console.log(error)
             }
         },
+        async getbyemail({ commit, state }) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Accounts/getByEmail?recordId=${state.emailcodecheck}`)
+                commit('GETBYEMAIL', response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
         async Loginaccount({ commit }, object) {
             try {
                 const response = await axios.get(`${API_BASE_URL}Accounts/Login?AccountCode=${object.username}&PassWord=${object.password}`);
@@ -246,9 +272,31 @@ const accountModule = {
     },
     //MUTATIONS DÙNG ĐỂ THAO TÁC(thay doi trang thai state) VỚI STATE TRONG STORE
     mutations: {
+        CODECHECK(state, text) {
+            try {
+                state.codeCheck = text;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        EMAILCHECK(state, text) {
+            try {
+                state.emailcodecheck = text;
+            } catch (error) {
+                console.log(error);
+            }
+        },
         GETBYID(state, data) {
             try {
                 state.getById = data
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        GETBYEMAIL(state, data) {
+            try {
+                state.getByEmail = data
             } catch (error) {
                 console.log(error);
             }

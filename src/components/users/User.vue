@@ -164,8 +164,9 @@
           </div>
           <div v-else-if="tab.type === 'input'">
             <!-- Nội dung tab kiểu input -->
+            bang diem
           </div>
-          <div v-else-if="tab.type === 'text'">
+          <div v-else>
             <table class="timetable">
               <thead>
                 <tr>
@@ -191,16 +192,11 @@
               </tbody>
             </table>
           </div>
-          <div v-else>
-            <!-- Nội dung tab kiểu input -->
-            <input
-              type="text"
-              v-model="tab.inputValue"
-              placeholder="danh sach lop hoc"
-            />
-          </div>
         </template>
       </div>
+    </div>
+    <div class="user_feedback">
+      <i class="bx bx-chat"></i>
     </div>
   </div>
 </template>
@@ -220,19 +216,21 @@ export default {
     const activeTab = ref(0);
     const userData = ref([]);
     const timimgtable = ref([
-      "8:00 - 9:00",
-      "9:00 - 10:00",
-      "10:00 - 11:00",
-      "11:00 - 12:00",
-      "12:00 - 13:00",
+      "7:00 - 7:45",
+      "7:50 - 8:35",
+      "9:05 - 9:50",
+      "9:55 - 10:40",
+      "10:45 - 11:40",
+      "14:00 - 16:40",
     ]);
     const scheduleTable = ref([
-      ["Môn 1", "Môn 2", "Môn 3", "Môn 4", "Môn 5"],
-      ["Môn 6", "Môn 7", "Môn 8", "Môn 9", "Môn 10"],
-      ["Môn 11", "Môn 12", "Môn 13", "Môn 14", "Môn 15"],
-      ["Môn 16", "Môn 17", "Môn 18", "Môn 19", "Môn 20"],
-      ["Môn 21", "Môn 22", "Môn 23", "Môn 24", "Môn 25"],
-      ["Môn 26", "Môn 27", "Môn 28", "Môn 29", "Môn 30"],
+      ["Toán học", "Ngữ văn", "Tiếng anh", "Vật lý", "Hóa học"],
+      ["Lịch sử", "Địa lý", "Âm nhạc", "Mĩ thuật", "Thể dục"],
+      ["Toán học", "Ngữ văn", "Tiếng anh", "Vật lý", "Hóa học"],
+      ["Lịch sử", "Địa lý", "Âm nhạc", "Mĩ thuật", "Thể dục"],
+      ["Toán học", "Ngữ văn", "Tiếng anh", "Vật lý", "Hóa học"],
+      ["Lịch sử", "Địa lý", "Âm nhạc", "Mĩ thuật", "Thể dục"],
+      ["Tiếng anh", "Ngữ văn", "Ngữ văn", "Toán học", "Toán học"],
     ]);
     const tabs = ref([
       { label: "Thông tin cá nhân", type: "table", icon: "bx-badge-check" },
@@ -247,12 +245,6 @@ export default {
         type: "text",
         content: "This is some text content.",
         icon: "bx-book",
-      },
-      {
-        label: "Danh sách lớp",
-        type: "tablelop",
-        content: "This is some text content.",
-        icon: "bxs-layer",
       },
     ]);
     const toastUpdate = () => {

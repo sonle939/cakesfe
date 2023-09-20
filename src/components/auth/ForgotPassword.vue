@@ -13,62 +13,120 @@
         <img src="../../assets/qr-login-34.png" alt="" class="img_qr" />
       </div>
       <img src="../../assets/bg34-1.png" class="hh_icon" />
-      <form class="form_wrapper">
+      <form class="form_wrapper" novalidate="true">
         <div class="form_signin">
-          <label class="label" v-if="isSendEmail">
-            <i class="fa fa-envelope" aria-hidden="true"></i>
-            <input type="text" name="input" placeholder="Vui lòng nhập email" />
-          </label>
-          <div class="verify_form" v-if="isCodeVerify">
-            <h3>Vui lòng nhập mã gồm 4 chữ số được gửi</h3>
-            <div class="verify_container">
-              <input type="text" class="label input" style="width: 40px" />
-              <input type="text" class="label input" style="width: 40px" />
-              <input type="text" class="label input" style="width: 40px" />
-              <input type="text" class="label input" style="width: 40px" />
-            </div>
-          </div>
-          <div class="changepass_form" v-if="isChangepassword">
-            <label class="label">
-              <i class="fa fa-link" aria-hidden="true"></i>
+          <div class="signin_item">
+            <label
+              :class="validateemail ? 'label bd_error mb_0' : 'label'"
+              v-if="isSendEmail"
+            >
+              <i class="fa fa-envelope" aria-hidden="true"></i>
               <input
                 type="text"
                 name="input"
-                placeholder="Vui lòng nhập mật khẩu mới"
+                placeholder="Vui lòng nhập email"
+                v-model="emailtext"
+                @change="EMAILCHECK(emailtext)"
               />
             </label>
-            <label class="label">
-              <i class="fa fa-flickr" aria-hidden="true"></i>
-              <input type="text" name="input" placeholder="Xác nhân mật khẩu" />
-            </label>
+            <p v-if="validateemail">Vui lòng nhập địa chỉ email</p>
+          </div>
+
+          <div class="verify_form" v-if="isCodeVerify">
+            <h3>Kiểm tra hộp thư của bạn</h3>
+            <div class="verify_container">
+              <input
+                type="text"
+                :class="
+                  checkcodefromEmail ? 'label input bd_error mb_0 ' : 'label'
+                "
+                style="width: 40px"
+                v-model="codeData.code1"
+              />
+              <input
+                type="text"
+                :class="
+                  checkcodefromEmail ? 'label input bd_error mb_0 ' : 'label'
+                "
+                style="width: 40px"
+                v-model="codeData.code2"
+              />
+              <input
+                type="text"
+                :class="
+                  checkcodefromEmail ? 'label input bd_error mb_0 ' : 'label'
+                "
+                style="width: 40px"
+                v-model="codeData.code3"
+              />
+              <input
+                type="text"
+                :class="
+                  checkcodefromEmail ? 'label input bd_error mb_0 ' : 'label'
+                "
+                style="width: 40px"
+                v-model="codeData.code4"
+              />
+            </div>
+            <p v-if="checkcodefromEmail">Mã xác nhập bị sai</p>
+          </div>
+          <div class="changepass_form" v-if="isChangepassword">
+            <div class="signin_item">
+              <label :class="validatenewpass ? 'label bd_error mb_0' : 'label'">
+                <i class="fa fa-link" aria-hidden="true"></i>
+                <input
+                  :type="showPassword ? 'text' : 'password'"
+                  name="input"
+                  placeholder="Vui lòng nhập mật khẩu mới"
+                  v-model="newPassword"
+                />
+                <i
+                  :class="showPassword ? 'fa fa-eye' : 'fa fa-eye-slash'"
+                  aria-hidden="true"
+                  style="margin-right: 0"
+                  @click="togglePasswordVisibility"
+                ></i>
+              </label>
+
+              <p v-if="validatenewpass">Vui lòng nhập mật khẩu mới</p>
+            </div>
+            <div class="signin_item">
+              <label :class="validateconfirm ? 'label bd_error mb_0' : 'label'">
+                <i class="fa fa-flickr" aria-hidden="true"></i>
+                <input
+                  :type="showPasswordConfirm ? 'text' : 'password'"
+                  name="input"
+                  placeholder="Xác nhân mật khẩu"
+                  v-model="confirmPassword"
+                />
+                <i
+                  :class="showPasswordConfirm ? 'fa fa-eye' : 'fa fa-eye-slash'"
+                  aria-hidden="true"
+                  style="margin-right: 0"
+                  @click="toggleConfirmPasswordVisibility"
+                ></i>
+              </label>
+              <p v-if="validateconfirm">Vui lòng xác nhận mật khẩu</p>
+              <p v-if="passwordjoint">Mật khẩu không khớp</p>
+            </div>
           </div>
         </div>
-        <button
-          v-if="isSendEmail"
-          @click="
-            isSendEmail = false;
-            isCodeVerify = true;
-          "
-        >
-          Gửi mã
-        </button>
-        <button
-          v-if="isCodeVerify"
-          @click="
-            isChangepassword = true;
-            isCodeVerify = false;
-          "
-        >
+        <button v-if="isSendEmail" @click.prevent="sendEmail()">Gửi mã</button>
+        <button v-if="isCodeVerify" @click.prevent="checkcodeEmail()">
           Xác minh mã
         </button>
-        <button v-if="isChangepassword">Cập nhật mật khẩu</button>
+        <button v-if="isChangepassword" @click.prevent="ResetPassword()">
+          Cập nhật mật khẩu
+        </button>
       </form>
     </div>
   </div>
 </template>
   
   <script>
-import { ref } from "vue";
+import { reactive, ref } from "vue";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import { createToast } from "mosha-vue-toastify";
 
 export default {
   name: "ForgotPassword",
@@ -77,6 +135,22 @@ export default {
     const isSendEmail = ref(true);
     const isCodeVerify = ref(false);
     const isChangepassword = ref(false);
+    const emailtext = ref("");
+    const checkcodefromEmail = ref(false);
+    const newPassword = ref("");
+    const confirmPassword = ref("");
+    const validateemail = ref(false);
+    const validatenewpass = ref(false);
+    const validateconfirm = ref(false);
+    const passwordjoint = ref(false);
+    const showPassword = ref(false);
+    const showPasswordConfirm = ref(false);
+    const codeData = reactive({
+      code1: "",
+      code2: "",
+      code3: "",
+      code4: "",
+    });
     const handleAuth = () => {
       if (changeAuth.value === "login") {
         changeAuth.value = "signup";
@@ -84,13 +158,150 @@ export default {
         changeAuth.value = "login";
       }
     };
+    const toastUpdate = () => {
+      createToast(
+        {
+          title: "Quên mật khẩu",
+          description: "Đổi mật khẩu thành công",
+        },
+        {
+          type: "warning",
+          timeout: 3000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
     return {
+      codeData,
       changeAuth,
       isSendEmail,
       isCodeVerify,
       isChangepassword,
+      checkcodefromEmail,
+      showPasswordConfirm,
+      emailtext,
+      validateemail,
+      newPassword,
+      confirmPassword,
+      validatenewpass,
+      validateconfirm,
+      passwordjoint,
+      showPassword,
       handleAuth,
+      toastUpdate,
     };
+  },
+  computed: {
+    ...mapGetters(["codeCheck", "getByEmail"]),
+    updateResult() {
+      return (
+        this.codeData.code1 +
+        this.codeData.code2 +
+        this.codeData.code3 +
+        this.codeData.code4
+      );
+    },
+  },
+  methods: {
+    ...mapMutations(["EMAILCHECK"]),
+    ...mapActions(["sendEmailCode", "getbyemail", "updateItemaccount"]),
+    togglePasswordVisibility() {
+      // Khi người dùng nhấp vào biểu tượng "eye", thay đổi trạng thái hiển thị mật khẩu
+      this.showPassword = !this.showPassword;
+    },
+    toggleConfirmPasswordVisibility() {
+      // Khi người dùng nhấp vào biểu tượng "eye", thay đổi trạng thái hiển thị mật khẩu
+      this.showPasswordConfirm = !this.showPasswordConfirm;
+    },
+    validateInputs() {
+      let isValid = true;
+      // Kiểm tra điều kiện cho tên đăng nhập
+      if (this.emailtext.trim() === "") {
+        isValid = false;
+        this.validateemail = true;
+      } else if (this.emailtext !== "") {
+        this.validateemail = false;
+      }
+      return isValid;
+    },
+    validateCheckCodeFromEmail() {
+      let isValid = true;
+      // Kiểm tra điều kiện cho tên đăng nhập
+      if (this.updateResult !== this.codeCheck) {
+        isValid = false;
+        this.checkcodefromEmail = true;
+      } else if (this.updateResult === this.codeCheck) {
+        this.checkcodefromEmail = false;
+      }
+      return isValid;
+    },
+    validatePassword() {
+      let isValid = true;
+      // Kiểm tra điều kiện cho tên đăng nhập
+      if (this.newPassword.trim() === "") {
+        isValid = false;
+        this.validatenewpass = true;
+      } else if (this.newPassword !== "") {
+        this.validatenewpass = false;
+      }
+      // Kiểm tra điều kiện cho tên đăng nhập
+      if (this.confirmPassword.trim() === "") {
+        isValid = false;
+        this.validateconfirm = true;
+      } else if (this.confirmPassword !== "") {
+        this.validateconfirm = false;
+      }
+      // Kiểm tra điều kiện cho tên đăng nhập
+      if (this.confirmPassword !== this.newPassword) {
+        isValid = false;
+        this.passwordjoint = true;
+      } else if (this.confirmPassword == this.newPassword) {
+        this.passwordjoint = false;
+      }
+      return isValid;
+    },
+    checkcodeEmail() {
+      try {
+        if (this.validateCheckCodeFromEmail()) {
+          this.isChangepassword = true;
+          this.isCodeVerify = false;
+          this.getbyemail({
+            recordId: this.emailtext,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async ResetPassword() {
+      try {
+        if (this.validatePassword()) {
+          this.getByEmail.PassWord = this.confirmPassword;
+          this.getByEmail.IsChecked = false;
+          this.updateItemaccount(this.getByEmail);
+          this.toastUpdate();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async sendEmail() {
+      try {
+        if (this.validateInputs()) {
+          this.isSendEmail = false;
+          this.isCodeVerify = true;
+          this.sendEmailCode({
+            emailInput: this.emailtext,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  mounted() {
+    this.codeCheck;
   },
 };
 </script>

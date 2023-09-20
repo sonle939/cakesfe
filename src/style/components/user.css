@@ -43,7 +43,27 @@
   border-bottom: 2px solid #041434;
   color: black;
 }
-
+.user {
+  overflow: hidden;
+  position: relative;
+}
+.user_feedback {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #fff;
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: shake 0.5s ease infinite 1.5s;
+}
+.user_feedback i {
+  font-size: 30px;
+}
 /* Thêm các lớp biểu tượng (icon) của Boxicons vào .bx để tạo biểu tượng */
 .iconuser {
   font-size: 20px;
@@ -138,31 +158,26 @@
 .timetable th,
 .timetable td {
   padding: 10px;
-  text-align: center;
-  border: 1px solid #ccc;
+  text-align: left;
+  height: 80px;
 }
 
 .timetable th {
-  background-color: #f2f2f2;
+  color: black;
 }
 
 .timetable td {
   background-color: #fff;
+  color: black;
 }
 
 /* CSS cho các ô lịch học */
 .timetable td {
   position: relative;
 }
-
-.timetable td::after {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 128, 255, 0.2); /* Màu nền cho ô lịch học */
-  border: 2px solid #0080ff; /* Viền cho ô lịch học */
+.timetable thead tr th {
+  background-color: #ebecf1;
+}
+.timetable tbody td:first-child {
+  background-color: #ebecf1;
 }

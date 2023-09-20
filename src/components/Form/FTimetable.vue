@@ -40,16 +40,74 @@
             class="sinput"
             placeholder="mã thời khóa biểu"
             v-model="formData.TimeTableCode"
+            style="width: 150px"
           />
         </label>
-        <label class="slabel"
-          >Ngày học
-          <input
-            type="text"
-            class="sinput"
-            placeholder="ngày học"
-            v-model="formData.DayLearn"
-          />
+        <label class="slabel" @click="toggleDropdowndaylearn">
+          Ngày học
+          <div class="dropdown" style="margin-top: 8px; width: 200px">
+            <input
+              type="text"
+              v-model="selectedOptiondaylearn"
+              placeholder="Chọn giá trị lọc"
+            />
+            <i
+              @click="toggleDropdowndaylearn"
+              :class="
+                isOpendaylearn
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpendaylearn"
+              style="width: 200px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in optionDayLearn"
+                  :key="data.id"
+                  @click="selectOptiondaylearn(data.name)"
+                >
+                  {{ data.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+        <label class="slabel" @click="toggleDropdownlearntype">
+          Buổi học
+          <div class="dropdown" style="margin-top: 8px; width: 200px">
+            <input
+              type="text"
+              v-model="selectedOptionlearntype"
+              placeholder="Chọn giá trị lọc"
+            />
+            <i
+              @click="toggleDropdownlearntype"
+              :class="
+                isOpenlearntype
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpenlearntype"
+              style="width: 200px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in optionlearntype"
+                  :key="data.id"
+                  @click="selectOptionlearntype(data.name)"
+                >
+                  {{ data.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
         </label>
         <label class="slabel" @click="toggleDropdowntimestart">
           Giờ bắt đầu
@@ -74,7 +132,7 @@
             >
               <ul ref="list">
                 <li
-                  v-for="data in optionTime"
+                  v-for="data in filteredOptionTime"
                   :key="data.id"
                   @click="selectOptiontimestart(data.name)"
                 >
@@ -224,16 +282,74 @@
             class="sinput"
             placeholder="mã lớp học"
             v-model="getByIdtimetable.TimeTableCode"
+            style="width: 150px"
           />
         </label>
-        <label class="slabel"
-          >Ngày học
-          <input
-            type="text"
-            class="sinput"
-            placeholder="tên lớp học"
-            v-model="getByIdtimetable.DayLearn"
-          />
+        <label class="slabel" @click="toggleDropdowndaylearnUpdate">
+          Ngày học
+          <div class="dropdown" style="margin-top: 8px; width: 200px">
+            <input
+              type="text"
+              v-model="getByIdtimetable.DayLearn"
+              placeholder="Chọn giá trị lọc"
+            />
+            <i
+              @click="toggleDropdowndaylearnUpdate"
+              :class="
+                isOpendaylearnUpdate
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpendaylearnUpdate"
+              style="width: 200px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in optionDayLearn"
+                  :key="data.id"
+                  @click="selectOptiondaylearnUpdate(data.name)"
+                >
+                  {{ data.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+        <label class="slabel" @click="toggleDropdownlearntypeUpdate">
+          Buổi học
+          <div class="dropdown" style="margin-top: 8px; width: 200px">
+            <input
+              type="text"
+              v-model="getByIdtimetable.TimeType"
+              placeholder="Chọn giá trị lọc"
+            />
+            <i
+              @click="toggleDropdownlearntypeUpdate"
+              :class="
+                isOpenlearntypeUpdate
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpenlearntypeUpdate"
+              style="width: 200px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in optionlearntype"
+                  :key="data.id"
+                  @click="selectOptionlearntypeUpdate(data.name)"
+                >
+                  {{ data.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
         </label>
         <label class="slabel" @click="toggleDropdowntimestartUpdate">
           Giờ bắt đầu
@@ -258,7 +374,7 @@
             >
               <ul ref="list">
                 <li
-                  v-for="data in optionTime"
+                  v-for="data in filteredOptionTime"
                   :key="data.id"
                   @click="selectOptiontimestartUpdate(data.name)"
                 >
@@ -440,11 +556,16 @@ export default {
       TeacherId: "",
       ClassRoomId: "",
       DayLearn: "",
+      TimeType: "",
       TimeStart: "",
       TimeEnd: "",
     });
     const isOpentimestart = ref(false);
     const isOpentimestartUpdate = ref(false);
+    const isOpendaylearn = ref(false);
+    const isOpendaylearnUpdate = ref(false);
+    const isOpenlearntype = ref(false);
+    const isOpenlearntypeUpdate = ref(false);
     const isOpenclassroom = ref(false);
     const isOpenssubject = ref(false);
     const isOpensteacher = ref(false);
@@ -455,17 +576,34 @@ export default {
     const selectedOptionteacher = ref("");
     const selectedOptionclassroom = ref("");
     const selectedOptiontimestart = ref("");
+    const selectedOptiondaylearn = ref("");
+    const selectedOptionlearntype = ref("");
     const optionTime = ref([
       { id: 1, name: "7h00p" },
       { id: 2, name: "7h50p" },
       { id: 3, name: "9h05p" },
       { id: 4, name: "9h55p" },
       { id: 5, name: "10h45p" },
+      { id: 6, name: "14h00p" },
+    ]);
+    const optionDayLearn = ref([
+      { id: 1, name: "Thứ 2" },
+      { id: 2, name: "Thứ 3" },
+      { id: 3, name: "Thứ 4" },
+      { id: 4, name: "Thứ 5" },
+      { id: 5, name: "Thứ 6" },
+      { id: 5, name: "Thứ 7" },
+    ]);
+    const optionlearntype = ref([
+      { id: 1, name: "Buổi sáng" },
+      { id: 2, name: "Buổi chiều" },
     ]);
     return {
       toast,
       toastUpdate,
       checkForm,
+      optionDayLearn,
+      optionlearntype,
       error,
       build,
       formData,
@@ -482,9 +620,30 @@ export default {
       selectedOptionclassroom,
       selectedOptiontimestart,
       optionTime,
+      isOpendaylearn,
+      isOpendaylearnUpdate,
+      selectedOptiondaylearn,
+      isOpenlearntype,
+      isOpenlearntypeUpdate,
+      selectedOptionlearntype,
     };
   },
   computed: {
+    filteredOptionTime() {
+      if (
+        this.selectedOptionlearntype == "Buổi sáng" ||
+        this.getByIdtimetable.TimeType == "Buổi sáng"
+      ) {
+        return this.optionTime.slice(0, 5); // Trả về thời gian buổi sáng
+      } else if (
+        this.selectedOptionlearntype == "Buổi chiều" ||
+        this.getByIdtimetable.TimeType == "Buổi chiều"
+      ) {
+        return this.optionTime.slice(5); // Trả về thời gian buổi chiều
+      } else {
+        return []; // Trả về một mảng rỗng nếu không có buổi học nào được chọn hoặc buổi học không tồn tại
+      }
+    },
     filteredTeacher() {
       if (this.selectedOptionteacher) {
         const teacherKeyword = this.selectedOptionteacher.toLowerCase();
@@ -518,6 +677,9 @@ export default {
       } else if (this.selectedOptiontimestart == "10h45p") {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         return (this.formData.TimeEnd = "11h40p");
+      } else if (this.selectedOptiontimestart == "14h00p") {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        return (this.formData.TimeEnd = "16h40p");
       } else {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         return (this.formData.TimeEnd = "giờ kết thúc");
@@ -617,6 +779,18 @@ export default {
     toggleDropdowntimestartUpdate() {
       this.isOpentimestartUpdate = !this.isOpentimestartUpdate;
     },
+    toggleDropdowndaylearn() {
+      this.isOpendaylearn = !this.isOpendaylearn;
+    },
+    toggleDropdowndaylearnUpdate() {
+      this.isOpendaylearnUpdate = !this.isOpendaylearnUpdate;
+    },
+    toggleDropdownlearntype() {
+      this.isOpenlearntype = !this.isOpenlearntype;
+    },
+    toggleDropdownlearntypeUpdate() {
+      this.isOpenlearntypeUpdate = !this.isOpenlearntypeUpdate;
+    },
     selectOptiontimestart(options) {
       this.formData.TimeStart = options;
       this.selectedOptiontimestart = options;
@@ -625,6 +799,24 @@ export default {
     selectOptiontimestartUpdate(options) {
       this.getByIdtimetable.TimeStart = options;
       this.isOpentimestartUpdate = false;
+    },
+    selectOptionlearntype(options) {
+      this.formData.TimeType = options;
+      this.selectedOptionlearntype = options;
+      this.isOpenlearntype = false;
+    },
+    selectOptionlearntypeUpdate(options) {
+      this.getByIdtimetable.TimeType = options;
+      this.isOpenlearntypeUpdate = false;
+    },
+    selectOptiondaylearn(options) {
+      this.formData.DayLearn = options;
+      this.selectedOptiondaylearn = options;
+      this.isOpendaylearn = false;
+    },
+    selectOptiondaylearnUpdate(options) {
+      this.getByIdtimetable.DayLearn = options;
+      this.isOpendaylearnUpdate = false;
     },
     selectOptionclassroom(id, options) {
       this.formData.ClassRoomId = id;

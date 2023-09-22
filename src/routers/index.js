@@ -14,6 +14,7 @@ import Student from '../pages/Student.vue';
 import Subject from '../pages/Subject.vue';
 import Teacher from '../pages/Teacher.vue';
 import TimeTable from '../pages/TimeTable.vue';
+import Conduct from '../pages/Conduct.vue';
 import Information from '../pages/Information.vue';
 const routes = [
     {
@@ -39,6 +40,10 @@ const routes = [
     {
         path: '/admin/grade',
         component: Grade
+    },
+    {
+        path: '/admin/conduct',
+        component: Conduct
     },
     {
         path: '/admin/classroom',

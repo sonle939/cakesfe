@@ -10,7 +10,8 @@ import subject from './module/subject';
 import teacher from './module/teacher';
 import timetable from './module/timetable';
 import user from './module/user';
-
+import feedback from './module/feedback';
+import conduct from './module/conduct';
 import { createStore } from 'vuex';
 
 const store = createStore({
@@ -26,7 +27,9 @@ const store = createStore({
         subject,
         teacher,
         timetable,
-        user
+        user,
+        feedback,
+        conduct
     }
 });
 export default store;

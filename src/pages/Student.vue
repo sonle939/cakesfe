@@ -189,6 +189,12 @@
                         "
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
+                      <span
+                        content="Phản hồi"
+                        v-tippy="{ arrow: true, arrowType: 'round' }"
+                      >
+                        <i class="bx bxs-send"></i>
+                      </span>
                     </div>
                   </td>
                 </tr>
@@ -329,7 +335,7 @@ export default {
       "pageNumberstudent",
       "totalPagesstudent",
       "checkAllstudent",
-      "checkAmountstudent", 
+      "checkAmountstudent",
       "trueCheckedstudent",
       "classroomstudent",
       "loadingstudent",

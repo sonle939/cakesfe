@@ -477,7 +477,6 @@ export default {
       Gender: "",
       SubjectId: "",
       Address: "",
-      ClassRoomId: "",
       Collaborate: "",
       Standard: "",
     });
@@ -671,10 +670,6 @@ export default {
             isValid = false;
             this.error.push("Vui lòng chọn bộ môn");
             break;
-          case this.selectedOptionsClassroomId == null:
-            isValid = false;
-            this.error.push("Vui lòng chọn lớp học");
-            break;
           case this.selectedOptionsCollaborate == null:
             isValid = false;
             this.error.push("Vui lòng chọn tình trạng");
@@ -731,7 +726,6 @@ export default {
             Email: this.formData.Email,
             Gender: this.formData.Gender,
             Address: this.formData.Address,
-            ClassRoomId: this.formData.ClassRoomId,
             SubjectId: this.formData.SubjectId,
             Standard: this.formData.Standard,
             Collaborate: this.formData.Collaborate,

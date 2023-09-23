@@ -72,6 +72,12 @@ export default {
       dataRole: "",
       dataSideBar: [
         {
+          id: 12,
+          name: "Thống kê",
+          classIcon: "bx bxs-pie-chart-alt-2",
+          nameRouter: "/admin/statistic",
+        },
+        {
           id: 1,
           name: "Tài khoản",
           classIcon: "bx bx-user-circle",
@@ -130,6 +136,12 @@ export default {
           name: "Thời gian",
           classIcon: "bx bx-calendar",
           nameRouter: "/admin/timetable",
+        },
+        {
+          id: 11,
+          name: "Hạnh kiểm",
+          classIcon: "bx bxl-sketch",
+          nameRouter: "/admin/conduct",
         },
       ],
     };

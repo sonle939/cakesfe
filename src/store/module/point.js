@@ -13,15 +13,15 @@ const pointModule = {
         isshowpoint: false,
         selectedItemspoint: [],
         formModepoint: false,
+        pointmaxcode: null,
 
         //phan trang
         pageSizespoint: 15, // số lượng item trên một trang
         pageNumberpoint: 1, // số trang đang hiển thị
-        studentId: '',
-        subjectId: '',
-        teacherId: '',
-        semesterId: '',
-        SchoolyearId: '',
+        subjectId: '4e4dd06a-1a04-681f-29dc-88a3ac8a3bba',
+        classroomid: '677132b4-2a33-68d1-26c2-579daad24557',
+        semesterId: '3f7bb059-6c87-1b53-7f6a-e0860b0602ba',
+        schoolyearId: '17ae2be6-2c6a-5cab-3bcb-6f55ff55ddab',
         totalRecordspoint: 1,
         totalPagespoint: null,
         //ket thuc khai bao bien phan trang
@@ -34,6 +34,7 @@ const pointModule = {
         loadingpoint: state => state.loadingpoint,
         checkAllpoint: state => state.checkAllpoint,
         isCheckedpoint: state => state.point.isChecked,
+        pointmaxcode: state => state.pointmaxcode,
         //dùng để đếm số lượng dữ liệu (phân trang)
         allPoint: state => state.point.length,
         showIsHidepoint: state => state.isHidepoint,
@@ -55,12 +56,18 @@ const pointModule = {
             try {
                 commit('SET_LOADING_POINT')
                 const res = await
-                    axios.get(`${API_BASE_URL}Points/Paging?pageSize=${state.pageSizespoint}
-                    &pageNumber=${state.pageNumberpoint}&studentId=${state.studentId}
-                    &subjectId=${state.subjectId}&teacherId=${state.teacherId}&semesterId=${state.semesterId}&schoolyearId=${state.SchoolyearId}`)
+                    axios.get(`${API_BASE_URL}Points/Paging?pageSize=${state.pageSizespoint}&pageNumber=${state.pageNumberpoint}&subjectId=${state.subjectId}&semesterId=${state.semesterId}&schoolyearId=${state.schoolyearId}&ClassRoomId=${state.classroomid}`)
                 commit('SET_POINT', res.data.data)
                 commit('SET_TOTAL_PAGES_POINT', res.data.totalRecords)
                 commit('SET_ALLPAGE_POINT', res.data.totalPages);
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getMaxCodepoint({ commit }) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Points/PointMaxcode`)
+                commit('SET_MAXCODE_POINT', response.data.data)
             } catch (error) {
                 console.log(error)
             }
@@ -160,6 +167,38 @@ const pointModule = {
 
         },
 
+        async setFilterclassroomidpoint({ commit, dispatch }, filter) {
+            try {
+                commit('FILTER_CLASSROOMID_POINT', filter);
+                dispatch('getpoint');
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        async setFiltersubjectidpoint({ commit, dispatch }, filter) {
+            try {
+                commit('FILTER_SUBJECTID_POINT', filter);
+                dispatch('getpoint');
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        async setFiltersemesterpoint({ commit, dispatch }, filter) {
+            try {
+                commit('FILTER_SEMESTER_POINT', filter);
+                dispatch('getpoint');
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        async setFilterschoolyearpoint({ commit, dispatch }, filter) {
+            try {
+                commit('FILTER_SCHOOLYEAR_POINT', filter);
+                dispatch('getpoint');
+            } catch (error) {
+                console.error(error)
+            }
+        },
     },
     //MUTATIONS DÙNG ĐỂ THAO TÁC(thay doi trang thai state) VỚI STATE TRONG STORE
     mutations: {
@@ -324,6 +363,41 @@ const pointModule = {
                         item.isChecked = false;
                     }
                 });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        SET_MAXCODE_POINT(state, pointmaxcode) {
+            try {
+                state.pointmaxcode = pointmaxcode
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        FILTER_SUBJECTID_POINT(state, subjectId) {
+            try {
+                state.subjectId = subjectId;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        FILTER_CLASSROOMID_POINT(state, classroomid) {
+            try {
+                state.classroomid = classroomid;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        FILTER_SEMESTER_POINT(state, semesterId) {
+            try {
+                state.semesterId = semesterId;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        FILTER_SCHOOLYEAR_POINT(state, schoolyearId) {
+            try {
+                state.schoolyearId = schoolyearId;
             } catch (error) {
                 console.log(error);
             }

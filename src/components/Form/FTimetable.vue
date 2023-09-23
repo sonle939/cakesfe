@@ -945,6 +945,7 @@ export default {
             TeacherId: this.formData.TeacherId,
             ClassRoomId: this.formData.ClassRoomId,
             DayLearn: this.formData.DayLearn,
+            TimeType: this.formData.TimeType,
             TimeStart: this.formData.TimeStart,
             TimeEnd: this.formData.TimeEnd,
             isChecked: false,

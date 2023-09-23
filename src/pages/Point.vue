@@ -7,59 +7,7 @@
         <HeaderContent text="Quản lý bảng điểm" :showform="modeFormInsert" />
         <div class="search_table">
           <div class="search_filter">
-            <div class="checked_data" v-show="trueCheckedpoint">
-              <h3>
-                Đã chọn tất cả
-                <p>{{ checkAmountpoint }}</p>
-              </h3>
-              <h3 @click="uncheckItemspoint">Bỏ chọn</h3>
-              <VButton
-                text="Xác nhận thông tin"
-                class="btn_info"
-                leftIcon="bx bx-check-circle remove_icon"
-              />
-              <VButton
-                text="Xóa"
-                leftIcon="fa fa-times remove_icon"
-                class="remove_btn"
-                @click="
-                  deleteMultiplepoint(selectedItemspoint);
-                  toast();
-                "
-              />
-              <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
-            </div>
             <div class="dropdown_wrapper">
-              <div class="dropdown_item">
-                <p>Khối lớp</p>
-                <div class="dropdown" style="width: 130px">
-                  <input
-                    type="text"
-                    v-model="selectedOption"
-                    placeholder="Chọn giá trị lọc"
-                    @click="toggleDropdown"
-                  />
-                  <i
-                    @click="toggleDropdown"
-                    :class="
-                      isOpen
-                        ? 'bx bx-chevron-down active'
-                        : 'bx bx-chevron-down'
-                    "
-                  ></i>
-                  <div class="overlaylist" v-show="isOpen" style="width: 130px">
-                    <ul ref="list">
-                      <li
-                        v-for="data in gradeclassroom"
-                        :key="data.GradeId"
-                        @click="selectOption(data.GradeId, data.GradeName)"
-                      >
-                        {{ data.GradeName }}
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
               <div class="dropdown_item" style="margin-left: 12px">
                 <p>Lớp học</p>
                 <div class="dropdown" style="width: 130px">
@@ -84,9 +32,9 @@
                   >
                     <ul ref="list">
                       <li
-                        v-for="data in filteredGradeClass"
+                        v-for="data in classroom"
                         :key="data.ClassRoomId"
-                        @click="selectOptionclassroom(data.ClassRoomName)"
+                        @click="handleClassroomClick(data)"
                       >
                         {{ data.ClassRoomName }}
                       </li>
@@ -120,9 +68,7 @@
                       <li
                         v-for="data in subject"
                         :key="data.SubjectId"
-                        @click="
-                          selectOptionsubject(data.SubjectId, data.SubjectName)
-                        "
+                        @click="handleSubjectClick(data)"
                       >
                         {{ data.SubjectName }}
                       </li>
@@ -156,18 +102,69 @@
                       <li
                         v-for="data in semester"
                         :key="data.SemesterId"
-                        @click="
-                          selectOptionsemester(
-                            data.SemesterId,
-                            data.SemesterName
-                          )
-                        "
+                        @click="handleSemesterClick(data)"
                       >
                         {{ data.SemesterName }}
                       </li>
                     </ul>
                   </div>
                 </div>
+              </div>
+              <div class="dropdown_item" style="margin-left: 12px">
+                <p>Năm học</p>
+                <div class="dropdown" style="width: 130px">
+                  <input
+                    type="text"
+                    v-model="selectedOptionschoolyear"
+                    placeholder="Chọn giá trị lọc"
+                    @click="toggleDropdownschoolyear"
+                  />
+                  <i
+                    @click="toggleDropdownschoolyear"
+                    :class="
+                      isOpenschoolyear
+                        ? 'bx bx-chevron-down active'
+                        : 'bx bx-chevron-down'
+                    "
+                  ></i>
+                  <div
+                    class="overlaylist"
+                    v-show="isOpenschoolyear"
+                    style="width: 130px"
+                  >
+                    <ul ref="list">
+                      <li
+                        v-for="data in schoolyear"
+                        :key="data.SchoolYearId"
+                        @click="handleschoolyearClick(data)"
+                      >
+                        {{ data.SchoolYearName }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="checked_data" v-show="trueCheckedpoint">
+                <h3>
+                  Đã chọn tất cả
+                  <p>{{ checkAmountpoint }}</p>
+                </h3>
+                <h3 @click="uncheckItemspoint">Bỏ chọn</h3>
+                <VButton
+                  text="Xác nhận thông tin"
+                  class="btn_info"
+                  leftIcon="bx bx-check-circle remove_icon"
+                />
+                <VButton
+                  text="Xóa"
+                  leftIcon="fa fa-times remove_icon"
+                  class="remove_btn"
+                  @click="
+                    deleteMultiplepoint(selectedItemspoint);
+                    toast();
+                  "
+                />
+                <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
             </div>
             <div class="filter_item">
@@ -219,7 +216,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="data in pointAll" :key="data.PointId">
+                <tr v-for="data in point" :key="data.PointId">
                   <td>
                     <input
                       type="checkbox"
@@ -300,63 +297,33 @@
                         "
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
+                      <span
+                        content="Phản hồi"
+                        v-tippy="{ arrow: true, arrowType: 'round' }"
+                      >
+                        <i class="bx bxs-send"></i>
+                      </span>
                     </div>
                   </td>
                 </tr>
               </tbody>
             </table>
-            <div class="noData" v-if="pointAll.length == 0">
+            <div class="noData" v-if="point.length == 0">
               <img src="../assets/nodata.svg" alt="" />
               <h3>Không có dữ liệu</h3>
             </div>
             <Loading v-show="loadingpoint" />
           </div>
-          <div class="score">
-            <div class="score_left">
-              <p>
-                Sổ điểm năm học: <b>{{ selectedOptionschoolyear }}</b>
-              </p>
-            </div>
-            <div class="score_right">
-              <p>Chọn năm học:</p>
-              <div class="dropdown" style="width: 130px">
-                <input
-                  type="text"
-                  v-model="selectedOptionschoolyear"
-                  placeholder="Chọn giá trị"
-                  @click="toggleDropdownschoolyear"
-                />
-                <i
-                  @click="toggleDropdownschoolyear"
-                  :class="
-                    isOpenschoolyear
-                      ? 'bx bx-chevron-down active'
-                      : 'bx bx-chevron-down'
-                  "
-                ></i>
-                <div
-                  class="overlaylist"
-                  v-show="isOpenschoolyear"
-                  style="width: 130px; top: -100px; height: 90px"
-                >
-                  <ul ref="list" style="overflow: hidden">
-                    <li
-                      v-for="data in schoolyear"
-                      :key="data.SchoolYearId"
-                      @click="
-                        selectOptionschoolyear(
-                          data.SchoolYearId,
-                          data.SchoolYearName
-                        )
-                      "
-                    >
-                      {{ data.SchoolYearName }}
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
+          <AdminPaginnation
+            :showIsHide="showIsHidepoint"
+            :totalRecords="totalRecordspoint"
+            :pageNumber="pageNumberpoint"
+            :pageSize="pageSizespoint"
+            :totalPages="totalPagespoint"
+            :setPageNumber="setPageNumberpoint"
+            :setSize="setSizepoint"
+            :HIDE="HIDEPOINT"
+          />
         </div>
       </div>
     </div>
@@ -370,10 +337,12 @@ import Sidebar from "../components/Sidebar.vue";
 import HeaderContent from "@/components/content/Header.vue";
 import FPointVue from "../components/Form/FPoint.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import { reactive, ref } from "vue";
+import { ref } from "vue";
 import { format } from "date-fns";
 import Loading from "../components/Loading.vue";
 import { createToast } from "mosha-vue-toastify";
+import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
+import VButton from "../components/Button/VButton.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Point",
@@ -391,25 +360,16 @@ export default {
         }
       );
     };
-    const isOpen = ref(false);
-    const selectedOption = ref("");
     const isOpenclassroom = ref(false);
-    const selectedOptionclassroom = ref("");
+    const selectedOptionclassroom = ref("Lớp 6A");
     const isOpensubject = ref(false);
-    const selectedOptionsubject = ref("");
+    const selectedOptionsubject = ref("Toán học");
     const isOpensemester = ref(false);
-    const selectedOptionsemester = ref("");
+    const selectedOptionsemester = ref("Học kì 1");
     const isOpenschoolyear = ref(false);
-    const selectedOptionschoolyear = ref("");
-    const idData = reactive({
-      ClassRoomId: "",
-      GradeId: "",
-    });
+    const selectedOptionschoolyear = ref("2021-2022");
     return {
       toast,
-      idData,
-      isOpen,
-      selectedOption,
       isOpenclassroom,
       selectedOptionclassroom,
       isOpenschoolyear,
@@ -421,17 +381,6 @@ export default {
     };
   },
   computed: {
-    filteredGradeClass() {
-      if (this.selectedOption) {
-        const keyword = this.selectedOption.toLowerCase();
-        return this.classroom.filter((data) =>
-          data.GradeName.toLowerCase().includes(keyword)
-        );
-      } else {
-        // Trả về toàn bộ danh sách sinh viên nếu selectedOptionstudent là null
-        return this.classroom;
-      }
-    },
     ...mapGetters([
       "gradeclassroom",
       "classroom",
@@ -444,20 +393,16 @@ export default {
       "checkAllpoint",
       "checkAmountpoint",
       "trueCheckedpoint",
-      "pointAll",
+      "totalRecordspoint",
+      "pageSizespoint",
+      "pageNumberpoint",
+      "totalPagespoint",
+      "point",
     ]),
   },
   methods: {
     formattedDate(data) {
       return format(new Date(data), "dd/MM/yyyy");
-    },
-    toggleDropdown() {
-      this.isOpen = !this.isOpen;
-    },
-    selectOption(id, options) {
-      this.idData.GradeId = id;
-      this.selectedOption = options;
-      this.isOpen = false;
     },
     toggleDropdownclassroom() {
       this.isOpenclassroom = !this.isOpenclassroom;
@@ -466,50 +411,42 @@ export default {
       this.selectedOptionclassroom = options;
       this.isOpenclassroom = false;
     },
+    handleClassroomClick(data) {
+      this.selectOptionclassroom(data.ClassRoomName);
+      this.setFilterclassroomidpoint(data.ClassRoomId);
+    },
     toggleDropdownsubject() {
       this.isOpensubject = !this.isOpensubject;
     },
-    selectOptionsubject(id, options) {
+    selectOptionsubject(options) {
       this.selectedOptionsubject = options;
       this.isOpensubject = false;
+    },
+    handleSubjectClick(data) {
+      this.selectOptionsubject(data.SubjectName);
+      this.setFiltersubjectidpoint(data.SubjectId);
     },
     toggleDropdownsemester() {
       this.isOpensemester = !this.isOpensemester;
     },
-    selectOptionsemester(id, options) {
+    selectOptionsemester(options) {
       this.selectedOptionsemester = options;
       this.isOpensemester = false;
+    },
+    handleSemesterClick(data) {
+      this.selectOptionsemester(data.SemesterName);
+      this.setFiltersemesterpoint(data.SemesterId);
     },
     toggleDropdownschoolyear() {
       this.isOpenschoolyear = !this.isOpenschoolyear;
     },
-    selectOptionschoolyear(id, options) {
+    selectOptionschoolyear(options) {
       this.selectedOptionschoolyear = options;
       this.isOpenschoolyear = false;
     },
-    showValueDrop() {
-      if (this.gradeclassroom.length > 0) {
-        this.selectedOption =
-          this.gradeclassroom[this.gradeclassroom.length - 1].GradeName;
-      }
-    },
-    showValueDropSubject() {
-      if (this.subject.length > 0) {
-        this.selectedOptionsubject =
-          this.subject[this.subject.length - 1].SubjectName;
-      }
-    },
-    showValueDropSemester() {
-      if (this.semester.length > 0) {
-        this.selectedOptionsemester =
-          this.semester[this.semester.length - 1].SemesterName;
-      }
-    },
-    showValueDropSchoolyear() {
-      if (this.schoolyear.length > 0) {
-        this.selectedOptionschoolyear =
-          this.schoolyear[this.schoolyear.length - 1].SchoolYearName;
-      }
+    handleschoolyearClick(data) {
+      this.selectOptionschoolyear(data.SchoolYearName);
+      this.setFilterschoolyearpoint(data.SchoolYearId);
     },
     modeFormUpdate(data) {
       try {
@@ -534,12 +471,19 @@ export default {
       "getsubject",
       "getsemester",
       "getschoolyear",
-      "getAllpoint",
       "getIDpoint",
+      "getpoint",
       "deletepoint",
       "deleteMultiplepoint",
       "toggleAllSelectionpoint",
       "uncheckItemspoint",
+      "setPageNumberpoint",
+      "setSizepoint",
+      //phan trnag
+      "setFilterschoolyearpoint",
+      "setFiltersemesterpoint",
+      "setFiltersubjectidpoint",
+      "setFilterclassroomidpoint",
     ]),
     ...mapMutations([
       "SHOW_FORM_POINT",
@@ -549,27 +493,13 @@ export default {
       "SELECTCHECKEDPOINT",
     ]),
   },
-  beforeUpdate() {
-    this.showValueDropSemester();
-    this.showValueDropSchoolyear();
-    this.showValueDropSubject();
-    this.showValueDrop();
-  },
   mounted() {
-    //this.getAllpoint();
+    this.getpoint();
     this.getClassRoom();
     this.getGradeclassroom();
     this.getsubject();
     this.getschoolyear();
     this.getsemester();
-  },
-  watch: {
-    selectedOptionsemester(newValue) {
-      if (newValue === "") {
-        this.selectedOptionsemester =
-          this.semester[this.semester.length - 1].SemesterName;
-      }
-    },
   },
   components: {
     Navbar,
@@ -577,6 +507,8 @@ export default {
     HeaderContent,
     FPointVue,
     Loading,
+    AdminPaginnation,
+    VButton,
   },
 };
 </script>

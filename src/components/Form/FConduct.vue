@@ -152,7 +152,7 @@
           style="margin-left: 24px"
         >
           Thông tin lớp học
-          <div class="dropdown" style="margin-top: 8px; width: 345px">
+          <div class="dropdown" style="margin-top: 8px; width: 475px">
             <input
               type="text"
               v-model="selectedOptionclassroom"
@@ -169,7 +169,7 @@
             <div
               class="overlaylist"
               v-show="isOpenclassroom"
-              style="width: 345px"
+              style="width: 470px"
             >
               <ul ref="list">
                 <li
@@ -187,7 +187,7 @@
         </label>
         <label class="slabel" @click="toggleDropdownstudent">
           Thông tin học sinh
-          <div class="dropdown" style="margin-top: 8px">
+          <div class="dropdown" style="margin-top: 8px; width: 475px">
             <input
               type="text"
               v-model="selectedOptionstudent"
@@ -201,12 +201,16 @@
                   : 'bx bx-chevron-down'
               "
             ></i>
-            <div class="overlaylist" v-show="isOpenstudent">
+            <div
+              class="overlaylist"
+              v-show="isOpenstudent"
+              style="width: 470px"
+            >
               <ul ref="list">
                 <li
                   v-for="data in filteredStudent"
                   :key="data.StudentId"
-                  @click="selectOptionteacher(data.StudentId, data.StudentName)"
+                  @click="selectOptionstudent(data.StudentId, data.StudentName)"
                 >
                   {{ data.StudentName }}
                 </li>
@@ -399,7 +403,7 @@
         </label>
         <label class="slabel" @click="toggleDropdownstudentUpdate">
           Thông tin học sinh
-          <div class="dropdown" style="margin-top: 8px; width: 470px">
+          <div class="dropdown" style="margin-top: 8px; width: 475px">
             <input
               type="text"
               v-model="getByIdconduct.StudentName"
@@ -549,11 +553,11 @@ export default {
       if (this.selectedOptionstudent) {
         const teacherKeyword = this.selectedOptionstudent.toLowerCase();
         return this.studentAll.filter((data) =>
-          data.ClassRoomName.toLowerCase().includes(teacherKeyword)
+          data.StudentName.toLowerCase().includes(teacherKeyword)
         );
       } else if (this.selectedOptionclassroom) {
         const subjectKeyword = this.selectedOptionclassroom.toLowerCase();
-        return this.classroom.filter((data) =>
+        return this.studentAll.filter((data) =>
           data.ClassRoomName.toLowerCase().includes(subjectKeyword)
         );
       } else {
@@ -783,8 +787,8 @@ export default {
       try {
         this.checkForm = true;
         if (this.validateFormUpdate()) {
-          this.getByIdtimetable.IsChecked = false;
-          this.updateItemconduct(this.getByIdtimetable);
+          this.getByIdconduct.IsChecked = false;
+          this.updateItemconduct(this.getByIdconduct);
           this.SHOW_FORM_CONDUCT();
           this.toastUpdate();
           this.checkForm = false;

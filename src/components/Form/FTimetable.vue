@@ -657,7 +657,7 @@ export default {
         );
       } else {
         // Trả về toàn bộ danh sách sinh viên nếu cả hai selectedOptionteacher và selectedOptionsubject đều là null
-        return this.classroom;
+        return this.teachertimetable;
       }
     },
     filterTimeEnd() {

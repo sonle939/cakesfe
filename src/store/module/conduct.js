@@ -17,10 +17,10 @@ const conductModule = {
         //phan trang
         pageSizeconduct: 15, // số lượng item trên một trang
         pageNumberconduct: 1, // số trang đang hiển thị
-        semesterid: '',
+        semesterid: '3f7bb059-6c87-1b53-7f6a-e0860b0602ba',
         studentid: '',
-        schoolyearid: '',
-        classroomid: '',
+        schoolyearid: '17ae2be6-2c6a-5cab-3bcb-6f55ff55ddab',
+        classroomid: '677132b4-2a33-68d1-26c2-579daad24557',
         totalRecordsconduct: 1,
         totalPagesconduct: null,
         //ket thuc khai bao bien phan trang

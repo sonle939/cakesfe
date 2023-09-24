@@ -181,7 +181,6 @@
                   <th style="min-width: 155px">Tên học sinh</th>
                   <th style="min-width: 170px">Ngày sinh</th>
                   <th style="min-width: 170px">Giới tính</th>
-                  <th style="min-width: 170px">Thuộc về lớp</th>
                   <th style="min-width: 170px">Điểm hạnh kiểm</th>
                   <th style="min-width: 100px">Chức năng</th>
                 </tr>
@@ -227,11 +226,6 @@
                           ? "Khác"
                           : "Nữ"
                       }}
-                    </tippy>
-                  </td>
-                  <td class="text_left">
-                    <tippy :content="data.ClassRoomName">
-                      {{ data.ClassRoomName }}
                     </tippy>
                   </td>
                   <td class="text_left">
@@ -308,11 +302,11 @@ export default {
   name: "Conduct",
   setup() {
     const isOpen = ref(false);
-    const selectedOption = ref("");
+    const selectedOption = ref("Lớp 6A");
     const isOpensemester = ref("");
-    const selectedOptionsemester = ref("");
+    const selectedOptionsemester = ref("Học kì 1");
     const isOpenschoolyear = ref("");
-    const selectedOptionschoolyear = ref("");
+    const selectedOptionschoolyear = ref("2021-2022");
     const toast = () => {
       createToast(
         {

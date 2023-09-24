@@ -1,5 +1,22 @@
 <template>
   <div class="form_container" v-if="isshowpoint">
+    <div class="notify_error" v-if="checkForm">
+      <div class="error_wrapper">
+        <div class="error_text">
+          <h1>Dữ liệu không hợp lệ</h1>
+          <i class="bx bx-x" @click="handleClose"></i>
+        </div>
+        <ul>
+          <li v-for="(erro, index) in error" :key="index">
+            <i class="bx bxs-error"></i>
+            {{ erro }}
+          </li>
+        </ul>
+        <div class="error_btn">
+          <button @click="handleClose">Đồng ý</button>
+        </div>
+      </div>
+    </div>
     <form class="point_form">
       <div class="info_title">
         <div class="title_left">
@@ -19,6 +36,8 @@
               class="sinput"
               placeholder="ĐĐGTX1"
               style="width: 75px"
+              v-model="formData.ĐĐGTX1"
+              @change="calculateResult"
             />
           </label>
           <label class="slabel"
@@ -28,6 +47,8 @@
               class="sinput"
               placeholder="ĐĐGTX2"
               style="width: 75px"
+              v-model="formData.ĐĐGTX2"
+              @change="calculateResult"
             />
           </label>
           <label class="slabel"
@@ -37,6 +58,8 @@
               class="sinput"
               placeholder="ĐĐGTX3"
               style="width: 75px"
+              v-model="formData.ĐĐGTX3"
+              @change="calculateResult"
             />
           </label>
           <label class="slabel"
@@ -46,6 +69,8 @@
               class="sinput"
               placeholder="ĐĐGTX4"
               style="width: 75px"
+              v-model="formData.ĐĐGTX4"
+              @change="calculateResult"
             />
           </label>
           <label class="slabel"
@@ -55,6 +80,8 @@
               class="sinput"
               placeholder="ĐĐGGK"
               style="width: 200px"
+              v-model="formData.ĐĐGGK"
+              @change="calculateResult"
             />
           </label>
           <label class="slabel"
@@ -64,6 +91,8 @@
               class="sinput"
               placeholder="ĐĐGCK"
               style="width: 200px"
+              v-model="formData.ĐĐGCK"
+              @change="calculateResult"
             />
           </label>
           <label class="slabel"
@@ -73,6 +102,8 @@
               class="sinput"
               placeholder="ĐTBMK"
               style="width: 450px"
+              v-model="formData.ĐTBMK"
+              @change="calculateResult"
             />
           </label>
         </div>
@@ -84,6 +115,7 @@
               class="sinput"
               placeholder="mã nhập điểm"
               style="width: 200px"
+              v-model="formData.PointCode"
             />
           </label>
           <label class="slabel" @click="toggleDropdownsubject">
@@ -111,7 +143,9 @@
                   <li
                     v-for="data in filteredSubject"
                     :key="data.SubjectId"
-                    @click="selectOptionsubject(data.SubjectName)"
+                    @click="
+                      selectOptionsubject(data.SubjectId, data.SubjectName)
+                    "
                   >
                     {{ data.SubjectName }}
                   </li>
@@ -144,7 +178,9 @@
                   <li
                     v-for="data in filteredSemester"
                     :key="data.SemesterId"
-                    @click="selectOptionsemester(data.SemesterName)"
+                    @click="
+                      selectOptionsemester(data.SemesterId, data.SemesterName)
+                    "
                   >
                     {{ data.SemesterName }}
                   </li>
@@ -177,7 +213,12 @@
                   <li
                     v-for="data in filteredSchoolyear"
                     :key="data.SchoolYearId"
-                    @click="selectOptionschoolyear(data.SchoolYearId)"
+                    @click="
+                      selectOptionschoolyear(
+                        data.SchoolYearId,
+                        data.SchoolYearName
+                      )
+                    "
                   >
                     {{ data.SchoolYearName }}
                   </li>
@@ -251,7 +292,9 @@
                   <li
                     v-for="data in filteredStudent"
                     :key="data.StudentId"
-                    @click="selectOptionstudent(data.StudentName)"
+                    @click="
+                      selectOptionstudent(data.StudentId, data.StudentName)
+                    "
                   >
                     {{ data.StudentName }}
                   </li>
@@ -268,6 +311,7 @@
           class="sinput"
           placeholder="nhận xét học sinh"
           style="width: 97%"
+          v-model="formData.Comment"
         />
       </label>
       <div class="info_btn">
@@ -285,9 +329,10 @@
 import { ref } from "vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import VButton from "../Button/VButton.vue";
+import { createToast } from "mosha-vue-toastify";
 export default {
   name: "FPoint",
-  data() {
+  setup() {
     const isOpenclassroom = ref(false);
     const isOpenstudent = ref(false);
     const isOpenSchoolyear = ref(false);
@@ -298,7 +343,93 @@ export default {
     const selectedOptionsubject = ref("");
     const selectedOptionSchoolyear = ref("");
     const selectedOptionstudent = ref("");
+    const checkForm = ref(false);
+    const error = ref([]);
+    const build = ref(false);
+    const formData = ref({
+      PointCode: "",
+      StudentId: "",
+      SubjectId: "",
+      SemesterId: "",
+      SchoolYearId: "",
+      ĐĐGTX1: 0,
+      ĐĐGTX2: 0,
+      ĐĐGTX3: 0,
+      ĐĐGTX4: 0,
+      ĐĐGGK: 0,
+      ĐĐGCK: 0,
+      ĐTBMK: 0,
+      Comment: "",
+    });
+    const updateĐĐGTX = ref(0);
+
+    // const calculateResult = () => {
+    //   // Tính toán ĐTBMK khi có thay đổi trong ĐĐGTX
+    //   const { ĐĐGTX1, ĐĐGTX2, ĐĐGTX3, ĐĐGTX4 } = formData.value;
+    //   if (ĐĐGTX1 !== 0 || ĐĐGTX2 !== 0 || ĐĐGTX3 !== 0 || ĐĐGTX4 !== 0) {
+    //     updateĐĐGTX.value = (
+    //       (parseFloat(ĐĐGTX1) +
+    //         parseFloat(ĐĐGTX2) +
+    //         parseFloat(ĐĐGTX3) +
+    //         parseFloat(ĐĐGTX4) * 2) /
+    //       4
+    //     ).toFixed(2);
+    //   } else {
+    //     updateĐĐGTX.value = 0;
+    //   }
+    // };
+    const calculateResult = () => {
+      // Lấy giá trị từ formData
+      const { ĐĐGTX1, ĐĐGTX2, ĐĐGTX3, ĐĐGTX4, ĐĐGGK, ĐĐGCK } = formData.value;
+
+      // Tính toán ĐTBMK
+      const updateĐĐGTX =
+        (parseFloat(ĐĐGTX1) +
+          parseFloat(ĐĐGTX2) +
+          parseFloat(ĐĐGTX3) +
+          parseFloat(ĐĐGTX4) * 2) /
+        4;
+
+      // Tính điểm trung bình môn học theo học kỳ
+      const ĐTBMK = ((updateĐĐGTX + 2 * ĐĐGGK + 3 * ĐĐGCK) / 9).toFixed(2);
+
+      // Gán giá trị vào formData
+      formData.value.ĐTBMK = parseFloat(ĐTBMK);
+    };
+
+    const toast = () => {
+      createToast(
+        {
+          title: "Điểm",
+          description: "Thêm mới thành công",
+        },
+        {
+          type: "success",
+          timeout: 3000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
+    const toastUpdate = () => {
+      createToast(
+        {
+          title: "Điểm",
+          description: "Cập nhât thành công",
+        },
+        {
+          type: "warning",
+          timeout: 3000,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
     return {
+      formData,
+      checkForm,
+      error,
+      build,
       isOpenclassroom,
       isOpenstudent,
       isOpenssubject,
@@ -309,6 +440,10 @@ export default {
       selectedOptionstudent,
       selectedOptionclassroom,
       selectedOptionSchoolyear,
+      toast,
+      toastUpdate,
+      calculateResult,
+      updateĐĐGTX,
     };
   },
   computed: {
@@ -357,13 +492,30 @@ export default {
       );
     },
     ...mapGetters([
+      "point",
       "subject",
       "studentAll",
       "classroom",
       "isshowpoint",
       "semester",
       "schoolyear",
+      "pointmaxcode",
+      "getByIdpoint",
     ]),
+    maxId() {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      return (this.formData = {
+        ...this.formData,
+        PointCode: this.pointmaxcode,
+      });
+    },
+    PointList() {
+      return this.point
+        .filter((item) => item.PointId !== this.getByIdpoint.TimeTableId)
+        .map((employee) => {
+          return employee.PointCode;
+        });
+    },
   },
   methods: {
     toggleDropdownclassroom() {
@@ -385,21 +537,45 @@ export default {
       this.selectedOptionclassroom = options;
       this.isOpenclassroom = false;
     },
-    selectOptionsubject(options) {
+    selectOptionsubject(id, options) {
+      this.formData.SubjectId = id;
       this.selectedOptionsubject = options;
       this.isOpenssubject = false;
     },
-    selectOptionsemester(options) {
+    selectOptionsemester(id, options) {
+      this.formData.SemesterId = id;
       this.selectedOptionsemester = options;
       this.isOpensteachersemester = false;
     },
-    selectOptionschoolyear(options) {
+    selectOptionschoolyear(id, options) {
+      this.formData.SchoolYearId = id;
       this.selectedOptionSchoolyear = options;
       this.isOpenSchoolyear = false;
     },
-    selectOptionstudent(options) {
+    selectOptionstudent(id, options) {
+      this.formData.StudentId = id;
       this.selectedOptionstudent = options;
       this.isOpenstudent = false;
+    },
+    checkCodeTimetable(code) {
+      try {
+        if (this.PointList.includes(code)) {
+          console.log(code);
+          return true;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    handleClose() {
+      try {
+        this.checkForm = !this.checkForm;
+        this.error = [];
+      } catch (error) {
+        console.log(error);
+      }
     },
     ...mapActions([
       "getsubject",
@@ -407,15 +583,23 @@ export default {
       "getsemester",
       "getschoolyear",
       "getStudentAll",
+      "addpoint",
+      "updateItempoint",
+      "getMaxCodepoint",
     ]),
     ...mapMutations(["SHOW_FORM_POINT"]),
   },
+  beforeUpdate() {
+    this.maxId;
+  },
   mounted() {
+    this.maxId;
     this.getsubject();
     this.getsemester();
     this.getClassRoom();
     this.getschoolyear();
     this.getStudentAll();
+    this.getMaxCodepoint();
   },
   components: {
     VButton,

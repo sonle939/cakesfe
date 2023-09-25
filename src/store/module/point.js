@@ -35,6 +35,7 @@ const pointModule = {
         checkAllpoint: state => state.checkAllpoint,
         isCheckedpoint: state => state.point.isChecked,
         pointmaxcode: state => state.pointmaxcode,
+        formModepoint: state => state.formModepoint,
         //dùng để đếm số lượng dữ liệu (phân trang)
         allPoint: state => state.point.length,
         showIsHidepoint: state => state.isHidepoint,

@@ -203,7 +203,7 @@
                     Mã học sinh
                   </th>
                   <th style="min-width: 155px">Tên học sinh</th>
-                  <th style="min-width: 170px">Ngày sinh</th>
+                  <th style="min-width: 170px">Giới tính</th>
                   <th style="min-width: 155px">ĐĐGTX1</th>
                   <th style="min-width: 155px">ĐĐGTX2</th>
                   <th style="min-width: 155px">ĐĐGTX3</th>
@@ -235,8 +235,22 @@
                     </tippy>
                   </td>
                   <td class="text_left">
-                    <tippy :content="formattedDate(data.DateOfBirth)">
-                      {{ formattedDate(data.DateOfBirth) }}
+                    <tippy
+                      :content="
+                        data.Gender == 1
+                          ? 'Nam'
+                          : data.Gender == 2
+                          ? 'Khác'
+                          : 'Nữ'
+                      "
+                    >
+                      {{
+                        data.Gender == 1
+                          ? "Nam"
+                          : data.Gender == 2
+                          ? "Khác"
+                          : "Nữ"
+                      }}
                     </tippy>
                   </td>
                   <td class="text_left">
@@ -269,9 +283,20 @@
                       {{ data.ĐĐGCK }}
                     </tippy>
                   </td>
-                  <td class="text_left">
-                    <tippy :content="data.ĐTBMK">
-                      {{ data.ĐTBMK }}
+                  <td
+                    class="text_left"
+                    v-if="selectedOptionsemester == 'Học kì 1'"
+                  >
+                    <tippy :content="data.ĐTBMKI">
+                      {{ data.ĐTBMKI }}
+                    </tippy>
+                  </td>
+                  <td
+                    class="text_left"
+                    v-if="selectedOptionsemester == 'Học kì 2'"
+                  >
+                    <tippy :content="data.ĐTBMKII">
+                      {{ data.ĐTBMKII }}
                     </tippy>
                   </td>
                   <td class="text_left">
@@ -338,7 +363,6 @@ import HeaderContent from "@/components/content/Header.vue";
 import FPointVue from "../components/Form/FPoint.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import { ref } from "vue";
-import { format } from "date-fns";
 import Loading from "../components/Loading.vue";
 import { createToast } from "mosha-vue-toastify";
 import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
@@ -398,12 +422,10 @@ export default {
       "pageNumberpoint",
       "totalPagespoint",
       "point",
+      "semesterId",
     ]),
   },
   methods: {
-    formattedDate(data) {
-      return format(new Date(data), "dd/MM/yyyy");
-    },
     toggleDropdownclassroom() {
       this.isOpenclassroom = !this.isOpenclassroom;
     },

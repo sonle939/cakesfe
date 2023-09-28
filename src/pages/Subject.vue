@@ -38,7 +38,7 @@
 
             <div class="filter_item">
               <div class="wrapper__i">
-                <div class="excel"></div>
+                <div class="excel" @click="exportExcel"></div>
               </div>
               <div class="wrapper__i">
                 <div
@@ -198,6 +198,7 @@ export default {
       "uncheckItemsubject",
       "deleteMultiplesubject",
       "deletesubject",
+      "exportExcel",
     ]),
     ...mapMutations([
       "SELECTCHECKEDSUBJECT",

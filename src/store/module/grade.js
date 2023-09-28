@@ -1,4 +1,5 @@
 import axios from "axios";
+import { saveAs } from 'file-saver';
 const API_BASE_URL = 'https://localhost:7199/api/v2/';
 
 const grademodule = {
@@ -38,6 +39,19 @@ const grademodule = {
                 dispatch("getGrade");
                 dispatch('getMaxCodeGrade');
                 console.log('aaa', res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async exportExcel() {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Grades/ExportData`, {
+                    responseType: 'blob' // Bắt buộc thêm option responseType là 'blob' để server trả về kiểu dữ liệu blob
+                });
+
+                const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }); // Tạo blob từ dữ liệu trả về và type là Excel
+                console.log(response.status);
+                saveAs(blob, 'Grades.xlsx'); // Lưu file Excel với tên employees.xlsx
             } catch (error) {
                 console.log(error);
             }

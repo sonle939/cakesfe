@@ -100,7 +100,7 @@
                   >
                     <ul ref="list">
                       <li
-                        v-for="data in semester"
+                        v-for="data in filteredSemester"
                         :key="data.SemesterId"
                         @click="handleSemesterClick(data)"
                       >
@@ -169,7 +169,7 @@
             </div>
             <div class="filter_item">
               <div class="wrapper__i">
-                <div class="excel"></div>
+                <div class="excel" @click="exportExcel"></div>
               </div>
               <div class="wrapper__i">
                 <div class="filter"></div>
@@ -203,6 +203,7 @@
                     Mã học sinh
                   </th>
                   <th style="min-width: 155px">Tên học sinh</th>
+                  <th style="min-width: 170px">Ngày sinh</th>
                   <th style="min-width: 170px">Giới tính</th>
                   <th style="min-width: 155px">ĐĐGTX1</th>
                   <th style="min-width: 155px">ĐĐGTX2</th>
@@ -232,6 +233,11 @@
                       v-tippy="{ interactive: true }"
                     >
                       {{ data.StudentName }}
+                    </tippy>
+                  </td>
+                  <td class="text_left">
+                    <tippy :content="formattedDate(data.DateOfBirth)">
+                      {{ formattedDate(data.DateOfBirth) }}
                     </tippy>
                   </td>
                   <td class="text_left">
@@ -283,20 +289,9 @@
                       {{ data.ĐĐGCK }}
                     </tippy>
                   </td>
-                  <td
-                    class="text_left"
-                    v-if="selectedOptionsemester == 'Học kì 1'"
-                  >
-                    <tippy :content="data.ĐTBMKI">
-                      {{ data.ĐTBMKI }}
-                    </tippy>
-                  </td>
-                  <td
-                    class="text_left"
-                    v-if="selectedOptionsemester == 'Học kì 2'"
-                  >
-                    <tippy :content="data.ĐTBMKII">
-                      {{ data.ĐTBMKII }}
+                  <td class="text_left">
+                    <tippy :content="data.ĐTBMK">
+                      {{ data.ĐTBMK }}
                     </tippy>
                   </td>
                   <td class="text_left">
@@ -367,6 +362,7 @@ import Loading from "../components/Loading.vue";
 import { createToast } from "mosha-vue-toastify";
 import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 import VButton from "../components/Button/VButton.vue";
+import { format } from "date-fns";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Point",
@@ -424,8 +420,45 @@ export default {
       "point",
       "semesterId",
     ]),
+    filteredSemester() {
+      return this.semester.filter((data) => data.SemesterName !== "Cả năm");
+    },
   },
   methods: {
+    formattedDate(data) {
+      try {
+        return format(new Date(data), "dd/MM/yyyy");
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // calculateYearlyAverage(studentId) {
+    //   // Initialize variables to store ĐTBMK values for both semesters
+    //   let ĐTBMK1 = 0;
+    //   let ĐTBMK2 = 0;
+
+    //   // Loop through the points and sum the ĐTBMK values for both semesters
+    //   for (const point of this.point) {
+    //     if (point.StudentId === studentId) {
+    //       if (point.SemesterName === "Học kì 1") {
+    //         ĐTBMK1 = parseFloat(point.ĐTBMK);
+    //         console.log("diem kì1", ĐTBMK1);
+    //       } else if (point.SemesterName === "Học kì 2") {
+    //         ĐTBMK2 = parseFloat(point.ĐTBMK);
+    //         console.log("diem kì2", ĐTBMK2);
+    //       }
+    //     }
+    //   }
+
+    //   // Calculate the yearly average using the formula
+    //   const yearlyAverage = (ĐTBMK1 + 2 * ĐTBMK2) / 3;
+    //   console.log(yearlyAverage);
+
+    //   // Round the yearly average (if needed)
+    //   const roundedAverage = yearlyAverage.toFixed(2);
+
+    //   return roundedAverage; // Return the yearly average
+    // },
     toggleDropdownclassroom() {
       this.isOpenclassroom = !this.isOpenclassroom;
     },
@@ -506,6 +539,7 @@ export default {
       "setFiltersemesterpoint",
       "setFiltersubjectidpoint",
       "setFilterclassroomidpoint",
+      "exportExcel",
     ]),
     ...mapMutations([
       "SHOW_FORM_POINT",

@@ -100,26 +100,14 @@
               @change="calculateResult"
             />
           </label>
-          <label class="slabel" v-if="selectedOptionsemester == 'Học kì 1'"
+          <label class="slabel"
             >ĐTBMKI
             <input
               type="text"
               class="sinput"
               placeholder="ĐTBMKI"
               style="width: 450px"
-              v-model="formData.ĐTBMKI"
-              @change="calculateResult"
-              disabled
-            />
-          </label>
-          <label class="slabel" v-if="selectedOptionsemester == 'Học kì 2'"
-            >ĐTBMKII
-            <input
-              type="text"
-              class="sinput"
-              placeholder="ĐTBMKII"
-              style="width: 450px"
-              v-model="formData.ĐTBMKII"
+              v-model="formData.ĐTBMK"
               @change="calculateResult"
               disabled
             />
@@ -423,25 +411,14 @@
               @change="calculateResultUpdate"
             />
           </label>
-          <label class="slabel" v-if="getByIdpoint.SemesterName == 'Học kì 1'"
+          <label class="slabel"
             >ĐTBMKI
             <input
               type="text"
               class="sinput"
               placeholder="ĐTBMKI"
               style="width: 450px"
-              v-model="getByIdpoint.ĐTBMKI"
-              @change="calculateResultUpdate"
-            />
-          </label>
-          <label class="slabel" v-if="getByIdpoint.SemesterName == 'Học kì 2'"
-            >ĐTBMKII
-            <input
-              type="text"
-              class="sinput"
-              placeholder="ĐTBMKII"
-              style="width: 450px"
-              v-model="getByIdpoint.ĐTBMKII"
+              v-model="getByIdpoint.ĐTBMK"
               @change="calculateResultUpdate"
             />
           </label>
@@ -712,9 +689,7 @@ export default {
       ĐĐGTX4: 0,
       ĐĐGGK: 0,
       ĐĐGCK: 0,
-      ĐTBMKI: 0,
-      ĐTBMKII: 0,
-      ĐTBMKCN: 0,
+      ĐTBMK: 0,
       Comment: "",
     });
     const updateĐĐGTX = ref(0);
@@ -839,10 +814,13 @@ export default {
   computed: {
     filteredSemester() {
       const keyword = this.selectedOptionsemester.toLowerCase();
-      return this.semester.filter((data) =>
-        data.SemesterName.toLowerCase().includes(keyword)
+      return this.semester.filter(
+        (data) =>
+          data.SemesterName.toLowerCase().includes(keyword) &&
+          data.SemesterName !== "Cả năm"
       );
     },
+
     filteredSubject() {
       const keyword = this.selectedOptionsubject.toLowerCase();
       return this.subject.filter((data) =>
@@ -923,21 +901,11 @@ export default {
 
       // Khai báo biến để lưu điểm trung bình môn học
       let ĐTBMK;
+      // Tính điểm trung bình môn học theo học kỳ 1
+      ĐTBMK = ((totalĐĐGTX + 2 * ĐĐGGK + 3 * ĐĐGCK) / 9).toFixed(2);
 
-      // Kiểm tra giá trị của selectedOptionsemester
-      if (this.getByIdpoint.SemesterName === "Học kì 1") {
-        // Tính điểm trung bình môn học theo học kỳ 1
-        ĐTBMK = ((totalĐĐGTX + 2 * ĐĐGGK + 3 * ĐĐGCK) / 9).toFixed(2);
-
-        // Gán giá trị vào formData cho ĐTBMKI
-        this.getByIdpoint.ĐTBMKI = ĐTBMK;
-      } else {
-        // Tính điểm trung bình môn học theo học kỳ 2 (hoặc ngược lại)
-        ĐTBMK = ((totalĐĐGTX + 2 * ĐĐGGK + 3 * ĐĐGCK) / 9).toFixed(2);
-
-        // Gán giá trị vào formData cho ĐTBMKII (hoặc ngược lại)
-        this.getByIdpoint.ĐTBMKII = ĐTBMK;
-      }
+      // Gán giá trị vào formData cho ĐTBMKI
+      this.getByIdpoint.ĐTBMK = ĐTBMK;
     },
     calculateResult() {
       // Lấy giá trị từ formData
@@ -952,21 +920,9 @@ export default {
 
       // Khai báo biến để lưu điểm trung bình môn học
       let ĐTBMK;
-
-      // Kiểm tra giá trị của selectedOptionsemester
-      if (this.selectedOptionsemester === "Học kì 1") {
-        // Tính điểm trung bình môn học theo học kỳ 1
-        ĐTBMK = ((totalĐĐGTX + 2 * ĐĐGGK + 3 * ĐĐGCK) / 9).toFixed(2);
-
-        // Gán giá trị vào formData cho ĐTBMKI
-        this.formData.ĐTBMKI = ĐTBMK;
-      } else {
-        // Tính điểm trung bình môn học theo học kỳ 2 (hoặc ngược lại)
-        ĐTBMK = ((totalĐĐGTX + 2 * ĐĐGGK + 3 * ĐĐGCK) / 9).toFixed(2);
-
-        // Gán giá trị vào formData cho ĐTBMKII (hoặc ngược lại)
-        this.formData.ĐTBMKII = ĐTBMK;
-      }
+      ĐTBMK = ((totalĐĐGTX + 2 * ĐĐGGK + 3 * ĐĐGCK) / 9).toFixed(2);
+      // Gán giá trị vào formData cho ĐTBMKI
+      this.formData.ĐTBMK = ĐTBMK;
     },
     toggleDropdownclassroom() {
       this.isOpenclassroom = !this.isOpenclassroom;
@@ -999,53 +955,93 @@ export default {
       this.isOpenstudentUpdate = !this.isOpenstudentUpdate;
     },
     selectOptionclassroom(options) {
-      this.selectedOptionclassroom = options;
-      this.isOpenclassroom = false;
+      try {
+        this.selectedOptionclassroom = options;
+        this.isOpenclassroom = false;
+      } catch (error) {
+        console.log(error);
+      }
     },
     selectOptionclassroomUpdate(id, option) {
-      this.getByIdpoint.ClassRoomId = id;
-      this.getByIdpoint.ClassRoomName = option;
-      this.isOpenclassroomUpdate;
+      try {
+        this.getByIdpoint.ClassRoomId = id;
+        this.getByIdpoint.ClassRoomName = option;
+        this.isOpenclassroomUpdate;
+      } catch (error) {
+        console.log(error);
+      }
     },
     selectOptionsubject(id, options) {
-      this.formData.SubjectId = id;
-      this.selectedOptionsubject = options;
-      this.isOpenssubject = false;
+      try {
+        this.formData.SubjectId = id;
+        this.selectedOptionsubject = options;
+        this.isOpenssubject = false;
+      } catch (error) {
+        console.log(error);
+      }
     },
     selectOptionsubjectUpdate(id, option) {
-      this.getByIdpoint.SubjectId = id;
-      this.getByIdpoint.SubjectName = option;
-      this.isOpenssubjectUpdate;
+      try {
+        this.getByIdpoint.SubjectId = id;
+        this.getByIdpoint.SubjectName = option;
+        this.isOpenssubjectUpdate;
+      } catch (error) {
+        console.log(error);
+      }
     },
     selectOptionsemester(id, options) {
-      this.formData.SemesterId = id;
-      this.selectedOptionsemester = options;
-      this.isOpensteachersemester = false;
+      try {
+        this.formData.SemesterId = id;
+        this.selectedOptionsemester = options;
+        this.isOpensteachersemester = false;
+      } catch (error) {
+        console.log(error);
+      }
     },
     selectOptionsemesterUpdate(id, options) {
-      this.getByIdpoint.SemesterId = id;
-      this.getByIdpoint.SemesterName = options;
-      this.isOpensteachersemesterUpdate = false;
+      try {
+        this.getByIdpoint.SemesterId = id;
+        this.getByIdpoint.SemesterName = options;
+        this.isOpensteachersemesterUpdate = false;
+      } catch (error) {
+        console.log(error);
+      }
     },
     selectOptionschoolyear(id, options) {
-      this.formData.SchoolYearId = id;
-      this.selectedOptionSchoolyear = options;
-      this.isOpenSchoolyear = false;
+      try {
+        this.formData.SchoolYearId = id;
+        this.selectedOptionSchoolyear = options;
+        this.isOpenSchoolyear = false;
+      } catch (error) {
+        console.log(error);
+      }
     },
     selectOptionschoolyearUpdate(id, option) {
-      this.getByIdpoint.SchoolYearId = id;
-      this.getByIdpoint.SchoolYearName = option;
-      this.isOpenSchoolyearUpdate;
+      try {
+        this.getByIdpoint.SchoolYearId = id;
+        this.getByIdpoint.SchoolYearName = option;
+        this.isOpenSchoolyearUpdate;
+      } catch (error) {
+        console.log(error);
+      }
     },
     selectOptionstudent(id, options) {
-      this.formData.StudentId = id;
-      this.selectedOptionstudent = options;
-      this.isOpenstudent = false;
+      try {
+        this.formData.StudentId = id;
+        this.selectedOptionstudent = options;
+        this.isOpenstudent = false;
+      } catch (error) {
+        console.log(error);
+      }
     },
     selectOptionstudentUpdate(id, option) {
-      this.getByIdpoint.StudentId = id;
-      this.getByIdpoint.StudentName = option;
-      this.isOpenstudentUpdate;
+      try {
+        this.getByIdpoint.StudentId = id;
+        this.getByIdpoint.StudentName = option;
+        this.isOpenstudentUpdate;
+      } catch (error) {
+        console.log(error);
+      }
     },
     checkCodePoint(code) {
       try {
@@ -1081,19 +1077,19 @@ export default {
             isValid = false;
             this.error.push("Vui lòng nhập mã điểm");
             break;
-          case this.selectedOptionSchoolyear == null:
+          case this.selectedOptionSchoolyear === "":
             isValid = false;
             this.error.push("Vui lòng chọn năm học");
             break;
-          case this.selectedOptionsemester == null:
+          case this.selectedOptionsemester === "":
             isValid = false;
             this.error.push("Vui lòng chọn học kỳ");
             break;
-          case this.selectedOptionsubject == null:
+          case this.selectedOptionsubject === "":
             isValid = false;
             this.error.push("Vui lòng chọn môn học");
             break;
-          case this.selectedOptionstudent == null:
+          case this.selectedOptionstudent === "":
             isValid = false;
             this.error.push("Vui lòng chọn học sinh");
             break;
@@ -1153,46 +1149,31 @@ export default {
       try {
         this.checkForm = true;
         if (this.validateFormAdd()) {
-          if (this.selectedOptionsemester === "Học kì 1") {
-            this.addpoint({
-              PointId: uuidv4(),
-              PointCode: this.formData.PointCode,
-              StudentId: this.formData.StudentId,
-              SubjectId: this.formData.SubjectId,
-              SemesterId: this.formData.SemesterId,
-              SchoolYearId: this.formData.SchoolYearId,
-              ĐĐGTX1: this.formData.ĐĐGTX1,
-              ĐĐGTX2: this.formData.ĐĐGTX2,
-              ĐĐGTX3: this.formData.ĐĐGTX3,
-              ĐĐGTX4: this.formData.ĐĐGTX4,
-              ĐĐGGK: this.formData.ĐĐGGK,
-              ĐĐGCK: this.formData.ĐĐGCK,
-              ĐTBMKI: this.formData.ĐTBMKI,
-              Comment: this.formData.Comment,
-              isChecked: false,
-            });
-          } else {
-            this.addpoint({
-              PointId: uuidv4(),
-              PointCode: this.formData.PointCode,
-              StudentId: this.formData.StudentId,
-              SubjectId: this.formData.SubjectId,
-              SemesterId: this.formData.SemesterId,
-              SchoolYearId: this.formData.SchoolYearId,
-              ĐĐGTX1: this.formData.ĐĐGTX1,
-              ĐĐGTX2: this.formData.ĐĐGTX2,
-              ĐĐGTX3: this.formData.ĐĐGTX3,
-              ĐĐGTX4: this.formData.ĐĐGTX4,
-              ĐĐGGK: this.formData.ĐĐGGK,
-              ĐĐGCK: this.formData.ĐĐGCK,
-              ĐTBMKII: this.formData.ĐTBMKII,
-              Comment: this.formData.Comment,
-              isChecked: false,
-            });
-          }
+          this.addpoint({
+            PointId: uuidv4(),
+            PointCode: this.formData.PointCode,
+            StudentId: this.formData.StudentId,
+            SubjectId: this.formData.SubjectId,
+            SemesterId: this.formData.SemesterId,
+            SchoolYearId: this.formData.SchoolYearId,
+            ĐĐGTX1: this.formData.ĐĐGTX1,
+            ĐĐGTX2: this.formData.ĐĐGTX2,
+            ĐĐGTX3: this.formData.ĐĐGTX3,
+            ĐĐGTX4: this.formData.ĐĐGTX4,
+            ĐĐGGK: this.formData.ĐĐGGK,
+            ĐĐGCK: this.formData.ĐĐGCK,
+            ĐTBMK: this.formData.ĐTBMK,
+            Comment: this.formData.Comment,
+            isChecked: false,
+          });
           // reset formData
           this.formData = { PointCode: this.pointmaxcode };
-          this.selectedOption = null;
+          this.selectedOptionSchoolyear = "";
+          this.selectedOptionsemester = "";
+          this.selectedOptionstudent = "";
+          this.selectedOptionsubject = "";
+          this.selectedOptionSchoolyear = "";
+          this.selectedOptionclassroom = "";
           this.SHOW_FORM_POINT();
           this.toast();
           this.checkForm = false;

@@ -16,6 +16,8 @@ import Teacher from '../pages/Teacher.vue';
 import TimeTable from '../pages/TimeTable.vue';
 import Conduct from '../pages/Conduct.vue';
 import Information from '../pages/Information.vue';
+import Statistic from '../pages/Statistic.vue';
+
 const routes = [
     {
         path: '/',
@@ -48,6 +50,10 @@ const routes = [
     {
         path: '/admin/classroom',
         component: Classroom
+    },
+    {
+        path: '/admin/statistic',
+        component: Statistic
     },
     {
         path: '/admin/account',

@@ -100,7 +100,7 @@
             >
               <ul ref="list">
                 <li
-                  v-for="data in semester"
+                  v-for="data in filteredSemester"
                   :key="data.SemesterId"
                   @click="
                     selectOptionsemester(data.SemesterId, data.SemesterName)
@@ -310,7 +310,7 @@
             >
               <ul ref="list">
                 <li
-                  v-for="data in semester"
+                  v-for="data in filteredSemester"
                   :key="data.SemesterId"
                   @click="
                     selectOptionsemesterUpdate(
@@ -518,10 +518,10 @@ export default {
     const selectedOptionschoolyear = ref("");
     const selectedOptionconductgrade = ref("");
     const optionConductGrade = ref([
-      { id: 1, name: "T" },
-      { id: 2, name: "K" },
-      { id: 3, name: "TB" },
-      { id: 4, name: "Y" },
+      { id: 1, name: "Tốt" },
+      { id: 2, name: "Khá" },
+      { id: 3, name: "Trung bình" },
+      { id: 4, name: "Yếu" },
     ]);
     return {
       toast,
@@ -575,6 +575,15 @@ export default {
         return this.classroom;
       }
     },
+    filteredSemester() {
+      const keyword = this.selectedOptionsemester.toLowerCase();
+      return this.semester.filter(
+        (data) =>
+          data.SemesterName.toLowerCase().includes(keyword) &&
+          data.SemesterName !== "Cả năm"
+      );
+    },
+
     ...mapGetters([
       "semester",
       "schoolyear",
@@ -719,13 +728,17 @@ export default {
             isValid = false;
             this.error.push("Vui lòng chọn điểm hạnh kiểm");
             break;
+          case this.formData.SemesterId === "":
+            isValid = false;
+            this.error.push("Vui lòng chọn học kỳ");
+            break;
           case this.selectedOptionschoolyear === "":
             isValid = false;
             this.error.push("Vui lòng chọn năm học");
             break;
-          case this.selectedOptionsemester === "":
+          case this.formData.StudentId === "":
             isValid = false;
-            this.error.push("Vui lòng chọn học kỳ");
+            this.error.push("Vui lòng chọn học sinh");
             break;
           default:
             break;

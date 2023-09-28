@@ -738,7 +738,7 @@ export default {
             isValid = false;
             this.error.push("Vui lòng nhập mật khẩu");
             break;
-          case this.selectedOption == null:
+          case this.selectedOption === "":
             isValid = false;
             this.error.push("Vui lòng chọn quyền tài khoản");
             break;

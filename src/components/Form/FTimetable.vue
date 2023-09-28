@@ -889,7 +889,7 @@ export default {
           case this.formData.TimeStart === "":
             isValid = false;
             this.error.push("Vui lòng nhập giờ bắt đầu");
-            break;
+            break; 
           case this.formData.TimeEnd === "":
             isValid = false;
             this.error.push("Vui lòng nhập giờ kết thúc");

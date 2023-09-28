@@ -67,7 +67,7 @@
                 </div>
               </div>
               <div class="wrapper__i">
-                <div class="excel"></div>
+                <div class="excel" @click="exportExcel"></div>
               </div>
               <div class="wrapper__i">
                 <div class="filter" @click="clearFilterCondition"></div>
@@ -108,6 +108,8 @@
                   <th style="min-width: 155px">Email</th>
                   <th style="min-width: 170px">Giới tính</th>
                   <th style="min-width: 155px">Chuyên môn</th>
+                  <th style="min-width: 155px">Đang dạy lớp</th>
+                  <th style="min-width: 155px">Loại giáo viên</th>
                   <th style="min-width: 155px">Tình trạng công tác</th>
                   <th style="min-width: 155px">Trình độ</th>
                   <th style="min-width: 170px">Địa chỉ</th>
@@ -165,6 +167,16 @@
                   <td class="text_left">
                     <tippy :content="data.SubjectName">
                       {{ data.SubjectName }}
+                    </tippy>
+                  </td>
+                  <td class="text_left">
+                    <tippy :content="data.Teaching">
+                      {{ data.Teaching }}
+                    </tippy>
+                  </td>
+                  <td class="text_left">
+                    <tippy :content="data.Duty">
+                      {{ data.Duty }}
                     </tippy>
                   </td>
                   <td class="text_left">
@@ -318,6 +330,7 @@ export default {
       "deleteMultipleteacher",
       "deleteteacher",
       "getIDteacher",
+      "exportExcel",
     ]),
     formattedDate(data) {
       return format(new Date(data), "dd/MM/yyyy");

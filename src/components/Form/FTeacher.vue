@@ -138,6 +138,66 @@
             </div>
           </div>
         </label>
+        <label class="slabel" @click="toggleDropdownsTeaching">
+          Đang dạy lớp
+          <div class="dropdown" style="margin-top: 8px; width: 495px">
+            <input
+              type="text"
+              v-model="selectedOptionsTeaching"
+              placeholder="Chọn lớp học"
+            />
+            <i
+              @click="toggleDropdownsTeaching"
+              :class="
+                isOpensTeaching
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpensTeaching"
+              style="width: 495px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in classroomteacher"
+                  :key="data.ClassRoomId"
+                  @click="selectOptionsTeaching(data.ClassRoomName)"
+                >
+                  {{ data.ClassRoomName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+        <label class="slabel" @click="toggleDropdownsDuty">
+          Loại giáo viên
+          <div class="dropdown" style="margin-top: 8px; width: 495px">
+            <input
+              type="text"
+              v-model="selectedOptionsDuty"
+              placeholder="Chọn loại giáo viên"
+            />
+            <i
+              @click="toggleDropdownsDuty"
+              :class="
+                isOpensDuty ? 'bx bx-chevron-down active' : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div class="overlaylist" v-show="isOpensDuty" style="width: 495px">
+              <ul ref="list">
+                <li
+                  v-for="data in DutyList"
+                  :key="data.id"
+                  @click="selectOptionsDuty(data.DutyName)"
+                >
+                  {{ data.DutyName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
         <label class="slabel" @click="toggleDropdownsCollaborate">
           Tình trạng công tác
           <div class="dropdown" style="margin-top: 8px; width: 495px">
@@ -157,7 +217,7 @@
             <div
               class="overlaylist"
               v-show="isOpensCollaborate"
-              style="width: 315px"
+              style="width: 495px"
             >
               <ul ref="list">
                 <li
@@ -190,7 +250,7 @@
             <div
               class="overlaylist"
               v-show="isOpensStandard"
-              style="width: 315px"
+              style="width: 495px"
             >
               <ul ref="list">
                 <li
@@ -350,6 +410,72 @@
             </div>
           </div>
         </label>
+        <label class="slabel" @click="toggleDropdownsTeachingUpdate">
+          Đang dạy lớp
+          <div class="dropdown" style="margin-top: 8px; width: 495px">
+            <input
+              type="text"
+              v-model="getByIdteacher.Teaching"
+              placeholder="Chọn lớp học"
+            />
+            <i
+              @click="toggleDropdownsTeachingUpdate"
+              :class="
+                isOpensTeachingUpdate
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpensTeachingUpdate"
+              style="width: 495px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in classroomteacher"
+                  :key="data.ClassRoomId"
+                  @click="selectOptionsTeachingUpdate(data.ClassRoomName)"
+                >
+                  {{ data.ClassRoomName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+        <label class="slabel" @click="toggleDropdownsDutyUpdate">
+          Loại giáo viên
+          <div class="dropdown" style="margin-top: 8px; width: 495px">
+            <input
+              type="text"
+              v-model="getByIdteacher.Duty"
+              placeholder="Chọn loại giáo viên"
+            />
+            <i
+              @click="toggleDropdownsDutyUpdate"
+              :class="
+                isOpensDutyUpdate
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div
+              class="overlaylist"
+              v-show="isOpensDutyUpdate"
+              style="width: 495px"
+            >
+              <ul ref="list">
+                <li
+                  v-for="data in DutyList"
+                  :key="data.id"
+                  @click="selectOptionsDutyUpdate(data.DutyName)"
+                >
+                  {{ data.DutyName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
         <label class="slabel" @click="toggleDropdownsCollaborateUpdate">
           Tình trạng công tác
           <div class="dropdown" style="margin-top: 8px; width: 495px">
@@ -369,7 +495,7 @@
             <div
               class="overlaylist"
               v-show="isOpensCollaborateUpdate"
-              style="width: 315px"
+              style="width: 495px"
             >
               <ul ref="list">
                 <li
@@ -402,7 +528,7 @@
             <div
               class="overlaylist"
               v-show="isOpensStandardUpdate"
-              style="width: 315px"
+              style="width: 495px"
             >
               <ul ref="list">
                 <li
@@ -455,7 +581,13 @@ export default {
     const isOpensStandardUpdate = ref(false);
     const isOpensClassroomIdUpdate = ref(false);
     const isOpensCollaborateUpdate = ref(false);
+    const isOpensDuty = ref(false);
+    const isOpensDutyUpdate = ref(false);
+    const isOpensTeaching = ref(false);
+    const isOpensTeachingUpdate = ref(false);
     const selectedOptions = ref("");
+    const selectedOptionsTeaching = ref("");
+    const selectedOptionsDuty = ref("");
     const selectedOptionsStandard = ref("");
     const selectedOptionsCollaborate = ref("");
     const Collaborate = reactive([
@@ -465,6 +597,10 @@ export default {
     const Standard = reactive([
       { id: 1, StandardName: "Đại học" },
       { id: 2, StandardName: "Cao đẳng" },
+    ]);
+    const DutyList = reactive([
+      { id: 1, DutyName: "Giáo viên chủ nhiệm" },
+      { id: 2, DutyName: "Giáo viên bộ môn" },
     ]);
     const checkForm = ref(false);
     const error = ref([]);
@@ -479,6 +615,8 @@ export default {
       Address: "",
       Collaborate: "",
       Standard: "",
+      Teaching: "",
+      Duty: "",
     });
     const toast = () => {
       createToast(
@@ -527,6 +665,13 @@ export default {
       selectedOptions,
       selectedOptionsCollaborate,
       selectedOptionsStandard,
+      selectedOptionsTeaching,
+      selectedOptionsDuty,
+      DutyList,
+      isOpensDuty,
+      isOpensDutyUpdate,
+      isOpensTeaching,
+      isOpensTeachingUpdate,
     };
   },
   computed: {
@@ -575,6 +720,18 @@ export default {
     toggleDropdownsUpdate() {
       this.isOpensUpdate = !this.isOpensUpdate;
     },
+    toggleDropdownsDuty() {
+      this.isOpensDuty = !this.isOpensDuty;
+    },
+    toggleDropdownsDutyUpdate() {
+      this.isOpensDutyUpdate = !this.isOpensDutyUpdate;
+    },
+    toggleDropdownsTeaching() {
+      this.isOpensTeaching = !this.isOpensTeaching;
+    },
+    toggleDropdownsTeachingUpdate() {
+      this.isOpensTeachingUpdate = !this.isOpensTeachingUpdate;
+    },
     toggleDropdownsStandard() {
       this.isOpensStandard = !this.isOpensStandard;
     },
@@ -596,6 +753,24 @@ export default {
       this.getByIdteacher.SubjectId = id;
       this.getByIdteacher.SubjectName = options;
       this.isOpensUpdate = false;
+    },
+    selectOptionsDuty(options) {
+      this.formData.Duty = options;
+      this.selectedOptionsDuty = options;
+      this.isOpensDuty = false;
+    },
+    selectOptionsDutyUpdate(options) {
+      this.getByIdteacher.Duty = options;
+      this.isOpensDutyUpdate = false;
+    },
+    selectOptionsTeaching(options) {
+      this.formData.Teaching = options;
+      this.selectedOptionsTeaching = options;
+      this.isOpensTeaching = false;
+    },
+    selectOptionsTeachingUpdate(options) {
+      this.getByIdteacher.Teaching = options;
+      this.isOpensTeachingUpdate = false;
     },
     selectOptionsStandard(options) {
       this.formData.Standard = options;
@@ -662,19 +837,15 @@ export default {
             isValid = false;
             this.error.push("Vui lòng nhập tên giáo viên");
             break;
-          case this.formData.TeacherName.length < 5:
-            isValid = false;
-            this.error.push("Tên giáo viên phải lớn hơn 5 kí tự");
-            break;
-          case this.selectedOptions == null:
+          case this.selectedOptions === "":
             isValid = false;
             this.error.push("Vui lòng chọn bộ môn");
             break;
-          case this.selectedOptionsCollaborate == null:
+          case this.selectedOptionsCollaborate === "":
             isValid = false;
             this.error.push("Vui lòng chọn tình trạng");
             break;
-          case this.selectedOptionsStandard == null:
+          case this.selectedOptionsStandard === "":
             isValid = false;
             this.error.push("Vui lòng chọn trình độ");
             break;
@@ -729,6 +900,8 @@ export default {
             SubjectId: this.formData.SubjectId,
             Standard: this.formData.Standard,
             Collaborate: this.formData.Collaborate,
+            Teaching: this.formData.Teaching,
+            Duty: this.formData.Duty,
             isChecked: false,
           });
           // reset formData
@@ -815,7 +988,7 @@ export default {
   font-size: 34px;
 }
 .teacher_form {
-  height: 61%;
+  height: 72%;
   width: 60%;
   background-color: #fff;
   border-radius: 4px;

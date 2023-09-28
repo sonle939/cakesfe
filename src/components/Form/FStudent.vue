@@ -462,11 +462,11 @@ export default {
             isValid = false;
             this.error.push("Vui lòng nhập tên học sinh");
             break;
-          case this.formData.StudentName.length < 5:
+          case this.formData.Email === "":
             isValid = false;
-            this.error.push("Tên học sinh phải lớn hơn 5 kí tự");
+            this.error.push("Vui lòng nhập địa chỉ email");
             break;
-          case this.selectedOption == null:
+          case this.selectedOption === "":
             isValid = false;
             this.error.push("Vui lòng chọn lớp học");
             break;

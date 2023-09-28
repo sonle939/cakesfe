@@ -37,7 +37,7 @@
             </div>
             <div class="filter_item">
               <div class="wrapper__i">
-                <div class="excel"></div>
+                <div class="excel" @click="exportExcel"></div>
               </div>
               <div class="wrapper__i">
                 <div
@@ -180,6 +180,7 @@ export default {
       "getIDsemester",
       "deletesemester",
       "deleteMultiplesemester",
+      "exportExcel",
     ]),
     ...mapMutations([
       "SELECTCHECKEDSEMESTER",

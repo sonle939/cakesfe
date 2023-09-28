@@ -64,7 +64,7 @@
                   >
                     <ul ref="list">
                       <li
-                        v-for="data in semester"
+                        v-for="data in filteredSemester"
                         :key="data.SemesterId"
                         @click="
                           selectOptionsemester(
@@ -143,7 +143,7 @@
             </div>
             <div class="filter_item">
               <div class="wrapper__i">
-                <div class="excel"></div>
+                <div class="excel" @click="exportExcel"></div>
               </div>
               <div class="wrapper__i">
                 <div class="filter" @click="clearFilterCondition()"></div>
@@ -396,9 +396,14 @@ export default {
       "getsemester",
       "getschoolyear",
       "getClassRoom",
+      "exportExcel",
     ]),
     formattedDate(data) {
-      return format(new Date(data), "dd/MM/yyyy");
+      try {
+        return format(new Date(data), "dd/MM/yyyy");
+      } catch (error) {
+        console.log(error);
+      }
     },
     modeFormUpdate(data) {
       try {
@@ -437,6 +442,9 @@ export default {
       "loadingconduct",
       "selectedItemsconduct",
     ]),
+    filteredSemester() {
+      return this.semester.filter((data) => data.SemesterName !== "Cả năm");
+    },
   },
   mounted() {
     this.getConduct();

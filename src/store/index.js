@@ -12,6 +12,7 @@ import timetable from './module/timetable';
 import user from './module/user';
 import feedback from './module/feedback';
 import conduct from './module/conduct';
+import summarise from './module/summarise';
 import { createStore } from 'vuex';
 
 const store = createStore({
@@ -29,7 +30,8 @@ const store = createStore({
         timetable,
         user,
         feedback,
-        conduct
+        conduct,
+        summarise
     }
 });
 export default store;

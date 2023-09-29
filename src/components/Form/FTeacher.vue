@@ -138,42 +138,9 @@
             </div>
           </div>
         </label>
-        <label class="slabel" @click="toggleDropdownsTeaching">
-          Đang dạy lớp
-          <div class="dropdown" style="margin-top: 8px; width: 495px">
-            <input
-              type="text"
-              v-model="selectedOptionsTeaching"
-              placeholder="Chọn lớp học"
-            />
-            <i
-              @click="toggleDropdownsTeaching"
-              :class="
-                isOpensTeaching
-                  ? 'bx bx-chevron-down active'
-                  : 'bx bx-chevron-down'
-              "
-            ></i>
-            <div
-              class="overlaylist"
-              v-show="isOpensTeaching"
-              style="width: 495px"
-            >
-              <ul ref="list">
-                <li
-                  v-for="data in classroomteacher"
-                  :key="data.ClassRoomId"
-                  @click="selectOptionsTeaching(data.ClassRoomName)"
-                >
-                  {{ data.ClassRoomName }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </label>
         <label class="slabel" @click="toggleDropdownsDuty">
           Loại giáo viên
-          <div class="dropdown" style="margin-top: 8px; width: 495px">
+          <div class="dropdown" style="margin-top: 8px; width: 315px">
             <input
               type="text"
               v-model="selectedOptionsDuty"
@@ -185,7 +152,7 @@
                 isOpensDuty ? 'bx bx-chevron-down active' : 'bx bx-chevron-down'
               "
             ></i>
-            <div class="overlaylist" v-show="isOpensDuty" style="width: 495px">
+            <div class="overlaylist" v-show="isOpensDuty" style="width: 315px">
               <ul ref="list">
                 <li
                   v-for="data in DutyList"
@@ -200,7 +167,7 @@
         </label>
         <label class="slabel" @click="toggleDropdownsCollaborate">
           Tình trạng công tác
-          <div class="dropdown" style="margin-top: 8px; width: 495px">
+          <div class="dropdown" style="margin-top: 8px; width: 315px">
             <input
               type="text"
               v-model="selectedOptionsCollaborate"
@@ -217,7 +184,7 @@
             <div
               class="overlaylist"
               v-show="isOpensCollaborate"
-              style="width: 495px"
+              style="width: 315px"
             >
               <ul ref="list">
                 <li
@@ -233,7 +200,7 @@
         </label>
         <label class="slabel" @click="toggleDropdownsStandard">
           Trình độ giáo viên
-          <div class="dropdown" style="margin-top: 8px; width: 495px">
+          <div class="dropdown" style="margin-top: 8px; width: 315px">
             <input
               type="text"
               v-model="selectedOptionsStandard"
@@ -250,7 +217,7 @@
             <div
               class="overlaylist"
               v-show="isOpensStandard"
-              style="width: 495px"
+              style="width: 315px"
             >
               <ul ref="list">
                 <li
@@ -410,42 +377,9 @@
             </div>
           </div>
         </label>
-        <label class="slabel" @click="toggleDropdownsTeachingUpdate">
-          Đang dạy lớp
-          <div class="dropdown" style="margin-top: 8px; width: 495px">
-            <input
-              type="text"
-              v-model="getByIdteacher.Teaching"
-              placeholder="Chọn lớp học"
-            />
-            <i
-              @click="toggleDropdownsTeachingUpdate"
-              :class="
-                isOpensTeachingUpdate
-                  ? 'bx bx-chevron-down active'
-                  : 'bx bx-chevron-down'
-              "
-            ></i>
-            <div
-              class="overlaylist"
-              v-show="isOpensTeachingUpdate"
-              style="width: 495px"
-            >
-              <ul ref="list">
-                <li
-                  v-for="data in classroomteacher"
-                  :key="data.ClassRoomId"
-                  @click="selectOptionsTeachingUpdate(data.ClassRoomName)"
-                >
-                  {{ data.ClassRoomName }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </label>
         <label class="slabel" @click="toggleDropdownsDutyUpdate">
           Loại giáo viên
-          <div class="dropdown" style="margin-top: 8px; width: 495px">
+          <div class="dropdown" style="margin-top: 8px; width: 315px">
             <input
               type="text"
               v-model="getByIdteacher.Duty"
@@ -462,7 +396,7 @@
             <div
               class="overlaylist"
               v-show="isOpensDutyUpdate"
-              style="width: 495px"
+              style="width: 315px"
             >
               <ul ref="list">
                 <li
@@ -478,7 +412,7 @@
         </label>
         <label class="slabel" @click="toggleDropdownsCollaborateUpdate">
           Tình trạng công tác
-          <div class="dropdown" style="margin-top: 8px; width: 495px">
+          <div class="dropdown" style="margin-top: 8px; width: 315px">
             <input
               type="text"
               v-model="getByIdteacher.Collaborate"
@@ -495,7 +429,7 @@
             <div
               class="overlaylist"
               v-show="isOpensCollaborateUpdate"
-              style="width: 495px"
+              style="width: 315px"
             >
               <ul ref="list">
                 <li
@@ -511,7 +445,7 @@
         </label>
         <label class="slabel" @click="toggleDropdownsStandardUpdate">
           Trình độ giáo viên
-          <div class="dropdown" style="margin-top: 8px; width: 495px">
+          <div class="dropdown" style="margin-top: 8px; width: 315px">
             <input
               type="text"
               v-model="getByIdteacher.Standard"
@@ -528,7 +462,7 @@
             <div
               class="overlaylist"
               v-show="isOpensStandardUpdate"
-              style="width: 495px"
+              style="width: 315px"
             >
               <ul ref="list">
                 <li
@@ -583,10 +517,7 @@ export default {
     const isOpensCollaborateUpdate = ref(false);
     const isOpensDuty = ref(false);
     const isOpensDutyUpdate = ref(false);
-    const isOpensTeaching = ref(false);
-    const isOpensTeachingUpdate = ref(false);
     const selectedOptions = ref("");
-    const selectedOptionsTeaching = ref("");
     const selectedOptionsDuty = ref("");
     const selectedOptionsStandard = ref("");
     const selectedOptionsCollaborate = ref("");
@@ -665,13 +596,10 @@ export default {
       selectedOptions,
       selectedOptionsCollaborate,
       selectedOptionsStandard,
-      selectedOptionsTeaching,
       selectedOptionsDuty,
       DutyList,
       isOpensDuty,
       isOpensDutyUpdate,
-      isOpensTeaching,
-      isOpensTeachingUpdate,
     };
   },
   computed: {
@@ -726,12 +654,6 @@ export default {
     toggleDropdownsDutyUpdate() {
       this.isOpensDutyUpdate = !this.isOpensDutyUpdate;
     },
-    toggleDropdownsTeaching() {
-      this.isOpensTeaching = !this.isOpensTeaching;
-    },
-    toggleDropdownsTeachingUpdate() {
-      this.isOpensTeachingUpdate = !this.isOpensTeachingUpdate;
-    },
     toggleDropdownsStandard() {
       this.isOpensStandard = !this.isOpensStandard;
     },
@@ -762,15 +684,6 @@ export default {
     selectOptionsDutyUpdate(options) {
       this.getByIdteacher.Duty = options;
       this.isOpensDutyUpdate = false;
-    },
-    selectOptionsTeaching(options) {
-      this.formData.Teaching = options;
-      this.selectedOptionsTeaching = options;
-      this.isOpensTeaching = false;
-    },
-    selectOptionsTeachingUpdate(options) {
-      this.getByIdteacher.Teaching = options;
-      this.isOpensTeachingUpdate = false;
     },
     selectOptionsStandard(options) {
       this.formData.Standard = options;
@@ -988,7 +901,7 @@ export default {
   font-size: 34px;
 }
 .teacher_form {
-  height: 72%;
+  height: 61%;
   width: 60%;
   background-color: #fff;
   border-radius: 4px;

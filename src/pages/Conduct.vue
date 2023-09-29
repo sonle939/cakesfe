@@ -143,7 +143,7 @@
             </div>
             <div class="filter_item">
               <div class="wrapper__i">
-                <div class="excel" @click="exportExcel"></div>
+                <div class="excel" @click="exportExcelConduct"></div>
               </div>
               <div class="wrapper__i">
                 <div class="filter" @click="clearFilterCondition()"></div>
@@ -396,7 +396,7 @@ export default {
       "getsemester",
       "getschoolyear",
       "getClassRoom",
-      "exportExcel",
+      "exportExcelConduct",
     ]),
     formattedDate(data) {
       try {

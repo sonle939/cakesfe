@@ -83,7 +83,7 @@ const accountModule = {
                 console.log(error)
             }
         },
-        async exportExcel() {
+        async exportExcelAccount() {
             try {
                 const response = await axios.get(`${API_BASE_URL}Accounts/ExportData`, {
                     responseType: 'blob' // Bắt buộc thêm option responseType là 'blob' để server trả về kiểu dữ liệu blob

@@ -42,7 +42,7 @@ const subjectmodule = {
                 console.log(error);
             }
         },
-        async exportExcel() {
+        async exportExcelSubject() {
             try {
                 const response = await axios.get(`${API_BASE_URL}Subjects/ExportData`, {
                     responseType: 'blob' // Bắt buộc thêm option responseType là 'blob' để server trả về kiểu dữ liệu blob

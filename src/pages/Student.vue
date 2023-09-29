@@ -69,7 +69,7 @@
                 </div>
               </div>
               <div class="wrapper__i">
-                <div class="excel" @click="exportExcel"></div>
+                <div class="excel" @click="exportExcelStudent"></div>
               </div>
               <div class="wrapper__i">
                 <div class="filter" @click="clearFilterCondition()"></div>
@@ -303,7 +303,7 @@ export default {
       "uncheckItemsstudent",
       "deleteMultiplestudent",
       "deletestudent",
-      "exportExcel",
+      "exportExcelStudent",
     ]),
     formattedDate(data) {
       return format(new Date(data), "dd/MM/yyyy");

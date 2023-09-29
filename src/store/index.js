@@ -13,6 +13,7 @@ import user from './module/user';
 import feedback from './module/feedback';
 import conduct from './module/conduct';
 import summarise from './module/summarise';
+import assignment from "./module/assignment";
 import { createStore } from 'vuex';
 
 const store = createStore({
@@ -31,7 +32,8 @@ const store = createStore({
         user,
         feedback,
         conduct,
-        summarise
+        summarise,
+        assignment
     }
 });
 export default store;

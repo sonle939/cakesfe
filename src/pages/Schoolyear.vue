@@ -37,7 +37,7 @@
             </div>
             <div class="filter_item">
               <div class="wrapper__i">
-                <div class="excel" @click="exportExcel"></div>
+                <div class="excel" @click="exportExcelSchoolyear"></div>
               </div>
               <div class="wrapper__i">
                 <div
@@ -200,7 +200,7 @@ export default {
       "deleteschoolyear",
       "getIDschoolyear",
       "uncheckItemsschoolyear",
-      "exportExcel",
+      "exportExcelSchoolyear",
     ]),
     ...mapMutations([
       "SELECTCHECKEDSCHOOLYEAR",

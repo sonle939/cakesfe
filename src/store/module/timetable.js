@@ -68,7 +68,7 @@ const timetableModule = {
                 console.log(error)
             }
         },
-        async exportExcel() {
+        async exportExcelTimetable() {
             try {
                 const response = await axios.get(`${API_BASE_URL}TimeTables/ExportData`, {
                     responseType: 'blob' // Bắt buộc thêm option responseType là 'blob' để server trả về kiểu dữ liệu blob

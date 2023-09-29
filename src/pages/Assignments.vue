@@ -1,28 +1,23 @@
 <template>
-  <div class="account">
+  <div class="classroom">
     <Navbar />
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý tài khoản" :showform="modeFormInsert" />
+        <HeaderContent text="Quản lý phân công" :showform="modeFormInsert" />
         <div class="search_table">
           <div class="search_filter">
             <div class="search_check">
               <div class="search_list">
                 <i class="bx bx-search-alt-2"></i>
-                <input
-                  type="text"
-                  placeholder="Tìm kiếm trong danh sách"
-                  v-model="searchCode"
-                  @keydown.enter="setFilteraccountcode(searchCode)"
-                />
+                <input type="text" placeholder="Tìm kiếm trong danh sách" />
               </div>
-              <div class="checked_data" v-show="trueChecked">
+              <div class="checked_data" v-show="trueCheckedassignment">
                 <h3>
                   Đã chọn tất cả
-                  <p>{{ checkAmount }}</p>
+                  <p>{{ checkAmountassignment }}</p>
                 </h3>
-                <h3 @click="uncheckItemsaccount">Bỏ chọn</h3>
+                <h3 @click="uncheckItemsassignment">Bỏ chọn</h3>
                 <VButton
                   text="Xác nhận thông tin"
                   class="btn_info"
@@ -33,7 +28,7 @@
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
                   @click="
-                    deleteMultipleaccount(selectedItems);
+                    deleteMultipleassignment(selectedItemsassignment);
                     toast();
                   "
                 />
@@ -57,20 +52,22 @@
                 <div class="overlaylist" v-show="isOpen">
                   <ul ref="list">
                     <li
-                      v-for="data in selectedRoles"
-                      :key="data.id"
-                      @click="selectOption(data.name)"
+                      v-for="data in classroom"
+                      :key="data.ClassRoomId"
+                      @click="
+                        selectOption(data.ClassRoomId, data.ClassRoomName)
+                      "
                     >
-                      {{ data.name }}
+                      {{ data.ClassRoomName }}
                     </li>
                   </ul>
                 </div>
               </div>
               <div class="wrapper__i">
-                <div class="excel" @click="exportExcelAccount"></div>
+                <div class="excel" @click="exportExcelAssignment"></div>
               </div>
               <div class="wrapper__i">
-                <div class="filter" @click="clearFilterCondition()"></div>
+                <div class="filter" @click="getAssignment()"></div>
               </div>
               <div class="wrapper__i">
                 <div class="setting"></div>
@@ -79,10 +76,9 @@
           </div>
           <div
             :class="
-              loadingaccount
-                ? 'table-wrapper active mg-bot'
-                : 'table-wrapper mg-bot'
+              loadingassignment ? 'table-wrapper active' : 'table-wrapper'
             "
+            style="height: auto; margin-bottom: 20px"
           >
             <table style="width: 100%; height: auto">
               <thead>
@@ -97,38 +93,44 @@
                     <input
                       type="checkbox"
                       class="option-input"
-                      v-model="checkAll"
-                      @change="toggleAllSelection"
+                      v-model="checkAllassignment"
+                      @change="toggleAllSelectionassignment"
                     />
-                    Mã tài khoản
+                    Mã phân phối
                   </th>
-                  <th style="min-width: 155px">Mật khẩu</th>
-                  <th style="min-width: 80px">Loại tài khoản</th>
+                  <th style="min-width: 155px">Tên lớp học</th>
+                  <th style="min-width: 155px">Môn học</th>
+                  <th style="min-width: 170px">Giáo viên dạy</th>
                   <th style="min-width: 100px">Chức năng</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="data in account" :key="data.AccountId">
+                <tr v-for="data in assignment" :key="data.AssignmentId">
                   <td>
                     <input
                       type="checkbox"
                       class="option-input"
                       v-model="data.isChecked"
-                      @click="SELECTCHECKED(data.AccountId)"
+                      @click="SELECTCHECKEDASSIGNMENT(data.AssignmentId)"
                     />
-                    {{ data.AccountCode }}
+                    {{ data.AssignmentCode }}
                   </td>
                   <td class="text_left">
                     <tippy
-                      :content="data.PassWord"
+                      :content="data.ClassRoomName"
                       v-tippy="{ interactive: true }"
                     >
-                      {{ data.PassWord }}
+                      {{ data.ClassRoomName }}
                     </tippy>
                   </td>
                   <td class="text_left">
-                    <tippy :content="data.Role">
-                      {{ data.Role }}
+                    <tippy :content="data.SubjectName">
+                      {{ data.SubjectName }}
+                    </tippy>
+                  </td>
+                  <td class="text_left">
+                    <tippy :content="data.TeacherName">
+                      {{ data.TeacherName }}
                     </tippy>
                   </td>
                   <td style="width: 100px">
@@ -144,7 +146,7 @@
                         content="Xóa"
                         v-tippy
                         @click="
-                          deleteaccount(data.AccountId);
+                          deleteassignment(data.AssignmentId);
                           toast();
                         "
                         ><i class="bx bxs-trash-alt"></i
@@ -154,47 +156,50 @@
                 </tr>
               </tbody>
             </table>
-            <div class="noData" v-if="account.length == 0">
+            <div class="noData" v-if="assignment.length == 0">
               <img src="../assets/nodata.svg" alt="" />
               <h3>Không có dữ liệu</h3>
             </div>
-            <Loading v-show="loadingaccount" />
+            <Loading v-show="loadingassignment" style="margin-top: -400px" />
           </div>
           <AdminPaginnation
-            :showIsHide="showIsHideaccount"
-            :totalRecords="totalRecordsaccount"
-            :pageNumber="pageNumberaccount"
-            :pageSize="pageSizeaccount"
-            :totalPages="totalPagesaccount"
-            :setPageNumber="setPageNumberaccount"
-            :setSize="setSizeaccount"
+            :HIDE="HIDEASSIGNMENT"
+            :showIsHide="showIsHideassignment"
+            :totalRecords="totalRecordsassignment"
+            :pageNumber="pageNumberassignment"
+            :pageSize="pageSizeassignment"
+            :totalPages="totalPagesassignment"
+            :setPageNumber="setPageNumberassignment"
+            :setSize="setSizeassignment"
           />
         </div>
       </div>
     </div>
-    <FAccountVue />
+    <FAssignment />
   </div>
 </template>
 
 <script>
-import HeaderContent from "@/components/content/Header.vue";
 import Navbar from "../components/Navbar.vue";
 import Sidebar from "../components/Sidebar.vue";
-import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
+import HeaderContent from "@/components/content/Header.vue";
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import FAccountVue from "../components/Form/FAccount.vue";
+import FAssignment from "../components/Form/FAssignment.vue";
 import Loading from "../components/Loading.vue";
-import { createToast } from "mosha-vue-toastify";
 import VButton from "../components/Button/VButton.vue";
-
+import { createToast } from "mosha-vue-toastify";
+import { ref } from "vue";
+import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
-  name: "Account",
-  data() {
+  name: "Assignments",
+  setup() {
+    const isOpen = ref(false);
+    const selectedOption = ref("");
     const toast = () => {
       createToast(
         {
-          title: "Tài khoản",
+          title: "Phân công",
           description: "Xóa bỏ thành công",
         },
         {
@@ -206,88 +211,72 @@ export default {
     };
     return {
       toast,
-      isOpen: false,
-      selectedOption: null,
-      selectedRoles: [
-        { id: 1, name: "admin" },
-        { id: 2, name: "teacher" },
-        { id: 3, name: "student" },
-      ],
-      searchCode: "",
+      isOpen,
+      selectedOption,
     };
   },
   computed: {
     ...mapGetters([
-      "account",
-      "allAccount",
-      "showIsHideaccount",
-      "totalRecordsaccount",
-      "pageSizeaccount",
-      "hasMoreItems",
-      "pageNumberaccount",
-      "totalPagesaccount",
-      "checkAllaccount",
-      "checkAmount",
-      "trueChecked",
-      "loadingaccount",
-      "selectedItems",
+      "assignment",
+      "classroom",
+      "teacherAll",
+      "checkAllassignment",
+      "checkAmountassignment",
+      "trueCheckedassignment",
+      "loadingassignment",
+      "selectedItemsassignment",
+      "showIsHideassignment",
+      "totalRecordsassignment",
+      "pageSizeassignment",
+      "pageNumberassignment",
+      "totalPagesassignment",
     ]),
   },
   methods: {
     toggleDropdown() {
       this.isOpen = !this.isOpen;
     },
-    selectOption(options) {
+    selectOption(id, options) {
+      this.filteridclassroomassignment(id);
       this.selectedOption = options;
-      this.setFilterrole(options);
       this.isOpen = false;
     },
-    clearFilterCondition() {
-      try {
-        this.getaccount();
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    ...mapMutations([
-      "SET_PAGE",
-      "HIDE",
-      "SELECTCHECKED",
-      "SHOW_FORM_ACCOUNT",
-      "SET_FILTER_ROLE",
-      "SET_FILTER_ACCOUNTCODE",
-      "SET_LOADING_ACCOUNT",
-      "UPDATE_MODE_ACCOUNT",
-      "ADD_MODE_ACCOUNT",
-    ]),
     ...mapActions([
-      "setPageNumberaccount",
-      "setSizeaccount",
-      "getaccount",
-      "toggleAllSelection",
-      "setFilterrole",
-      "setFilteraccountcode",
-      "getIDaccount",
-      "uncheckItemsaccount",
-      "deleteaccount",
-      "deleteMultipleaccount",
+      "getAssignment",
+      "toggleAllSelectionassignment",
+      "uncheckItemsassignment",
+      "deleteassignment",
+      "deleteMultipleassignment",
+      "getIDassignment",
+      "exportExcelAssignment",
+      "getClassRoom",
       "getteacherAll",
-      "getStudentAll",
-      "exportExcelAccount",
+      "setPageNumberassignment",
+      "setSizeassignment",
+      "filteridclassroomassignment",
+      "filterassignmentcode",
+    ]),
+    ...mapMutations([
+      "SELECTCHECKEDASSIGNMENT",
+      "SHOW_FORM_ASSIGNMENT",
+      "ADD_MODE_ASSIGNMENT",
+      "UPDATE_MODE_ASSIGNMENT",
+      "SET_PAGE_ASSIGNMENT",
+      "HIDEASSIGNMENT",
     ]),
     modeFormUpdate(data) {
       try {
-        this.UPDATE_MODE_ACCOUNT();
-        this.getIDaccount(data);
-        this.SHOW_FORM_ACCOUNT();
+        this.UPDATE_MODE_ASSIGNMENT();
+        this.getIDassignment(data);
+        this.SHOW_FORM_ASSIGNMENT();
       } catch (error) {
         console.log(error);
       }
     },
     modeFormInsert() {
       try {
-        this.ADD_MODE_ACCOUNT();
-        this.SHOW_FORM_ACCOUNT();
+        this.ADD_MODE_ASSIGNMENT();
+        this.SHOW_FORM_ASSIGNMENT();
       } catch (error) {
         console.log(error);
       }
@@ -297,18 +286,18 @@ export default {
     Navbar,
     Sidebar,
     HeaderContent,
-    AdminPaginnation,
-    FAccountVue,
+    FAssignment,
     Loading,
     VButton,
+    AdminPaginnation,
   },
   mounted() {
-    this.getaccount();
-    this.getStudentAll();
+    this.getAssignment();
+    this.getClassRoom();
     this.getteacherAll();
   },
 };
 </script>
 
-<style>
+<style scoped>
 </style>

@@ -132,6 +132,12 @@ export default {
           nameRouter: "/admin/teacher",
         },
         {
+          id: 13,
+          name: "Phân công",
+          classIcon: "bx bx-git-repo-forked",
+          nameRouter: "/admin/assignments",
+        },
+        {
           id: 10,
           name: "Thời gian",
           classIcon: "bx bx-calendar",

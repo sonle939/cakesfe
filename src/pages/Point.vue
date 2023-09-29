@@ -169,7 +169,7 @@
             </div>
             <div class="filter_item">
               <div class="wrapper__i">
-                <div class="excel" @click="exportExcel"></div>
+                <div class="excel" @click="exportExcelPoint"></div>
               </div>
               <div class="wrapper__i">
                 <div class="filter"></div>
@@ -539,7 +539,7 @@ export default {
       "setFiltersemesterpoint",
       "setFiltersubjectidpoint",
       "setFilterclassroomidpoint",
-      "exportExcel",
+      "exportExcelPoint",
     ]),
     ...mapMutations([
       "SHOW_FORM_POINT",

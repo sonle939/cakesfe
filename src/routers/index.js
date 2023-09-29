@@ -17,7 +17,7 @@ import TimeTable from '../pages/TimeTable.vue';
 import Conduct from '../pages/Conduct.vue';
 import Information from '../pages/Information.vue';
 import Statistic from '../pages/Statistic.vue';
-
+import Assignments from '../pages/Assignments.vue';
 const routes = [
     {
         path: '/',
@@ -42,6 +42,10 @@ const routes = [
     {
         path: '/admin/grade',
         component: Grade
+    },
+    {
+        path: '/admin/assignments',
+        component: Assignments
     },
     {
         path: '/admin/conduct',

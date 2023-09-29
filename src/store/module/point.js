@@ -65,7 +65,7 @@ const pointModule = {
                 console.log(error)
             }
         },
-        async exportExcel() {
+        async exportExcelPoint() {
             try {
                 const response = await axios.get(`${API_BASE_URL}Points/ExportData`, {
                     responseType: 'blob' // Bắt buộc thêm option responseType là 'blob' để server trả về kiểu dữ liệu blob

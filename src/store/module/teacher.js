@@ -68,7 +68,7 @@ const teacherModule = {
                 console.log(error)
             }
         },
-        async exportExcel() {
+        async exportExcelteacher() {
             try {
                 const response = await axios.get(`${API_BASE_URL}Teachers/ExportData`, {
                     responseType: 'blob' // Bắt buộc thêm option responseType là 'blob' để server trả về kiểu dữ liệu blob

@@ -72,7 +72,7 @@
                 </div>
               </div>
               <div class="wrapper__i">
-                <div class="excel" @click="exportExcel"></div>
+                <div class="excel" @click="exportExcelTimetable"></div>
               </div>
               <div class="wrapper__i">
                 <div class="filter"></div>
@@ -322,7 +322,7 @@ export default {
       "uncheckItemstimetable",
       "deleteMultipletimetable",
       "deletetimetable",
-      "exportExcel",
+      "exportExcelTimetable",
     ]),
     modeFormUpdate(data) {
       try {

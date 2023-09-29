@@ -62,7 +62,7 @@
                 </div>
               </div>
               <div class="wrapper__i">
-                <div class="excel" @click="exportExcel"></div>
+                <div class="excel" @click="exportExcelClasroom"></div>
               </div>
               <div class="wrapper__i">
                 <div class="filter" @click="getClassRoom()"></div>
@@ -218,7 +218,7 @@ export default {
       "deleteclassroom",
       "deleteMultipleclassroom",
       "getIDclassroom",
-      "exportExcel",
+      "exportExcelClasroom",
     ]),
     ...mapMutations([
       "SELECTCHECKEDCLASSROOM",

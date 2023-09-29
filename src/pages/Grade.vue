@@ -38,7 +38,7 @@
 
             <div class="filter_item">
               <div class="wrapper__i">
-                <div class="excel" @click="exportExcel"></div>
+                <div class="excel" @click="exportExcelGrade"></div>
               </div>
               <div class="wrapper__i">
                 <div
@@ -198,7 +198,7 @@ export default {
       "uncheckItemsgrade",
       "deleteMultiplegrade",
       "deletegrade",
-      "exportExcel",
+      "exportExcelGrade",
     ]),
     ...mapMutations([
       "SELECTCHECKEDGRADE",

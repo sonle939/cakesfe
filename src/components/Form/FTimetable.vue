@@ -391,6 +391,7 @@
             class="sinput"
             style="width: 150px"
             v-model="filterTimeEndUpdate"
+            disabled
           />
         </label>
         <label class="slabel" @click="toggleDropdownsubjectUpdate">
@@ -412,7 +413,7 @@
             <div class="overlaylist" v-show="isOpenssubjectUpdate">
               <ul ref="list">
                 <li
-                  v-for="data in filteredSubject"
+                  v-for="data in filteredSubjectUpate"
                   :key="data.SubjectId"
                   @click="
                     selectOptionsubjectUpdate(data.SubjectId, data.SubjectName)
@@ -443,7 +444,7 @@
             <div class="overlaylist" v-show="isOpensteacherUpdate">
               <ul ref="list">
                 <li
-                  v-for="data in filteredTeacher"
+                  v-for="data in filteredTeacherUpdate"
                   :key="data.TeacherId"
                   @click="
                     selectOptionteacherUpdate(data.TeacherId, data.TeacherName)
@@ -482,7 +483,7 @@
             >
               <ul ref="list">
                 <li
-                  v-for="data in filteredClassroom"
+                  v-for="data in filteredClassroomUpdate"
                   :key="data.ClassRoomId"
                   @click="
                     selectOptionclassroomUpdate(
@@ -660,6 +661,22 @@ export default {
         return this.teachertimetable;
       }
     },
+    filteredTeacherUpdate() {
+      if (this.getByIdtimetable.TeacherName) {
+        const teacherKeyword = this.getByIdtimetable.TeacherName.toLowerCase();
+        return this.teachertimetable.filter((data) =>
+          data.TeacherName.toLowerCase().includes(teacherKeyword)
+        );
+      } else if (this.getByIdtimetable.SubjectName) {
+        const subjectKeyword = this.getByIdtimetable.SubjectName.toLowerCase();
+        return this.teachertimetable.filter((data) =>
+          data.SubjectName.toLowerCase().includes(subjectKeyword)
+        );
+      } else {
+        // Trả về toàn bộ danh sách sinh viên nếu cả hai selectedOptionteacher và selectedOptionsubject đều là null
+        return this.teachertimetable;
+      }
+    },
     filterTimeEnd() {
       if (this.selectedOptiontimestart == "7h00p") {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
@@ -704,7 +721,7 @@ export default {
         return (this.getByIdtimetable.TimeEnd = "11h40p");
       } else {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        return (this.getByIdtimetable.TimeEnd = "giờ kết thúc");
+        return (this.getByIdtimetable.TimeEnd = "16h40p");
       }
     },
     filteredSubject() {
@@ -717,9 +734,29 @@ export default {
         return this.subjecttimetable;
       }
     },
+    filteredSubjectUpate() {
+      if (this.getByIdtimetable.SubjectName) {
+        const keyword = this.getByIdtimetable.SubjectName.toLowerCase();
+        return this.subjecttimetable.filter((data) =>
+          data.SubjectName.toLowerCase().includes(keyword)
+        );
+      } else {
+        return this.subjecttimetable;
+      }
+    },
     filteredClassroom() {
       if (this.selectedOptionclassroom) {
         const keyword = this.selectedOptionclassroom.toLowerCase();
+        return this.classroomtimetable.filter((data) =>
+          data.ClassRoomName.toLowerCase().includes(keyword)
+        );
+      } else {
+        return this.classroomtimetable;
+      }
+    },
+    filteredClassroomUpdate() {
+      if (this.getByIdtimetable.ClassRoomName) {
+        const keyword = this.getByIdtimetable.ClassRoomName.toLowerCase();
         return this.classroomtimetable.filter((data) =>
           data.ClassRoomName.toLowerCase().includes(keyword)
         );
@@ -955,6 +992,9 @@ export default {
           this.selectedOptionclassroom = null;
           this.selectedOptionsubject = null;
           this.selectedOptionteacher = null;
+          this.selectedOptiondaylearn = null;
+          this.selectedOptionlearntype = null;
+          this.selectedOptiontimestart = null;
           this.SHOW_FORM_TIMETABLE();
           this.toast();
           this.checkForm = false;

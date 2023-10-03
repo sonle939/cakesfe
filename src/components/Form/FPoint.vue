@@ -557,7 +557,7 @@
             <div class="dropdown" style="margin-top: 8px; width: 200px">
               <input
                 type="text"
-                v-model="getByIdpoint.ClassRoomName"
+                v-model="selectedOptionclassroom"
                 placeholder="Chọn lớp học"
               />
               <i
@@ -612,7 +612,7 @@
               >
                 <ul ref="list">
                   <li
-                    v-for="data in filteredStudent"
+                    v-for="data in filteredStudentUpdate"
                     :key="data.StudentId"
                     @click="
                       selectOptionstudentUpdate(
@@ -853,6 +853,22 @@ export default {
         return this.studentAll;
       }
     },
+    filteredStudentUpdate() {
+      if (this.getByIdpoint.StudentName) {
+        const teacherKeyword = this.getByIdpoint.StudentName.toLowerCase();
+        return this.studentAll.filter((data) =>
+          data.StudentName.toLowerCase().includes(teacherKeyword)
+        );
+      } else if (this.selectedOptionclassroom) {
+        const subjectKeyword = this.selectedOptionclassroom.toLowerCase();
+        return this.studentAll.filter((data) =>
+          data.ClassRoomName.toLowerCase().includes(subjectKeyword)
+        );
+      } else {
+        // Trả về toàn bộ danh sách sinh viên nếu cả hai selectedOptionteacher và selectedOptionsubject đều là null
+        return this.studentAll;
+      }
+    },
     filteredSchoolyear() {
       const keyword = this.selectedOptionSchoolyear.toLowerCase();
       return this.schoolyear.filter((data) =>
@@ -962,11 +978,10 @@ export default {
         console.log(error);
       }
     },
-    selectOptionclassroomUpdate(id, option) {
+    selectOptionclassroomUpdate(option) {
       try {
-        this.getByIdpoint.ClassRoomId = id;
-        this.getByIdpoint.ClassRoomName = option;
-        this.isOpenclassroomUpdate;
+        this.selectedOptionclassroom = option;
+        this.isOpenclassroomUpdate = false;
       } catch (error) {
         console.log(error);
       }
@@ -984,7 +999,7 @@ export default {
       try {
         this.getByIdpoint.SubjectId = id;
         this.getByIdpoint.SubjectName = option;
-        this.isOpenssubjectUpdate;
+        this.isOpenssubjectUpdate = false;
       } catch (error) {
         console.log(error);
       }
@@ -1020,7 +1035,7 @@ export default {
       try {
         this.getByIdpoint.SchoolYearId = id;
         this.getByIdpoint.SchoolYearName = option;
-        this.isOpenSchoolyearUpdate;
+        this.isOpenSchoolyearUpdate = false;
       } catch (error) {
         console.log(error);
       }
@@ -1038,7 +1053,7 @@ export default {
       try {
         this.getByIdpoint.StudentId = id;
         this.getByIdpoint.StudentName = option;
-        this.isOpenstudentUpdate;
+        this.isOpenstudentUpdate = false;
       } catch (error) {
         console.log(error);
       }

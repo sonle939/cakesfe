@@ -125,7 +125,7 @@
               <img src="../assets/nodata.svg" alt="" />
               <h3>Không có dữ liệu</h3>
             </div>
-            <Loading v-show="loadingschoolyear" style="margin-top: -430px" />
+            <Loading v-show="loadingschoolyear" style="margin-top: -370px" />
           </div>
         </div>
       </div>

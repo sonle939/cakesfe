@@ -18,6 +18,7 @@ import Conduct from '../pages/Conduct.vue';
 import Information from '../pages/Information.vue';
 import Statistic from '../pages/Statistic.vue';
 import Assignments from '../pages/Assignments.vue';
+import Feedback from '../pages/Feedback.vue';
 const routes = [
     {
         path: '/',
@@ -46,6 +47,10 @@ const routes = [
     {
         path: '/admin/assignments',
         component: Assignments
+    },
+    {
+        path: '/admin/feedback',
+        component: Feedback
     },
     {
         path: '/admin/conduct',

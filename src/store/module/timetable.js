@@ -8,6 +8,7 @@ const timetableModule = {
         subjecttimetable: [],
         teachertimetable: [],
         classroomtimetable: [],
+        getidcls: [],
         getByIdtimetable: [],
         loadingtimetable: false,
         checkAlltimetable: false,
@@ -31,6 +32,7 @@ const timetableModule = {
         timetable: state => state.timetable,
         isshowtimetable: state => state.isshowtimetable,
         getByIdtimetable: state => state.getByIdtimetable,
+        getidcls: state => state.getidcls,
         subjecttimetable: state => state.subjecttimetable,
         teachertimetable: state => state.teachertimetable,
         classroomtimetable: state => state.classroomtimetable,
@@ -85,6 +87,14 @@ const timetableModule = {
             try {
                 const response = await axios.get(`${API_BASE_URL}TimeTables/${object.TimeTableId}`)
                 commit('GETBYIDTIMETABLE', response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getIDCLS({ commit }, object) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}TimeTables/CLSID?recordId=${object.ClassRoomId}`)
+                commit('GETIDCLS', response.data)
             } catch (error) {
                 console.log(error)
             }
@@ -238,6 +248,13 @@ const timetableModule = {
                 console.log(error);
             }
 
+        },
+        GETIDCLS(state, data) {
+            try {
+                state.getidcls = data
+            } catch (error) {
+                console.log(error);
+            }
         },
         SET_TIMETABLE(state, timetable) {
             try {

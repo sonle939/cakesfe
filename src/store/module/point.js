@@ -5,6 +5,7 @@ const API_BASE_URL = 'https://localhost:7199/api/v2/';
 const pointModule = {
     state: {
         point: [],
+        pointStudentId: [],
         pointAll: [],
         getByIdpoint: [],
         loadingpoint: false,
@@ -28,6 +29,7 @@ const pointModule = {
     },
     getters: {
         point: state => state.point,
+        pointStudentId: state => state.pointStudentId,
         pointAll: state => state.pointAll,
         isshowpoint: state => state.isshowpoint,
         getByIdpoint: state => state.getByIdpoint,
@@ -94,12 +96,21 @@ const pointModule = {
                 console.log(error)
             }
         },
+        async getpointstudentid({ commit }, object) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Points/StudentId?recordId=${object.StudentId}`)
+                commit('GETSTUDENTIDPOINT', response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
         async addpoint({ commit, dispatch }, newStaff) {
             try {
                 const res = await axios.post(`${API_BASE_URL}Points/`, newStaff)
                 //commit('SETTEXTCHECK', res.data.notify)
                 commit('ADD_POINT', newStaff)
                 dispatch('getpoint');
+                dispatch('getMaxCodepoint')
                 console.log('aaa', res.data.notify);
             } catch (error) {
                 console.log(error);
@@ -112,6 +123,7 @@ const pointModule = {
                 await axios.delete(`${API_BASE_URL}Points/${PointId}`)
                 commit('DELETE_POINT', PointId);
                 dispatch('getpoint');
+                dispatch('getMaxCodepoint')
             } catch (error) {
                 console.log(error)
             }
@@ -124,6 +136,7 @@ const pointModule = {
                 // Nếu xóa thành công, commit mutation để xóa employees khỏi state
                 if (response.status === 200) {
                     commit('DELETE_POINT', PointIds);
+                    dispatch('getMaxCodepoint')
                     dispatch('getpoint');
                 }
             } catch (error) {
@@ -138,6 +151,7 @@ const pointModule = {
                 commit('UPDATE_POINT', response.data);
                 //  commit('SETUPDATECHECK', response.data.message)
                 dispatch('getpoint');
+                dispatch('getMaxCodepoint')
                 console.log('update', response.data.message);
             } catch (error) {
                 console.log(error);
@@ -219,6 +233,14 @@ const pointModule = {
         GETBYIDPOINT(state, data) {
             try {
                 state.getByIdpoint = data
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        GETSTUDENTIDPOINT(state, data) {
+            try {
+                state.pointStudentId = data
             } catch (error) {
                 console.log(error);
             }

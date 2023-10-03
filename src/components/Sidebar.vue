@@ -78,6 +78,12 @@ export default {
           nameRouter: "/admin/statistic",
         },
         {
+          id: 12,
+          name: "Phản hồi",
+          classIcon: "bx bx-message-rounded-dots",
+          nameRouter: "/admin/feedback",
+        },
+        {
           id: 1,
           name: "Tài khoản",
           classIcon: "bx bx-user-circle",
@@ -130,12 +136,6 @@ export default {
           name: "Giáo viên",
           classIcon: "bx bxs-group",
           nameRouter: "/admin/teacher",
-        },
-        {
-          id: 13,
-          name: "Phân công",
-          classIcon: "bx bx-git-repo-forked",
-          nameRouter: "/admin/assignments",
         },
         {
           id: 10,

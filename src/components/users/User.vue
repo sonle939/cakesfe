@@ -11,7 +11,11 @@
         <li
           v-for="(tab, index) in tabs"
           :key="index"
-          @click="changeTab(index)"
+          @click="
+            changeTab(index);
+            getIDCLS(userData);
+            getpointstudentid(userData);
+          "
           class="tab-button"
           :class="{ active: activeTab === index }"
         >
@@ -163,40 +167,214 @@
             </div>
           </div>
           <div v-else-if="tab.type === 'input'">
-            <!-- Nội dung tab kiểu input -->
-            bang diem
+            <div class="user_point">
+              <div class="uspoit_lefy"></div>
+              <div class="uspoint_right"></div>
+            </div>
           </div>
           <div v-else>
-            <table class="timetable">
-              <thead>
-                <tr>
-                  <th>Thời gian</th>
-                  <th>Thứ 2</th>
-                  <th>Thứ 3</th>
-                  <th>Thứ 4</th>
-                  <th>Thứ 5</th>
-                  <th>Thứ 6</th>
-                  <th>Thứ 7</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(time, index) in timimgtable" :key="index">
-                  <td>{{ time }}</td>
-                  <td>{{ scheduleTable[0][index] }}</td>
-                  <td>{{ scheduleTable[1][index] }}</td>
-                  <td>{{ scheduleTable[2][index] }}</td>
-                  <td>{{ scheduleTable[3][index] }}</td>
-                  <td>{{ scheduleTable[4][index] }}</td>
-                  <td>{{ scheduleTable[5][index] }}</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="daylearn_wapper">
+              <div class="daylearn">
+                <div class="daylearn_left">
+                  Thứ
+                  <b>2</b>
+                </div>
+                <div class="daylearn_right">
+                  <div
+                    v-for="item in filteredDataT2"
+                    :key="item.TimeTableId"
+                    class="dl_right_item"
+                    :style="{
+                      'border-left':
+                        '3px solid ' + timeStartColor(item.TimeStart),
+                    }"
+                  >
+                    <h3>{{ item.SubjectName }}</h3>
+                    <p>{{ item.TimeStart }}-{{ item.TimeEnd }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="daylearn">
+                <div class="daylearn_left">
+                  Thứ
+                  <b>3</b>
+                </div>
+                <div class="daylearn_right">
+                  <div
+                    v-for="item in filteredDataT3"
+                    :key="item.TimeTableId"
+                    class="dl_right_item"
+                    :style="{
+                      'border-left':
+                        '3px solid ' + timeStartColor(item.TimeStart),
+                    }"
+                  >
+                    <h3>{{ item.SubjectName }}</h3>
+                    <p>{{ item.TimeStart }}-{{ item.TimeEnd }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="daylearn">
+                <div class="daylearn_left">
+                  Thứ
+                  <b>4</b>
+                </div>
+                <div class="daylearn_right">
+                  <div
+                    v-for="item in filteredDataT4"
+                    :key="item.TimeTableId"
+                    class="dl_right_item"
+                    :style="{
+                      'border-left':
+                        '3px solid ' + timeStartColor(item.TimeStart),
+                    }"
+                  >
+                    <h3>{{ item.SubjectName }}</h3>
+                    <p>{{ item.TimeStart }}-{{ item.TimeEnd }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="daylearn">
+                <div class="daylearn_left">
+                  Thứ
+                  <b>5</b>
+                </div>
+                <div class="daylearn_right">
+                  <div
+                    v-for="item in filteredDataT5"
+                    :key="item.TimeTableId"
+                    class="dl_right_item"
+                    :style="{
+                      'border-left':
+                        '3px solid ' + timeStartColor(item.TimeStart),
+                    }"
+                  >
+                    <h3>{{ item.SubjectName }}</h3>
+                    <p>{{ item.TimeStart }}-{{ item.TimeEnd }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="daylearn">
+                <div class="daylearn_left">
+                  Thứ
+                  <b>6</b>
+                </div>
+                <div class="daylearn_right">
+                  <div
+                    v-for="item in filteredDataT6"
+                    :key="item.TimeTableId"
+                    class="dl_right_item"
+                    :style="{
+                      'border-left':
+                        '3px solid ' + timeStartColor(item.TimeStart),
+                    }"
+                  >
+                    <h3>{{ item.SubjectName }}</h3>
+                    <p>{{ item.TimeStart }}-{{ item.TimeEnd }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="daylearn">
+                <div class="daylearn_left">
+                  Thứ
+                  <b>7</b>
+                </div>
+                <div class="daylearn_right">
+                  <div
+                    v-for="item in filteredDataT7"
+                    :key="item.TimeTableId"
+                    class="dl_right_item"
+                    :style="{
+                      'border-left':
+                        '3px solid ' + timeStartColor(item.TimeStart),
+                    }"
+                  >
+                    <h3>{{ item.SubjectName }}</h3>
+                    <p>{{ item.TimeStart }}-{{ item.TimeEnd }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="daylearn_note">
+              <p>Ghi chú:</p>
+              <div class="note_list">
+                <div class="note_item">
+                  <div class="item_box"></div>
+                  Tiết 1
+                </div>
+                <div class="note_item">
+                  <div class="item_box tiet2"></div>
+                  Tiết 2
+                </div>
+                <div class="note_item">
+                  <div class="item_box tiet3"></div>
+                  Tiết 3
+                </div>
+                <div class="note_item">
+                  <div class="item_box tiet4"></div>
+                  Tiết 4
+                </div>
+                <div class="note_item">
+                  <div class="item_box tiet5"></div>
+                  Tiết 5
+                </div>
+                <div class="note_item">
+                  <div class="item_box buoichieu"></div>
+                  Lịch học chiều
+                </div>
+              </div>
+            </div>
           </div>
         </template>
       </div>
     </div>
-    <div class="user_feedback">
-      <i class="bx bx-chat"></i>
+    <div :class="activeMessage ? 'user_feedback active' : 'user_feedback'">
+      <i
+        class="bx bx-chat"
+        v-if="activeMessage === false"
+        @click="activeMessage = true"
+      ></i>
+      <form
+        class="feedback_form"
+        novalidate="true"
+        v-if="activeMessage === true"
+      >
+        <div class="fb_container">
+          <div class="feedback_title">
+            <h3>Phản hồi</h3>
+            <div class="fb_icon" @click="handleClickMessage()">
+              <i class="bx bx-exit-fullscreen"></i>
+            </div>
+          </div>
+          <div class="fb_name">
+            <i class="fa fa-user-circle" aria-hidden="true"></i>
+            <p>Lê Xuân Sơn</p>
+          </div>
+          <div class="feedback_des">
+            <div class="fb_desinfo">
+              <i class="fa fa-podcast" aria-hidden="true"></i>
+              <input type="text" placeholder="Tiêu đề" />
+            </div>
+            <textarea
+              class="textares"
+              placeholder="Nhập nội dung phản hồi..."
+              rows="7"
+              cols="41"
+            ></textarea>
+          </div>
+        </div>
+        <div class="fb_btn">
+          <button
+            @click.prevent="handleClickMessage()"
+            style="margin-right: 10px"
+          >
+            Hủy
+          </button>
+          <button>
+            Gửi phản hồi <i class="fa fa-telegram" aria-hidden="true"></i>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -215,23 +393,7 @@ export default {
   setup() {
     const activeTab = ref(0);
     const userData = ref([]);
-    const timimgtable = ref([
-      "7:00 - 7:45",
-      "7:50 - 8:35",
-      "9:05 - 9:50",
-      "9:55 - 10:40",
-      "10:45 - 11:40",
-      "14:00 - 16:40",
-    ]);
-    const scheduleTable = ref([
-      ["Toán học", "Ngữ văn", "Tiếng anh", "Vật lý", "Hóa học"],
-      ["Lịch sử", "Địa lý", "Âm nhạc", "Mĩ thuật", "Thể dục"],
-      ["Toán học", "Ngữ văn", "Tiếng anh", "Vật lý", "Hóa học"],
-      ["Lịch sử", "Địa lý", "Âm nhạc", "Mĩ thuật", "Thể dục"],
-      ["Toán học", "Ngữ văn", "Tiếng anh", "Vật lý", "Hóa học"],
-      ["Lịch sử", "Địa lý", "Âm nhạc", "Mĩ thuật", "Thể dục"],
-      ["Tiếng anh", "Ngữ văn", "Ngữ văn", "Toán học", "Toán học"],
-    ]);
+    const activeMessage = ref(false);
     const tabs = ref([
       { label: "Thông tin cá nhân", type: "table", icon: "bx-badge-check" },
       {
@@ -267,16 +429,57 @@ export default {
 
     return {
       activeTab,
-      timimgtable,
-      scheduleTable,
       toastUpdate,
       tabs,
       changeTab,
       userData,
+      activeMessage,
     };
   },
   computed: {
-    ...mapGetters(["idloginstudent", "student"]),
+    ...mapGetters(["idloginstudent", "student", "getidcls", "pointStudentId"]),
+    filteredDataT2() {
+      // Thay thế 'dataList' bằng tên biến chứa dữ liệu của bạn
+      return this.getidcls.filter((item) => item.DayLearn === "Thứ 2");
+    },
+    filteredDataT3() {
+      // Thay thế 'dataList' bằng tên biến chứa dữ liệu của bạn
+      return this.getidcls.filter((item) => item.DayLearn === "Thứ 3");
+    },
+    filteredDataT4() {
+      // Thay thế 'dataList' bằng tên biến chứa dữ liệu của bạn
+      return this.getidcls.filter((item) => item.DayLearn === "Thứ 4");
+    },
+    filteredDataT5() {
+      // Thay thế 'dataList' bằng tên biến chứa dữ liệu của bạn
+      return this.getidcls.filter((item) => item.DayLearn === "Thứ 5");
+    },
+    filteredDataT6() {
+      // Thay thế 'dataList' bằng tên biến chứa dữ liệu của bạn
+      return this.getidcls.filter((item) => item.DayLearn === "Thứ 6");
+    },
+    filteredDataT7() {
+      // Thay thế 'dataList' bằng tên biến chứa dữ liệu của bạn
+      return this.getidcls.filter((item) => item.DayLearn === "Thứ 7");
+    },
+    timeStartColor() {
+      return (timeStart) => {
+        switch (timeStart) {
+          case "7h00p":
+            return "#22c55e";
+          case "7h50p":
+            return "#84cc16";
+          case "9h05p":
+            return "#facc15";
+          case "9h55p":
+            return "#f97316";
+          case "10h45p":
+            return "#ef4444";
+          default:
+            return ""; // Trường hợp mặc định không có màu sắc
+        }
+      };
+    },
     formattedDateOfBirth: {
       get() {
         // Chuyển đổi từ ISO 8601 sang "yyyy-MM-dd"
@@ -293,6 +496,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["getIDCLS", "getpointstudentid"]),
     validateFormUpdate() {
       try {
         let isValid = true;
@@ -309,6 +513,14 @@ export default {
             break;
         }
         return isValid;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    handleClickMessage() {
+      try {
+        this.activeMessage = !this.activeMessage;
+        console.log("123", this.activeMessage);
       } catch (error) {
         console.log(error);
       }

@@ -60,9 +60,110 @@
   align-items: center;
   justify-content: center;
   animation: shake 0.5s ease infinite 1.5s;
+  transition: all 0.3s ease-in;
 }
+.user_feedback.active {
+  height: 400px;
+  width: 350px;
+  border-radius: 20px;
+  animation: none;
+  align-items: normal;
+  justify-content: flex-start;
+}
+.feedback_form {
+  width: 100%;
+}
+
 .user_feedback i {
   font-size: 30px;
+}
+.fb_container {
+  padding: 20px;
+}
+.feedback_title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 999;
+}
+.fb_icon {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ebecf1;
+}
+.fb_name {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  padding: 5px 10px;
+  background-color: #041434;
+  border-radius: 20px;
+  color: #fff;
+  width: 200px;
+}
+.fb_name i {
+  margin-right: 10px;
+}
+.fb_desinfo {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  margin-bottom: 20px;
+  width: 210px;
+}
+.fb_desinfo i {
+  margin-right: 10px;
+}
+.fb_desinfo input {
+  border: 1px solid #9fa9c5;
+  border-radius: 20px;
+  padding: 5px 10px;
+  height: 80%;
+  width: 100%;
+  background: transparent;
+}
+textarea {
+  border-radius: 10px;
+  border: 1px solid #9fa9c5;
+  width: 300px; /* Điều chỉnh chiều rộng của textarea theo mong muốn của bạn */
+  height: 105px; /* Điều chỉnh chiều cao của textarea theo mong muốn của bạn */
+  padding: 10px;
+  resize: none;
+}
+textarea:focus {
+  border-color: #9fa9c5;
+}
+.fb_btn {
+  background-color: #ebecf1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 70px;
+  border-radius: 20px;
+  padding: 0 20px;
+  border-top-right-radius: 0px;
+  border-top-left-radius: 0px;
+}
+.fb_btn button {
+  height: 40px;
+  min-width: 100px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #041434;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+.fb_btn button i {
+  margin-left: 10px;
 }
 /* Thêm các lớp biểu tượng (icon) của Boxicons vào .bx để tạo biểu tượng */
 .iconuser {
@@ -148,36 +249,93 @@
 }
 
 /*thoi khoa biẻu*/
-/* CSS cho bảng */
-.timetable {
+.daylearn_wapper {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  border-collapse: collapse;
   margin-top: 20px;
+  padding: 20px;
+}
+.daylearn {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.daylearn_left {
+  height: 100px;
+  width: 150px;
+  background-color: white; /* Màu nền trắng */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #000;
+  font-size: 20px;
+  text-transform: uppercase;
+  border-radius: 20px;
+  border-left: 3px solid #041434;
+  border-right: 3px solid #041434;
 }
 
-.timetable th,
-.timetable td {
-  padding: 10px;
-  text-align: left;
-  height: 80px;
+.daylearn_left b {
+  color: #000;
+  font-size: 25px;
 }
-
-.timetable th {
-  color: black;
+.daylearn_right {
+  display: flex;
+  align-items: center;
+  margin-left: 30px;
+  flex-direction: row-reverse;
 }
-
-.timetable td {
+.dl_right_item {
+  height: 100px;
+  width: 200px;
   background-color: #fff;
-  color: black;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  margin: 0 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
-
-/* CSS cho các ô lịch học */
-.timetable td {
-  position: relative;
+.daylearn_note {
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
 }
-.timetable thead tr th {
-  background-color: #ebecf1;
+.daylearn_note p {
+  margin-right: 30px;
+  text-transform: uppercase;
+  font-weight: 700;
 }
-.timetable tbody td:first-child {
-  background-color: #ebecf1;
+.note_list {
+  display: flex;
+  align-items: center;
+}
+.note_item {
+  display: flex;
+  align-items: center;
+  margin: 0 20px;
+}
+.item_box {
+  height: 10px;
+  width: 40px;
+  background-color: #22c55e;
+  margin-right: 10px;
+}
+.tiet2 {
+  background-color: #84cc16;
+}
+.tiet3 {
+  background-color: #facc15;
+}
+.tiet4 {
+  background-color: #f97316;
+}
+.tiet5 {
+  background-color: #ef4444;
+}
+.buoichieu {
+  background-color: #000;
 }

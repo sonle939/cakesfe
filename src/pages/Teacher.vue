@@ -57,7 +57,7 @@
                 <div class="overlaylist" v-show="isOpen">
                   <ul ref="list">
                     <li
-                      v-for="data in subjectteacher"
+                      v-for="data in filteredSubject"
                       :key="data.SubjectId"
                       @click="selectOption(data.SubjectId, data.SubjectName)"
                     >
@@ -245,6 +245,7 @@ import FTeacher from "../components/Form/FTeacher.vue";
 import Loading from "../components/Loading.vue";
 import VButton from "../components/Button/VButton.vue";
 import { createToast } from "mosha-vue-toastify";
+import { ref } from "vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Teacher",
@@ -262,11 +263,14 @@ export default {
         }
       );
     };
+    const selectedOption = ref("");
+    const searchText = ref("");
+    const isOpen = ref(false);
     return {
       toast,
-      isOpen: false,
-      selectedOption: null,
-      searchText: "",
+      isOpen,
+      selectedOption,
+      searchText,
     };
   },
   computed: {
@@ -286,6 +290,12 @@ export default {
       "loadingteacher",
       "selectedItemsteacher",
     ]),
+    filteredSubject() {
+      const keyword = this.selectedOption.toLowerCase();
+      return this.subjectteacher.filter((data) =>
+        data.SubjectName.toLowerCase().includes(keyword)
+      );
+    },
   },
   methods: {
     toggleDropdown() {

@@ -70,10 +70,12 @@ const classroomModule = {
         async deleteclassroom({ commit, dispatch }, ClassRoomId) {
             //commit('DELETE_TODO', id)
             try {
-                await axios.delete(`${API_BASE_URL}ClassRooms/${ClassRoomId}`)
-                commit('DELETE_CLASSROOM', ClassRoomId);
-                dispatch('getClassRoom');
-                dispatch('getMaxCodeclassroom');
+                const response = await axios.delete(`${API_BASE_URL}ClassRooms/${ClassRoomId}`)
+                if (response.status === 200) {
+                    commit('DELETE_CLASSROOM', ClassRoomId);
+                    dispatch('getClassRoom');
+                    dispatch('getMaxCodeclassroom');
+                }
             } catch (error) {
                 console.log(error)
             }

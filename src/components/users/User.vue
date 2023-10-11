@@ -168,7 +168,8 @@
           </div>
           <div v-else-if="tab.type === 'input'">
             <div class="user_point">
-              <div class="uspoit_lefy"></div>
+              
+              <div class="uspoit_lefy">{{ pointStudentId }}</div>
               <div class="uspoint_right"></div>
             </div>
           </div>
@@ -191,6 +192,13 @@
                   >
                     <h3>{{ item.SubjectName }}</h3>
                     <p>{{ item.TimeStart }}-{{ item.TimeEnd }}</p>
+                  </div>
+                  <div
+                    class="dl_right_item"
+                    style="border-left: #22c55e !important"
+                  >
+                    <h3>Chào cờ</h3>
+                    <p>7h00p-7h45p</p>
                   </div>
                 </div>
               </div>
@@ -280,6 +288,10 @@
                   <b>7</b>
                 </div>
                 <div class="daylearn_right">
+                  <div class="dl_right_item" style="border-left: #ef4444">
+                    <h3>SInh hoạt lớp</h3>
+                    <p>10h45p-11h40p</p>
+                  </div>
                   <div
                     v-for="item in filteredDataT7"
                     :key="item.TimeTableId"
@@ -338,6 +350,7 @@
         class="feedback_form"
         novalidate="true"
         v-if="activeMessage === true"
+        @submit.prevent="onSubmitAdd"
       >
         <div class="fb_container">
           <div class="feedback_title">
@@ -348,18 +361,23 @@
           </div>
           <div class="fb_name">
             <i class="fa fa-user-circle" aria-hidden="true"></i>
-            <p>Lê Xuân Sơn</p>
+            <p>{{ userData.StudentName }}</p>
           </div>
           <div class="feedback_des">
             <div class="fb_desinfo">
               <i class="fa fa-podcast" aria-hidden="true"></i>
-              <input type="text" placeholder="Tiêu đề" />
+              <input
+                type="text"
+                placeholder="Tiêu đề"
+                v-model="formData.Subject"
+              />
             </div>
             <textarea
               class="textares"
               placeholder="Nhập nội dung phản hồi..."
               rows="7"
               cols="41"
+              v-model="formData.Content"
             ></textarea>
           </div>
         </div>
@@ -380,12 +398,13 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import Navbar from "../Navbar.vue";
 import { mapActions, mapGetters } from "vuex";
 import VRadio from "../Input/VRadio.vue";
 import VButton from "../Button/VButton.vue";
 import { createToast } from "mosha-vue-toastify";
+import { v4 as uuidv4 } from "uuid";
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -423,21 +442,50 @@ export default {
         }
       );
     };
+    const toastMessage = () => {
+      createToast(
+        {
+          title: "Phản hồi",
+          description: "Gửi phản hồi thành công",
+        },
+        {
+          type: "success",
+          timeout: 2500,
+          transition: "bounce",
+          showIcon: "true",
+        }
+      );
+    };
     const changeTab = (index) => {
       activeTab.value = index;
     };
-
+    const formData = reactive({
+      FeedbackCode: "",
+      StudentId: "",
+      Subject: "",
+      Content: "",
+      Handle: "Đang chờ xử lý",
+    });
     return {
       activeTab,
       toastUpdate,
+      toastMessage,
       tabs,
       changeTab,
       userData,
       activeMessage,
+      formData,
     };
   },
   computed: {
-    ...mapGetters(["idloginstudent", "student", "getidcls", "pointStudentId"]),
+    ...mapGetters([
+      "idloginstudent",
+      "student",
+      "getidcls",
+      "pointStudentId",
+      "feedbackmaxcode",
+      "feedback",
+    ]),
     filteredDataT2() {
       // Thay thế 'dataList' bằng tên biến chứa dữ liệu của bạn
       return this.getidcls.filter((item) => item.DayLearn === "Thứ 2");
@@ -494,9 +542,23 @@ export default {
         this.userData.DateOfBirth = value;
       },
     },
+    maxId() {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      return (this.formData = {
+        ...this.formData,
+        FeedbackCode: this.feedbackmaxcode,
+      });
+    },
   },
   methods: {
-    ...mapActions(["getIDCLS", "getpointstudentid"]),
+    ...mapActions([
+      "getIDCLS",
+      "getpointstudentid",
+      "addfeedback",
+      "getMaxCodefeedback",
+      "getFeedback",
+      'pointStudentId'
+    ]),
     validateFormUpdate() {
       try {
         let isValid = true;
@@ -520,12 +582,11 @@ export default {
     handleClickMessage() {
       try {
         this.activeMessage = !this.activeMessage;
-        console.log("123", this.activeMessage);
       } catch (error) {
         console.log(error);
       }
     },
-    ...mapActions(["updateItemstudent", "IDloginstudent", "getstudent"]),
+    ...mapActions(["updateItemstudent", "IDloginstudent"]),
     async loadUserDataFromSessionStorage() {
       const userDataString = sessionStorage.getItem("idloginstudentData");
 
@@ -543,6 +604,29 @@ export default {
         "idloginstudentData",
         JSON.stringify(idloginstudentData)
       );
+    },
+    onSubmitAdd() {
+      try {
+        this.addfeedback({
+          FeedbackId: uuidv4(),
+          FeedbackCode: this.formData.FeedbackCode,
+          StudentId: this.userData.StudentId,
+          Subject: this.formData.Subject,
+          Content: this.formData.Content,
+          Handle: this.formData.Handle,
+          isChecked: false,
+        });
+        // reset formData
+        this.formData = { FeedbackCode: this.feedbackmaxcode };
+        this.formData.Content = "";
+        this.formData.Subject = "";
+        this.formData.Handle = "Đang chờ xử lý";
+        this.toastMessage();
+        this.handleClickMessage();
+        return false;
+      } catch (error) {
+        console.log(error);
+      }
     },
     onSubmitUpdate() {
       try {
@@ -567,9 +651,14 @@ export default {
     VRadio,
     VButton,
   },
+  beforeUpdate() {
+    this.maxId;
+  },
   mounted() {
-    this.getstudent();
+    this.maxId;
+    //this.getstudent();
     this.loadUserDataFromSessionStorage();
+    this.getMaxCodefeedback();
   },
   watch: {
     idloginstudent(newVal) {

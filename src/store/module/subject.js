@@ -59,10 +59,12 @@ const subjectmodule = {
         async deletesubject({ commit, dispatch }, SubjectId) {
             //commit('DELETE_TODO', id)
             try {
-                await axios.delete(`${API_BASE_URL}Subjects/${SubjectId}`)
-                commit('DELETE_SUBJECT', SubjectId);
-                dispatch('getsubject');
-                dispatch('getMaxCodeSubject');
+                const response = await axios.delete(`${API_BASE_URL}Subjects/${SubjectId}`)
+                if (response.status === 200) {
+                    commit('DELETE_SUBJECT', SubjectId);
+                    dispatch('getsubject');
+                    dispatch('getMaxCodeSubject');
+                }
             } catch (error) {
                 console.log(error)
             }

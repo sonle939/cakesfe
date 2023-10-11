@@ -528,7 +528,7 @@ export default {
         },
         {
           type: "success",
-          timeout: 5000,
+          timeout: 2000,
           transition: "bounce",
           showIcon: "true",
         }
@@ -926,7 +926,7 @@ export default {
           case this.formData.TimeStart === "":
             isValid = false;
             this.error.push("Vui lòng nhập giờ bắt đầu");
-            break; 
+            break;
           case this.formData.TimeEnd === "":
             isValid = false;
             this.error.push("Vui lòng nhập giờ kết thúc");
@@ -989,12 +989,12 @@ export default {
           });
           // reset formData
           this.formData = { TimeTableCode: this.timetablemaxcode };
-          this.selectedOptionclassroom = null;
-          this.selectedOptionsubject = null;
-          this.selectedOptionteacher = null;
-          this.selectedOptiondaylearn = null;
-          this.selectedOptionlearntype = null;
-          this.selectedOptiontimestart = null;
+          this.selectedOptionclassroom = "";
+          this.selectedOptionsubject = "";
+          this.selectedOptionteacher = "";
+          this.selectedOptiondaylearn = "";
+          this.selectedOptionlearntype = "";
+          this.selectedOptiontimestart = "";
           this.SHOW_FORM_TIMETABLE();
           this.toast();
           this.checkForm = false;

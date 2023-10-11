@@ -101,7 +101,7 @@
             />
           </label>
           <label class="slabel"
-            >ĐTBMKI
+            >ĐTBMK
             <input
               type="text"
               class="sinput"
@@ -412,7 +412,7 @@
             />
           </label>
           <label class="slabel"
-            >ĐTBMKI
+            >ĐTBMK
             <input
               type="text"
               class="sinput"

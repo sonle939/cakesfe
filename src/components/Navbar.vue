@@ -12,8 +12,57 @@
         <div class="icon_item">
           <i class="bx bx-info-circle"></i>
         </div>
-        <div class="icon_item">
-          <i class="bx bx-bell"></i>
+        <div class="icon_item" v-if="dataRole === 'student'">
+          <p class="notify_icon" v-if="countStudentsWithFalseHandle > 0">
+            {{ countStudentsWithFalseHandle }}
+          </p>
+          <i class="bx bx-bell" @click="handleInform()"></i>
+          <div class="overlay_inform" v-if="isInform">
+            <div class="inform_top">
+              <h3>Thông báo</h3>
+              <i
+                class="bx bx-dots-horizontal-rounded"
+                @click="handleRead()"
+              ></i>
+              <div class="overlay_infrom_icon" v-if="isShowRead">
+                <div
+                  class="overlay_icon"
+                  @click="
+                    handleRead();
+                    onSubmitUpdate();
+                  "
+                >
+                  <i class="bx bx-check-double"></i>
+                  Đánh dấu tất cả đã đọc
+                </div>
+                <div class="overlay_icon">
+                  <i class="bx bx-x"></i>
+                  Xóa thông báo
+                </div>
+              </div>
+            </div>
+            <div class="inform_list" v-if="getstudentidinform.length > 0">
+              <div
+                v-for="data in getstudentidinform"
+                :key="data.InfromId"
+                :class="
+                  data.Isread == 1 ? 'inform_item bgr_white' : 'inform_item'
+                "
+              >
+                <div class="infrom_icon">
+                  <i class="bx bxs-analyse"></i>
+                </div>
+                <div class="inform_des">
+                  <h3>{{ data.Title }}</h3>
+                  <p>Yêu cầu: {{ data.Message }} đã được xử lý</p>
+                </div>
+              </div>
+            </div>
+            <div class="null_inform" v-else>
+              <img src="../assets/nodata.svg" alt="" />
+              <p>Không có thông báo</p>
+            </div>
+          </div>
         </div>
         <div class="icon_item">
           <i class="bx bx-fullscreen"></i>
@@ -53,7 +102,7 @@
 <script>
 import { ref } from "vue";
 import { createToast } from "mosha-vue-toastify";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Navbar",
@@ -91,21 +140,49 @@ export default {
     const handleShow = () => {
       isshowOverlaylist.value = !isshowOverlaylist.value;
     };
-
+    const handleInform = () => {
+      isInform.value = !isInform.value;
+    };
+    const handleRead = () => {
+      isShowRead.value = !isShowRead.value;
+    };
+    const isInform = ref(false);
+    const isShowRead = ref(false);
     return {
       isshowOverlaylist,
+      isInform,
+      isShowRead,
       userData,
       teaadmin,
       dataRole,
       handleShow,
+      handleInform,
+      handleRead,
       toastError,
       toastSuccess,
     };
   },
   computed: {
-    ...mapGetters(["idloginstudent", "idloginteacher"]),
+    ...mapGetters(["idloginstudent", "idloginteacher", "getstudentidinform"]),
+    countStudentsWithFalseHandle() {
+      return this.getstudentidinform.filter((student) => student.Isread === 0)
+        .length;
+    },
   },
   methods: {
+    ...mapActions(["updateIteminform"]),
+    onSubmitUpdate() {
+      try {
+        this.getstudentidinform.forEach((item) => {
+          item.Isread = true;
+        });
+        this.updateIteminform(this.getstudentidinform);
+        return false;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     delDataUserlogin() {
       sessionStorage.clear();
     },

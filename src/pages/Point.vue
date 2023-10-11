@@ -4,7 +4,7 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý bảng điểm" :showform="modeFormInsert" />
+        <HeaderContent text="Quản lý bảng điểm" :showform="authenClickInsert" />
         <div class="search_table">
           <div class="search_filter">
             <div class="dropdown_wrapper">
@@ -32,7 +32,7 @@
                   >
                     <ul ref="list">
                       <li
-                        v-for="data in classroom"
+                        v-for="data in filteredClassroom"
                         :key="data.ClassRoomId"
                         @click="handleClassroomClick(data)"
                       >
@@ -66,7 +66,7 @@
                   >
                     <ul ref="list">
                       <li
-                        v-for="data in subject"
+                        v-for="data in filteredSubject"
                         :key="data.SubjectId"
                         @click="handleSubjectClick(data)"
                       >
@@ -134,7 +134,7 @@
                   >
                     <ul ref="list">
                       <li
-                        v-for="data in schoolyear"
+                        v-for="data in filteredSchoolyear"
                         :key="data.SchoolYearId"
                         @click="handleschoolyearClick(data)"
                       >
@@ -159,10 +159,7 @@
                   text="Xóa"
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
-                  @click="
-                    deleteMultiplepoint(selectedItemspoint);
-                    toast();
-                  "
+                  @click="authenClickDelMulp()"
                 />
                 <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
@@ -303,18 +300,12 @@
                     <div class="control_table">
                       <span
                         content="Cập nhật"
-                        @click="modeFormUpdate(data)"
+                        @click="authenClickUpdate(data)"
                         v-tippy="{ arrow: true, arrowType: 'round' }"
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span
-                        content="Xóa"
-                        v-tippy
-                        @click="
-                          deletepoint(data.PointId);
-                          toast();
-                        "
+                      <span content="Xóa" v-tippy @click="authenClickDel(data)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -374,6 +365,21 @@ export default {
         }
       );
     };
+    const toastAuthen = () => {
+      createToast(
+        {
+          title: "Quyền hạn",
+          description: "Bạn không đủ quyền để chỉnh sửa",
+        },
+        {
+          type: "warning",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 2000,
+        }
+      );
+    };
+    const teaadmin = ref([]);
     const isOpenclassroom = ref(false);
     const selectedOptionclassroom = ref("Lớp 6A");
     const isOpensubject = ref(false);
@@ -384,6 +390,8 @@ export default {
     const selectedOptionschoolyear = ref("2021-2022");
     return {
       toast,
+      toastAuthen,
+      teaadmin,
       isOpenclassroom,
       selectedOptionclassroom,
       isOpenschoolyear,
@@ -413,15 +421,99 @@ export default {
       "totalPagespoint",
       "point",
       "semesterId",
+      "idloginteacher",
     ]),
     filteredSemester() {
-      return this.semester.filter((data) => data.SemesterName !== "Cả năm");
+      const keyword = this.selectedOptionsemester.toLowerCase();
+      return this.semester.filter(
+        (data) =>
+          data.SemesterName.toLowerCase().includes(keyword) &&
+          data.SemesterName !== "Cả năm"
+      );
+    },
+    filteredSchoolyear() {
+      const keyword = this.selectedOptionschoolyear.toLowerCase();
+      return this.schoolyear.filter((data) =>
+        data.SchoolYearName.toLowerCase().includes(keyword)
+      );
+    },
+    filteredSubject() {
+      const keyword = this.selectedOptionsubject.toLowerCase();
+      return this.subject.filter((data) =>
+        data.SubjectName.toLowerCase().includes(keyword)
+      );
+    },
+    filteredClassroom() {
+      const keyword = this.selectedOptionclassroom.toLowerCase();
+      return this.classroom.filter((data) =>
+        data.ClassRoomName.toLowerCase().includes(keyword)
+      );
     },
   },
   methods: {
     formattedDate(data) {
       try {
         return format(new Date(data), "dd/MM/yyyy");
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async loadAdminAndTeacher() {
+      const userDataString = sessionStorage.getItem("idloginteacherData");
+      const userDataString1 = sessionStorage.getItem("roleData");
+      console.log(userDataString);
+      console.log(userDataString1);
+
+      if (userDataString) {
+        try {
+          this.teaadmin = JSON.parse(userDataString);
+        } catch (error) {
+          console.error("Lỗi khi chuyển đổi dữ liệu từ sessionStorage:", error);
+        }
+      }
+    },
+    authenClickUpdate(data) {
+      try {
+        if (this.teaadmin.SubjectName === this.selectedOptionsubject) {
+          this.modeFormUpdate(data);
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    authenClickDel(data) {
+      try {
+        if (this.teaadmin.SubjectName === this.selectedOptionsubject) {
+          this.deletepoint(data.PointId);
+          this.toast();
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    authenClickDelMulp() {
+      try {
+        if (this.teaadmin.SubjectName === this.selectedOptionsubject) {
+          this.deleteMultiplepoint(this.selectedItemspoint);
+          this.toast();
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    authenClickInsert() {
+      try {
+        if (this.teaadmin.SubjectName === this.selectedOptionsubject) {
+          this.modeFormInsert();
+        } else {
+          this.toastAuthen();
+        }
       } catch (error) {
         console.log(error);
       }
@@ -550,6 +642,19 @@ export default {
     this.getsubject();
     this.getschoolyear();
     this.getsemester();
+    this.loadAdminAndTeacher();
+  },
+  watch: {
+    idloginteacher(newVal) {
+      if (newVal && newVal.length !== null) {
+        const idloginteacherData = newVal;
+        sessionStorage.setItem(
+          "idloginteacherData",
+          JSON.stringify(idloginteacherData)
+        );
+      }
+      this.loadAdminAndTeacher();
+    },
   },
   components: {
     Navbar,

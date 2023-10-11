@@ -60,7 +60,7 @@
                 <div class="overlaylist" v-show="isOpen">
                   <ul ref="list">
                     <li
-                      v-for="data in classroomtimetable"
+                      v-for="data in filteredClassroom"
                       :key="data.ClassRoomId"
                       @click="
                         selectOption(data.ClassRoomId, data.ClassRoomName)
@@ -263,6 +263,12 @@ export default {
     };
   },
   computed: {
+    filteredClassroom() {
+      const keyword = this.selectedOption.toLowerCase();
+      return this.classroomtimetable.filter((data) =>
+        data.ClassRoomName.toLowerCase().includes(keyword)
+      );
+    },
     ...mapGetters([
       "timetable",
       "showIsHidetimetable",

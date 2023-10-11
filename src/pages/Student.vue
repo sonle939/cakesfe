@@ -4,7 +4,7 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý học sinh" :showform="modeFormInsert" />
+        <HeaderContent text="Quản lý học sinh" :showform="authenClickInsert" />
         <div class="search_table">
           <div class="search_filter">
             <div class="search_check">
@@ -32,10 +32,7 @@
                   text="Xóa"
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
-                  @click="
-                    deleteMultiplestudent(selectedItemsstudent);
-                    toast();
-                  "
+                  @click="authenClickDelMulp()"
                 />
                 <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
@@ -57,7 +54,7 @@
                 <div class="overlaylist" v-show="isOpen">
                   <ul ref="list">
                     <li
-                      v-for="data in classroomstudent"
+                      v-for="data in filteredClassroom"
                       :key="data.ClassRoomId"
                       @click="
                         selectOption(data.ClassRoomId, data.ClassRoomName)
@@ -175,18 +172,12 @@
                     <div class="control_table">
                       <span
                         content="Cập nhật"
-                        @click="modeFormUpdate(data)"
+                        @click="authenClickUpdate(data)"
                         v-tippy="{ arrow: true, arrowType: 'round' }"
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span
-                        content="Xóa"
-                        v-tippy
-                        @click="
-                          deletestudent(data.StudentId);
-                          toast();
-                        "
+                      <span content="Xóa" v-tippy @click="authenClickDel(data)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -228,10 +219,11 @@ import FStudentVue from "../components/Form/FStudent.vue";
 import Loading from "../components/Loading.vue";
 import VButton from "../components/Button/VButton.vue";
 import { createToast } from "mosha-vue-toastify";
+import { ref } from "vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Student",
-  data() {
+  setup() {
     const toast = () => {
       createToast(
         {
@@ -242,14 +234,67 @@ export default {
           type: "danger",
           transition: "bounce",
           showIcon: "true",
+          timeout: 2000,
         }
       );
     };
+    const toastWarning = () => {
+      createToast(
+        {
+          title: "Học sinh",
+          description: "Không thể xóa bản ghi này vì có dữ liệu liên quan.",
+        },
+        {
+          type: "warning",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 3000,
+        }
+      );
+    };
+    const toastWarningMultip = () => {
+      createToast(
+        {
+          title: "Học sinh",
+          description: "Không thể xóa các bản ghi này vì có dữ liệu liên quan.",
+        },
+        {
+          type: "warning",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 3000,
+        }
+      );
+    };
+    const toastAuthen = () => {
+      createToast(
+        {
+          title: "Quyền hạn",
+          description: "Bạn không đủ quyền để chỉnh sửa",
+        },
+        {
+          type: "danger",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 2000,
+        }
+      );
+    };
+    const selectedOption = ref("");
+    const searchtext = ref("");
+    const isOpen = ref(false);
+    const teaadmin = ref([]);
+    const isDisabled = ref(false);
     return {
       toast,
-      isOpen: false,
-      selectedOption: null,
-      searchtext: "",
+      isOpen,
+      selectedOption,
+      searchtext,
+      teaadmin,
+      isDisabled,
+      toastAuthen,
+      toastWarning,
+      toastWarningMultip,
     };
   },
   components: {
@@ -275,6 +320,20 @@ export default {
         this.getstudent();
       } catch (error) {
         console.log(error);
+      }
+    },
+    async loadAdminAndTeacher() {
+      const userDataString = sessionStorage.getItem("idloginteacherData");
+      const userDataString1 = sessionStorage.getItem("roleData");
+      console.log(userDataString);
+      console.log(userDataString1);
+
+      if (userDataString) {
+        try {
+          this.teaadmin = JSON.parse(userDataString);
+        } catch (error) {
+          console.error("Lỗi khi chuyển đổi dữ liệu từ sessionStorage:", error);
+        }
       }
     },
     ...mapMutations([
@@ -311,6 +370,52 @@ export default {
         console.log(error);
       }
     },
+    authenClickUpdate(data) {
+      try {
+        if (this.teaadmin.Duty === "Giáo viên chủ nhiệm") {
+          this.modeFormUpdate(data);
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    authenClickDel(data) {
+      try {
+        if (this.teaadmin.Duty === "Giáo viên chủ nhiệm") {
+          this.deletestudent(data.StudentId);
+          this.toast();
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    authenClickDelMulp() {
+      try {
+        if (this.teaadmin.Duty === "Giáo viên chủ nhiệm") {
+          this.deleteMultiplestudent(this.selectedItemsstudent);
+          this.toast();
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    authenClickInsert() {
+      try {
+        if (this.teaadmin.Duty === "Giáo viên chủ nhiệm") {
+          this.modeFormInsert();
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     modeFormInsert() {
       try {
         this.ADD_MODE_STUDENT();
@@ -335,11 +440,31 @@ export default {
       "classroomstudent",
       "loadingstudent",
       "selectedItemsstudent",
+      "idloginteacher",
     ]),
+    filteredClassroom() {
+      const keyword = this.selectedOption.toLowerCase();
+      return this.classroomstudent.filter((data) =>
+        data.ClassRoomName.toLowerCase().includes(keyword)
+      );
+    },
   },
   mounted() {
     this.getclassroomstudent();
+    this.loadAdminAndTeacher();
     this.getstudent();
+  },
+  watch: {
+    idloginteacher(newVal) {
+      if (newVal && newVal.length !== null) {
+        const idloginteacherData = newVal;
+        sessionStorage.setItem(
+          "idloginteacherData",
+          JSON.stringify(idloginteacherData)
+        );
+      }
+      this.loadAdminAndTeacher();
+    },
   },
 };
 </script>

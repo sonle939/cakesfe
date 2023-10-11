@@ -4,7 +4,7 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý lớp học" :showform="modeFormInsert" />
+        <HeaderContent text="Quản lý lớp học" :showform="authenClickInsert" />
         <div class="search_table">
           <div class="search_filter">
             <div class="search_check">
@@ -27,10 +27,7 @@
                   text="Xóa"
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
-                  @click="
-                    deleteMultipleclassroom(selectedItemsclassroom);
-                    toast();
-                  "
+                  @click="authenClickDelMulp()"
                 />
                 <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
@@ -52,7 +49,7 @@
                 <div class="overlaylist" v-show="isOpen">
                   <ul ref="list">
                     <li
-                      v-for="data in gradeclassroom"
+                      v-for="data in filteredGrade"
                       :key="data.GradeId"
                       @click="selectOption(data.GradeName)"
                     >
@@ -127,18 +124,12 @@
                     <div class="control_table">
                       <span
                         content="Cập nhật"
-                        @click="modeFormUpdate(data)"
+                        @click="authenClickUpdate(data)"
                         v-tippy="{ arrow: true, arrowType: 'round' }"
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span
-                        content="Xóa"
-                        v-tippy
-                        @click="
-                          deleteclassroom(data.ClassRoomId);
-                          toast();
-                        "
+                      <span content="Xóa" v-tippy @click="authenClickDel(data)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -168,6 +159,7 @@ import FClassroom from "../components/Form/FClassroom.vue";
 import Loading from "../components/Loading.vue";
 import VButton from "../components/Button/VButton.vue";
 import { createToast } from "mosha-vue-toastify";
+import { ref } from "vue";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Classroom",
@@ -182,13 +174,33 @@ export default {
           type: "danger",
           transition: "bounce",
           showIcon: "true",
+          timeout: 2000,
         }
       );
     };
+    const toastAuthen = () => {
+      createToast(
+        {
+          title: "Quyền hạn",
+          description: "Bạn không đủ quyền để chỉnh sửa",
+        },
+        {
+          type: "danger",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 2000,
+        }
+      );
+    };
+    const teaadmin = ref([]);
+    const selectedOption = ref("");
+    const isOpen = ref(false);
     return {
       toast,
-      isOpen: false,
-      selectedOption: null,
+      isOpen,
+      selectedOption,
+      toastAuthen,
+      teaadmin,
     };
   },
   computed: {
@@ -200,7 +212,14 @@ export default {
       "gradeclassroom",
       "loadingclassroom",
       "selectedItemsclassroom",
+      "idloginteacher",
     ]),
+    filteredGrade() {
+      const keyword = this.selectedOption.toLowerCase();
+      return this.gradeclassroom.filter((data) =>
+        data.GradeName.toLowerCase().includes(keyword)
+      );
+    },
   },
   methods: {
     toggleDropdown() {
@@ -209,6 +228,20 @@ export default {
     selectOption(options) {
       this.selectedOption = options;
       this.isOpen = false;
+    },
+    async loadAdminAndTeacher() {
+      const userDataString = sessionStorage.getItem("idloginteacherData");
+      const userDataString1 = sessionStorage.getItem("roleData");
+      console.log(userDataString);
+      console.log(userDataString1);
+
+      if (userDataString) {
+        try {
+          this.teaadmin = JSON.parse(userDataString);
+        } catch (error) {
+          console.error("Lỗi khi chuyển đổi dữ liệu từ sessionStorage:", error);
+        }
+      }
     },
     ...mapActions([
       "getClassRoom",
@@ -243,6 +276,52 @@ export default {
         console.log(error);
       }
     },
+    authenClickUpdate(data) {
+      try {
+        if (this.teaadmin.Duty === "Giáo viên chủ nhiệm") {
+          this.modeFormUpdate(data);
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    authenClickDel(data) {
+      try {
+        if (this.teaadmin.Duty === "Giáo viên chủ nhiệm") {
+          this.deleteclassroom(data.ClassRoomId);
+          this.toast();
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    authenClickDelMulp() {
+      try {
+        if (this.teaadmin.Duty === "Giáo viên chủ nhiệm") {
+          this.deleteMultipleclassroom(this.selectedItemsclassroom);
+          this.toast();
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    authenClickInsert() {
+      try {
+        if (this.teaadmin.Duty === "Giáo viên chủ nhiệm") {
+          this.modeFormInsert();
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   components: {
     Navbar,
@@ -255,6 +334,19 @@ export default {
   mounted() {
     this.getClassRoom();
     this.getGradeclassroom();
+    this.loadAdminAndTeacher();
+  },
+  watch: {
+    idloginteacher(newVal) {
+      if (newVal && newVal.length !== null) {
+        const idloginteacherData = newVal;
+        sessionStorage.setItem(
+          "idloginteacherData",
+          JSON.stringify(idloginteacherData)
+        );
+      }
+      this.loadAdminAndTeacher();
+    },
   },
 };
 </script>

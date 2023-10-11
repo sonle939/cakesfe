@@ -1,7 +1,9 @@
 import axios from "axios";
 import router from '../../routers/index';
 import studentModule from "./student";
+import informModule from "./inform";
 import teacherModule from "./teacher";
+import pointModule from "./point";
 const API_BASE_URL = 'https://localhost:7199/api/v2/';
 import { saveAs } from 'file-saver';
 
@@ -142,10 +144,12 @@ const accountModule = {
         async deleteaccount({ commit, dispatch }, AccountId) {
             //commit('DELETE_TODO', id)
             try {
-                await axios.delete(`${API_BASE_URL}Accounts/${AccountId}`)
-                commit('DELETE_ACCOUNT', AccountId);
-                dispatch('getaccount');
-                dispatch('getMaxCodeaccount');
+                const response = await axios.delete(`${API_BASE_URL}Accounts/${AccountId}`);
+                if (response.status === 200) {
+                    commit('DELETE_ACCOUNT', AccountId);
+                    dispatch('getaccount');
+                    dispatch('getMaxCodeaccount');
+                }
             } catch (error) {
                 console.log(error)
             }
@@ -271,6 +275,8 @@ const accountModule = {
                         router.push('/user');
                         // Chuyển hướng thành công, sau đó gọi action từ module studentModule
                         studentModule.actions.IDloginstudent({ commit }, response.data.user);
+                        informModule.actions.getStudentIDinform({ commit }, response.data.user);
+                        pointModule.actions.getpointstudentid({ commit }, response.data.user);
                         sessionStorage.setItem('roleData', response.data.user.role);
 
                     }

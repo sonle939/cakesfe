@@ -58,10 +58,12 @@ const semestermodule = {
         async deletesemester({ commit, dispatch }, SemesterId) {
             //commit('DELETE_TODO', id)
             try {
-                await axios.delete(`${API_BASE_URL}Semesters/${SemesterId}`)
-                commit('DELETE_SEMESTER', SemesterId);
-                dispatch('getsemester');
-                dispatch('getMaxCodesemester');
+                const response = await axios.delete(`${API_BASE_URL}Semesters/${SemesterId}`)
+                if (response.status === 200) {
+                    commit('DELETE_SEMESTER', SemesterId);
+                    dispatch('getsemester');
+                    dispatch('getMaxCodesemester');
+                }
             } catch (error) {
                 console.log(error)
             }

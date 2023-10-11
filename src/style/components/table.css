@@ -104,6 +104,9 @@ table td:last-child {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   flex-shrink: 0; /*giup img k bi méo*/
 }
+.control_table span.disabled-element {
+  pointer-events: none;
+}
 .control_table img {
   flex-shrink: 0;
 }

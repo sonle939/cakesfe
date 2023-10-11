@@ -32,10 +32,7 @@
                   text="Xóa"
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
-                  @click="
-                    deleteMultipleaccount(selectedItems);
-                    toast();
-                  "
+                  @click="deleteMultipleaccount(selectedItems)"
                 />
                 <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
@@ -204,8 +201,38 @@ export default {
         }
       );
     };
+    const toastWarning = () => {
+      createToast(
+        {
+          title: "Tài khoản",
+          description: "Không thể xóa bản ghi này vì có dữ liệu liên quan.",
+        },
+        {
+          type: "warning",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 3000,
+        }
+      );
+    };
+    const toastWarningMultip = () => {
+      createToast(
+        {
+          title: "Tài khoản",
+          description: "Không thể xóa các bản ghi này vì có dữ liệu liên quan.",
+        },
+        {
+          type: "warning",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 3000,
+        }
+      );
+    };
     return {
       toast,
+      toastWarning,
+      toastWarningMultip,
       isOpen: false,
       selectedOption: null,
       selectedRoles: [
@@ -249,6 +276,41 @@ export default {
         console.log(error);
       }
     },
+    // messageDel(data) {
+    //   try {
+    //     this.deleteaccount(data)
+    //       .then((response) => {
+    //         if (response && response.status === 200) {
+    //           this.toast();
+    //           console.log(response.status);
+    //         } else {
+    //           this.toastWarning();
+    //         }
+    //       })
+    //       .catch((error) => {
+    //         console.log(error);
+    //       });
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // },
+    // messageDelMultip() {
+    //   try {
+    //     this.deleteMultipleaccount(this.selectedItems)
+    //       .then((response) => {
+    //         if (response && response.status === 200) {
+    //           this.toast();
+    //         } else {
+    //           this.toastWarningMultip();
+    //         }
+    //       })
+    //       .catch((error) => {
+    //         console.log(error);
+    //       });
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // },
     ...mapMutations([
       "SET_PAGE",
       "HIDE",

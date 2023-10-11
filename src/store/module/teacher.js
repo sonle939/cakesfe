@@ -114,9 +114,12 @@ const teacherModule = {
         async deleteteacher({ commit, dispatch }, TeacherId) {
             //commit('DELETE_TODO', id)
             try {
-                await axios.delete(`${API_BASE_URL}Teachers/${TeacherId}`)
-                commit('DELETE_TEACHER', TeacherId);
-                dispatch('getteacher');
+                const response = await axios.delete(`${API_BASE_URL}Teachers/${TeacherId}`);
+                if (response.status === 200) {
+                    commit('DELETE_TEACHER', TeacherId);
+                    dispatch('getteacher');
+                    dispatch('getMaxCodeteacher')
+                }
             } catch (error) {
                 console.log(error)
             }
@@ -130,6 +133,7 @@ const teacherModule = {
                 if (response.status === 200) {
                     commit('DELETE_TEACHER', TeacherIds);
                     dispatch('getteacher');
+                    dispatch('getMaxCodeteacher');
                 }
             } catch (error) {
                 console.log(error);
@@ -143,6 +147,7 @@ const teacherModule = {
                 commit('UPDATE_TEACHER', response.data);
                 //  commit('SETUPDATECHECK', response.data.message)
                 dispatch('getteacher');
+                dispatch('getMaxCodeteacher');
                 console.log('update', response.data.message);
             } catch (error) {
                 console.log(error);

@@ -4,7 +4,7 @@
     <div class="d-flex">
       <Sidebar />
       <div class="page_content">
-        <HeaderContent text="Quản lý hạnh kiểm" :showform="modeFormInsert" />
+        <HeaderContent text="Quản lý hạnh kiểm" :showform="authenClickInsert" />
         <div class="search_table">
           <div class="search_filter">
             <div class="search_check">
@@ -133,10 +133,7 @@
                   text="Xóa"
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
-                  @click="
-                    deleteMultipleconduct(selectedItemsconduct);
-                    toast();
-                  "
+                  @click="authenClickDelMulp()"
                 />
                 <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
@@ -237,26 +234,14 @@
                     <div class="control_table">
                       <span
                         content="Cập nhật"
-                        @click="modeFormUpdate(data)"
+                        @click="authenClickUpdate(data)"
                         v-tippy="{ arrow: true, arrowType: 'round' }"
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span
-                        content="Xóa"
-                        v-tippy
-                        @click="
-                          deleteconduct(data.ConductId);
-                          toast();
-                        "
+                      <span content="Xóa" v-tippy @click="authenClickDel(data)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
-                      <span
-                        content="Phản hồi"
-                        v-tippy="{ arrow: true, arrowType: 'round' }"
-                      >
-                        <i class="bx bxs-send"></i>
-                      </span>
                     </div>
                   </td>
                 </tr>
@@ -320,8 +305,25 @@ export default {
         }
       );
     };
+    const toastAuthen = () => {
+      createToast(
+        {
+          title: "Quyền hạn",
+          description: "Bạn không đủ quyền để chỉnh sửa",
+        },
+        {
+          type: "danger",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 2000,
+        }
+      );
+    };
+    const teaadmin = ref([]);
     return {
       toast,
+      toastAuthen,
+      teaadmin,
       isOpen,
       selectedOption,
       isOpensemester,
@@ -340,6 +342,20 @@ export default {
     VButton,
   },
   methods: {
+    async loadAdminAndTeacher() {
+      const userDataString = sessionStorage.getItem("idloginteacherData");
+      const userDataString1 = sessionStorage.getItem("roleData");
+      console.log(userDataString);
+      console.log(userDataString1);
+
+      if (userDataString) {
+        try {
+          this.teaadmin = JSON.parse(userDataString);
+        } catch (error) {
+          console.error("Lỗi khi chuyển đổi dữ liệu từ sessionStorage:", error);
+        }
+      }
+    },
     toggleDropdown() {
       this.isOpen = !this.isOpen;
     },
@@ -422,6 +438,52 @@ export default {
         console.log(error);
       }
     },
+    authenClickUpdate(data) {
+      try {
+        if (this.teaadmin.Duty === "Giáo viên chủ nhiệm") {
+          this.modeFormUpdate(data);
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    authenClickDel(data) {
+      try {
+        if (this.teaadmin.Duty === "Giáo viên chủ nhiệm") {
+          this.deleteconduct(data.ConductId);
+          this.toast();
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    authenClickDelMulp() {
+      try {
+        if (this.teaadmin.Duty === "Giáo viên chủ nhiệm") {
+          this.deleteMultipleconduct(this.selectedItemsconduct);
+          this.toast();
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    authenClickInsert() {
+      try {
+        if (this.teaadmin.Duty === "Giáo viên chủ nhiệm") {
+          this.modeFormInsert();
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
   computed: {
     ...mapGetters([
@@ -441,6 +503,7 @@ export default {
       "classroom",
       "loadingconduct",
       "selectedItemsconduct",
+      "idloginteacher",
     ]),
     filteredSemester() {
       return this.semester.filter((data) => data.SemesterName !== "Cả năm");
@@ -452,6 +515,19 @@ export default {
     this.getsemester();
     this.getschoolyear();
     this.getClassRoom();
+    this.loadAdminAndTeacher();
+  },
+  watch: {
+    idloginteacher(newVal) {
+      if (newVal && newVal.length !== null) {
+        const idloginteacherData = newVal;
+        sessionStorage.setItem(
+          "idloginteacherData",
+          JSON.stringify(idloginteacherData)
+        );
+      }
+      this.loadAdminAndTeacher();
+    },
   },
 };
 </script>

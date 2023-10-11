@@ -87,10 +87,12 @@ const assignmentModule = {
         async deleteassignment({ commit, dispatch }, AssignmentId) {
             //commit('DELETE_TODO', id)
             try {
-                await axios.delete(`${API_BASE_URL}Assignments/${AssignmentId}`)
-                commit('DELETE_ASSIGNMENT', AssignmentId);
-                dispatch('getAssignment');
-                dispatch('getMaxCodeassignment');
+                const response = await axios.delete(`${API_BASE_URL}Assignments/${AssignmentId}`)
+                if (response.status === 200) {
+                    commit('DELETE_ASSIGNMENT', AssignmentId);
+                    dispatch('getAssignment');
+                    dispatch('getMaxCodeassignment');
+                }
             } catch (error) {
                 console.log(error)
             }

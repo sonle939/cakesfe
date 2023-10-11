@@ -60,10 +60,12 @@ const grademodule = {
         async deletegrade({ commit, dispatch }, GradeId) {
             //commit('DELETE_TODO', id)
             try {
-                await axios.delete(`${API_BASE_URL}Grades/${GradeId}`)
-                commit('DELETE_GRADE', GradeId);
-                dispatch('getGrade');
-                dispatch('getMaxCodeGrade');
+                const response = await axios.delete(`${API_BASE_URL}Grades/${GradeId}`);
+                if (response.status === 200) {
+                    commit('DELETE_GRADE', GradeId);
+                    dispatch('getGrade');
+                    dispatch('getMaxCodeGrade');
+                }
             } catch (error) {
                 console.log(error)
             }

@@ -783,10 +783,10 @@ export default {
           });
           // reset formData
           this.formData = { ConductCode: this.conductmaxcode };
-          this.selectedOptionsemester = null;
-          this.selectedOptionschoolyear = null;
-          this.selectedOptionconductgrade = null;
-          this.selectedOptionstudent = null;
+          this.selectedOptionsemester = "";
+          this.selectedOptionschoolyear = "";
+          this.selectedOptionconductgrade = "";
+          this.selectedOptionstudent = "";
           this.SHOW_FORM_CONDUCT();
           this.toast();
           this.checkForm = false;

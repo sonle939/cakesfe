@@ -19,6 +19,7 @@ import Information from '../pages/Information.vue';
 import Statistic from '../pages/Statistic.vue';
 import Assignments from '../pages/Assignments.vue';
 import Feedback from '../pages/Feedback.vue';
+
 const routes = [
     {
         path: '/',

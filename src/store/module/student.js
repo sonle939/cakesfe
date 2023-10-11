@@ -111,10 +111,12 @@ const studentModule = {
         async deletestudent({ commit, dispatch }, StudentId) {
             //commit('DELETE_TODO', id)
             try {
-                await axios.delete(`${API_BASE_URL}Students/${StudentId}`)
-                commit('DELETE_STUDENT', StudentId);
-                dispatch('getstudent');
-                dispatch('getMaxCodestudent');
+                const response = await axios.delete(`${API_BASE_URL}Students/${StudentId}`);
+                if (response.status === 200) {
+                    commit('DELETE_STUDENT', StudentId);
+                    dispatch('getstudent');
+                    dispatch('getMaxCodestudent');
+                }
             } catch (error) {
                 console.log(error)
             }

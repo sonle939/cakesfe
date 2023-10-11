@@ -102,10 +102,12 @@ const conductModule = {
         async deleteconduct({ commit, dispatch }, ConductId) {
             //commit('DELETE_TODO', id)
             try {
-                await axios.delete(`${API_BASE_URL}Conduct/${ConductId}`)
-                commit('DELETE_CONDUCT', ConductId);
-                dispatch('getConduct');
-                dispatch('getMaxCodeconduct');
+                const response = await axios.delete(`${API_BASE_URL}Conduct/${ConductId}`);
+                if (response.status === 200) {
+                    commit('DELETE_CONDUCT', ConductId);
+                    dispatch('getConduct');
+                    dispatch('getMaxCodeconduct');
+                }
             } catch (error) {
                 console.log(error)
             }

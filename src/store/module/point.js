@@ -120,10 +120,12 @@ const pointModule = {
         async deletepoint({ commit, dispatch }, PointId) {
             //commit('DELETE_TODO', id)
             try {
-                await axios.delete(`${API_BASE_URL}Points/${PointId}`)
-                commit('DELETE_POINT', PointId);
-                dispatch('getpoint');
-                dispatch('getMaxCodepoint')
+                const response = await axios.delete(`${API_BASE_URL}Points/${PointId}`);
+                if (response.status === 200) {
+                    commit('DELETE_POINT', PointId);
+                    dispatch('getpoint');
+                    dispatch('getMaxCodepoint')
+                }
             } catch (error) {
                 console.log(error)
             }

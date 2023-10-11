@@ -78,7 +78,7 @@ export default {
           nameRouter: "/admin/statistic",
         },
         {
-          id: 12,
+          id: 13,
           name: "Phản hồi",
           classIcon: "bx bx-message-rounded-dots",
           nameRouter: "/admin/feedback",
@@ -162,7 +162,8 @@ export default {
           (item) =>
             item.name === "Học sinh" ||
             item.name === "Bảng điểm" ||
-            item.name === "Lớp học"
+            item.name === "Lớp học" ||
+            item.name === "Hạnh kiểm"
         );
       } else {
         return []; // Trả về mảng rỗng cho các vai trò khác

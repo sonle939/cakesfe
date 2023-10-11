@@ -14,6 +14,7 @@ import feedback from './module/feedback';
 import conduct from './module/conduct';
 import summarise from './module/summarise';
 import assignment from "./module/assignment";
+import inform from "./module/inform";
 import { createStore } from 'vuex';
 
 const store = createStore({
@@ -33,7 +34,8 @@ const store = createStore({
         feedback,
         conduct,
         summarise,
-        assignment
+        assignment,
+        inform
     }
 });
 export default store;

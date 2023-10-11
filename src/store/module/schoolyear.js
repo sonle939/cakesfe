@@ -58,10 +58,12 @@ const schoolyearmodule = {
         async deleteschoolyear({ commit, dispatch }, SchoolYearId) {
             //commit('DELETE_TODO', id)
             try {
-                await axios.delete(`${API_BASE_URL}Schoolyears/${SchoolYearId}`)
-                commit('DELETE_SCHOOLYEAR', SchoolYearId);
-                dispatch('getschoolyear');
-                dispatch('getMaxCodeschoolyear')
+                const response = await axios.delete(`${API_BASE_URL}Schoolyears/${SchoolYearId}`)
+                if (response.status === 200) {
+                    commit('DELETE_SCHOOLYEAR', SchoolYearId);
+                    dispatch('getschoolyear');
+                    dispatch('getMaxCodeschoolyear')
+                }
             } catch (error) {
                 console.log(error)
             }

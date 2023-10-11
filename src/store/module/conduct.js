@@ -6,6 +6,7 @@ const conductModule = {
     state: {
         conduct: [],
         getByIdconduct: [],
+        conductgetstudentid: [],
         loadingconduct: false,
         checkAllconduct: false,
         isHideconduct: false,
@@ -28,6 +29,7 @@ const conductModule = {
     getters: {
         conduct: state => state.conduct,
         isshowconduct: state => state.isshowconduct,
+        conductgetstudentid: state => state.conductgetstudentid,
         getByIdconduct: state => state.getByIdconduct,
         loadingconduct: state => state.loadingconduct,
         checkAllconduct: state => state.checkAllconduct,
@@ -82,6 +84,14 @@ const conductModule = {
             try {
                 const response = await axios.get(`${API_BASE_URL}Conduct/${object.ConductId}`)
                 commit('GETBYIDCONDUCT', response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getconductstudentid({ commit }, object) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Conduct/StudentId?recordId=${object.StudentId}`)
+                commit('GETCONDUCTSTUDENTID', response.data)
             } catch (error) {
                 console.log(error)
             }
@@ -217,6 +227,14 @@ const conductModule = {
         GETBYIDCONDUCT(state, data) {
             try {
                 state.getByIdconduct = data
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        GETCONDUCTSTUDENTID(state, data) {
+            try {
+                state.conductgetstudentid = data
             } catch (error) {
                 console.log(error);
             }

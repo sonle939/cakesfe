@@ -47,40 +47,6 @@
                 </div>
               </div>
               <div class="dropdown_item" style="margin-left: 12px">
-                <p>Môn học</p>
-                <div class="dropdown" style="width: 130px">
-                  <input
-                    type="text"
-                    v-model="selectedOptionsubject"
-                    placeholder="Chọn giá trị"
-                    @click="toggleDropdownsubject"
-                  />
-                  <i
-                    @click="toggleDropdownsubject"
-                    :class="
-                      isOpensubject
-                        ? 'bx bx-chevron-down active'
-                        : 'bx bx-chevron-down'
-                    "
-                  ></i>
-                  <div
-                    class="overlaylist"
-                    v-show="isOpensubject"
-                    style="width: 130px"
-                  >
-                    <ul ref="list">
-                      <li
-                        v-for="data in subject"
-                        :key="data.SubjectId"
-                        @click="handleSubjectClick(data)"
-                      >
-                        {{ data.SubjectName }}
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div class="dropdown_item" style="margin-left: 12px">
                 <p>Năm học</p>
                 <div class="dropdown" style="width: 130px">
                   <input

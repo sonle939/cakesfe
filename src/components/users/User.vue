@@ -15,6 +15,7 @@
             changeTab(index);
             getIDCLS(userData);
             getpointstudentid(userData);
+            getconductstudentid(userData);
           "
           class="tab-button"
           :class="{ active: activeTab === index }"
@@ -168,9 +169,69 @@
           </div>
           <div v-else-if="tab.type === 'input'">
             <div class="user_point">
-              
-              <div class="uspoit_lefy">{{ pointStudentId }}</div>
-              <div class="uspoint_right"></div>
+              <div class="point_wrapper">
+                <div
+                  class="point_item"
+                  v-for="schoolYear in filteredSchoolYears"
+                  :key="schoolYear"
+                >
+                  <div class="point_container">
+                    <div class="point_schoolyear">
+                      <i class="bx bxl-gitlab bx-spin"></i>
+                      <p>Năm học: {{ schoolYear }}</p>
+                    </div>
+                    <ul>
+                      <li>
+                        <div>Môn học</div>
+                        <div>Điểm trung bình môn kì 1</div>
+                        <div>Điểm trung bình môn kì 2</div>
+                        <div>Điểm trung bình cả năm</div>
+                      </li>
+                      <li
+                        v-for="subject in filteredSubjects(schoolYear)"
+                        :key="subject.SubjectId"
+                      >
+                        <div>{{ subject.SubjectName }}</div>
+                        <div class="mr_tbmk1">{{ subject.ĐTBMK1 }}</div>
+                        <div>{{ subject.ĐTBMK2 }}</div>
+                        <div>{{ subject.ĐTBMONCANAM }}</div>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="point_conductandavg">
+                    <div class="point_conduct">
+                      <h3>Điểm hạnh kiểm</h3>
+                      <div class="us_conductlist">
+                        <div
+                          v-for="(conductData,index) in filteredConduct(schoolYear)"
+                          :key="index"
+                        >
+                          <span>{{ conductData.Hanhkiemki1 }}</span>
+                          <p>Hạnh kiểm kì 1</p>
+                        </div>
+                        <div
+                          v-for="(conductData,index)  in filteredConduct(schoolYear)"
+                          :key="index"
+                        >
+                          <span>{{ conductData.Hanhkiemki2 }}</span>
+                          <p>Hạnh kiểm kì 2</p>
+                        </div>
+                        <div
+                          v-for="(conductData,index)  in filteredConduct(schoolYear)"
+                          :key="index"
+                        >
+                          <span>{{ conductData.ConductGradeALL }}</span>
+                          <p>Hạnh kiểm cả năm</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="pointavgyear">
+                      <h3>Điểm trung bình cả năm {{ schoolYear }}</h3>
+                      <span> {{ averageOverallScore }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div v-else>
@@ -478,11 +539,23 @@ export default {
     };
   },
   computed: {
+    filteredSchoolYears() {
+      // Define the school years you want to display
+      const selectedSchoolYears = ["2021-2022", "2022-2023"];
+
+      // Filter and return unique school years that match the selected ones
+      return [
+        ...new Set(
+          this.pointStudentId.map((subject) => subject.SchoolYearName)
+        ),
+      ].filter((schoolYear) => selectedSchoolYears.includes(schoolYear));
+    },
     ...mapGetters([
       "idloginstudent",
       "student",
       "getidcls",
       "pointStudentId",
+      "conductgetstudentid",
       "feedbackmaxcode",
       "feedback",
     ]),
@@ -549,15 +622,43 @@ export default {
         FeedbackCode: this.feedbackmaxcode,
       });
     },
+    averageOverallScore() {
+      if (this.pointStudentId.length === 0) {
+        return 0; // Trường hợp mảng rỗng hoặc không tồn tại dữ liệu
+      }
+
+      // Sử dụng reduce để tính tổng của tất cả ĐTBMONCANAM
+      const totalScore = this.pointStudentId.reduce((acc, student) => {
+        return acc + student.ĐTBMONCANAM;
+      }, 0);
+
+      // Tính điểm trung bình cộng
+      const averageScore = totalScore / this.pointStudentId.length;
+
+      return averageScore.toFixed(1);
+    },
   },
   methods: {
+    filteredSubjects(schoolYear) {
+      // Filter subjects based on the selected school year
+      return this.pointStudentId.filter(
+        (subject) => subject.SchoolYearName === schoolYear
+      );
+    },
+    filteredConduct(schoolYear) {
+      // Filter subjects based on the selected school year
+      return this.conductgetstudentid.filter(
+        (subject) => subject.SchoolYearName === schoolYear
+      );
+    },
     ...mapActions([
       "getIDCLS",
       "getpointstudentid",
+      "getconductstudentid",
       "addfeedback",
       "getMaxCodefeedback",
       "getFeedback",
-      'pointStudentId'
+      "pointStudentId",
     ]),
     validateFormUpdate() {
       try {

@@ -4,6 +4,7 @@ import studentModule from "./student";
 import informModule from "./inform";
 import teacherModule from "./teacher";
 import pointModule from "./point";
+import conductModule from "./conduct";
 const API_BASE_URL = 'https://localhost:7199/api/v2/';
 import { saveAs } from 'file-saver';
 
@@ -277,6 +278,7 @@ const accountModule = {
                         studentModule.actions.IDloginstudent({ commit }, response.data.user);
                         informModule.actions.getStudentIDinform({ commit }, response.data.user);
                         pointModule.actions.getpointstudentid({ commit }, response.data.user);
+                        conductModule.actions.getconductstudentid({ commit }, response.data.user);
                         sessionStorage.setItem('roleData', response.data.user.role);
 
                     }

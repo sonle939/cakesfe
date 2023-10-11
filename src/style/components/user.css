@@ -339,3 +339,99 @@ textarea:focus {
 .buoichieu {
   background-color: #000;
 }
+.point_item {
+  margin-bottom: 30px;
+}
+.point_schoolyear {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  width: 200px;
+  background-color: white;
+  padding: 5px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  margin-bottom: 20px;
+  border-radius: 20px;
+}
+.point_schoolyear i {
+  margin-left: 8px;
+  font-weight: 700;
+}
+.point_schoolyear p {
+  font-weight: 700;
+  margin-left: 8px;
+}
+.point_wrapper {
+  display: flex;
+}
+.pointavgyear {
+  margin-top: 30px;
+}
+.pointavgyear span {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #041434;
+  color: white;
+  font-size: 20px;
+  margin-top: 20px;
+}
+.point_conduct {
+  margin-top: 60px;
+}
+.point_conduct ul {
+  display: flex;
+  align-items: center;
+}
+.us_conductlist div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+}
+.us_conductlist div span {
+  padding: 15px;
+  border-radius: 50%;
+  background-color: #041434;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+}
+.point_conduct li p {
+  font-size: 20px;
+}
+.us_conductlist {
+  display: flex;
+  align-items: center;
+}
+.point_item {
+  width: 70%;
+  display: flex;
+  padding: 5px;
+}
+.point_item ul li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  margin-bottom: 10px;
+  height: 40px;
+  width: 80%;
+  border-radius: 20px;
+}
+.point_item ul li:first-child {
+  background-color: #041434;
+  color: white;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.point_item ul li div {
+  margin: 0 20px;
+  flex: 1;
+  padding: 5px;
+}

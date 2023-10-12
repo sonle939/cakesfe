@@ -224,3 +224,9 @@ button {
   margin-right: 10px;
   font-weight: 400;
 }
+.background-white {
+  background-color: #fff;
+}
+.background-black {
+  background-color: #000;
+}

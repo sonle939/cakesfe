@@ -1,9 +1,16 @@
 <template>
   <div class="classroom">
     <Navbar />
-    <div class="d-flex">
+    <div
+      :class="[
+        backgroundWeb ? 'background-black d-flex' : 'background-white d-flex',
+        directiondiv && 'navigate_div',
+      ]"
+    >
       <Sidebar />
-      <div class="page_content">
+      <div
+        :class="directiondiv ? 'page_content border_design' : 'page_content '"
+      >
         <HeaderContent text="Quản lý lớp học" :showform="authenClickInsert" />
         <div class="search_table">
           <div class="search_filter">
@@ -213,6 +220,8 @@ export default {
       "loadingclassroom",
       "selectedItemsclassroom",
       "idloginteacher",
+      "backgroundWeb",
+      "directiondiv",
     ]),
     filteredGrade() {
       const keyword = this.selectedOption.toLowerCase();

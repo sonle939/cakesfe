@@ -51,3 +51,9 @@
   background-color: #57c841;
   cursor: pointer;
 }
+.background-white {
+  background-color: #fff;
+}
+.background-black {
+  background-color: #000;
+}

@@ -46,6 +46,7 @@
   letter-spacing: 1px;
   line-height: 16.8px;
   color: #1d1d1d;
+  background-color: transparent;
 }
 .navbar_right label input::placeholder {
   color: #333;
@@ -295,4 +296,8 @@
   color: #041434;
   font-weight: 400;
   font-size: 13px;
+}
+.logo_black {
+  margin-left: -58px;
+  width: 350px !important;
 }

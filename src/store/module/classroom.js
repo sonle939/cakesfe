@@ -12,7 +12,11 @@ const classroomModule = {
         selectedItemsclassroom: [],
         isshowclassroom: false,
         formModeclassroom: false,
-        classroommaxcode: null
+        classroommaxcode: null,
+        backgroundWeb: false,
+        directiondiv: false,
+        switchValue: false,
+        switchValue1: false,
     },
     getters: {
         classroom: state => state.classroom,
@@ -29,6 +33,10 @@ const classroomModule = {
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
         trueCheckedclassroom: state => state.classroom.some((item) => item.isChecked == true),
         selectedItemsclassroom: state => state.selectedItemsclassroom,
+        backgroundWeb: state => state.backgroundWeb,
+        directiondiv: state => state.directiondiv,
+        switchValue: state => state.switchValue,
+        switchValue1: state => state.switchValue1,
     },
     actions: {
         async getClassRoom({ commit }) {
@@ -260,6 +268,36 @@ const classroomModule = {
                 console.log(error);
             }
 
+        },
+        HANDLEBACKGROUND(state) {
+            try {
+                state.backgroundWeb = !state.backgroundWeb;
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        HANDLEDIRECTIVE(state) {
+            try {
+                state.directiondiv = !state.directiondiv;
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        HANDLESWITCH(state) {
+            try {
+                state.switchValue = !state.switchValue
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        HANDLESWITCH1(state) {
+            try {
+                state.switchValue1 = !state.switchValue1
+            } catch (error) {
+                console.log(error);
+            }
         },
         UPDATE_MODE_CLASSROOM(state) {
             try {

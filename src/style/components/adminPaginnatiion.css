@@ -51,3 +51,9 @@
   color: #bdbdbd !important;
   pointer-events: none !important;
 }
+.background-white {
+  background-color: #fff;
+}
+.background-black {
+  background-color: #000;
+}

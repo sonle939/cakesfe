@@ -1,9 +1,16 @@
 <template>
   <div class="point">
     <Navbar />
-    <div class="d-flex">
+    <div
+      :class="[
+        backgroundWeb ? 'background-black d-flex' : 'background-white d-flex',
+        directiondiv && 'navigate_div',
+      ]"
+    >
       <Sidebar />
-      <div class="page_content">
+      <div
+        :class="directiondiv ? 'page_content border_design' : 'page_content '"
+      >
         <HeaderContent text="Quản lý bảng điểm" :showform="authenClickInsert" />
         <div class="search_table">
           <div class="search_filter">
@@ -422,6 +429,8 @@ export default {
       "point",
       "semesterId",
       "idloginteacher",
+      "backgroundWeb",
+      "directiondiv",
     ]),
     filteredSemester() {
       const keyword = this.selectedOptionsemester.toLowerCase();

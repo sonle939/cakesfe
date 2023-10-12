@@ -1,9 +1,16 @@
 <template>
   <div class="classroom">
     <Navbar />
-    <div class="d-flex">
+    <div
+      :class="[
+        backgroundWeb ? 'background-black d-flex' : 'background-white d-flex',
+        directiondiv && 'navigate_div',
+      ]"
+    >
       <Sidebar />
-      <div class="page_content">
+      <div
+        :class="directiondiv ? 'page_content border_design' : 'page_content '"
+      >
         <HeaderContent text="Quản lý phân công" :showform="modeFormInsert" />
         <div class="search_table">
           <div class="search_filter">
@@ -78,7 +85,6 @@
             :class="
               loadingassignment ? 'table-wrapper active' : 'table-wrapper'
             "
-            style="height: auto; margin-bottom: 20px"
           >
             <table style="width: 100%; height: auto">
               <thead>
@@ -160,7 +166,7 @@
               <img src="../assets/nodata.svg" alt="" />
               <h3>Không có dữ liệu</h3>
             </div>
-            <Loading v-show="loadingassignment" style="margin-top: -400px" />
+            <Loading v-show="loadingassignment" />
           </div>
           <AdminPaginnation
             :HIDE="HIDEASSIGNMENT"
@@ -230,6 +236,8 @@ export default {
       "pageSizeassignment",
       "pageNumberassignment",
       "totalPagesassignment",
+      "backgroundWeb",
+      "directiondiv",
     ]),
   },
   methods: {

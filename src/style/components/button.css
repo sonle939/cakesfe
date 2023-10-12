@@ -76,3 +76,9 @@
   border: 1px solid #1f1f1f;
   background-color: white;
 }
+.background-white {
+  background-color: #fff;
+}
+.background-black {
+  background-color: #000;
+}

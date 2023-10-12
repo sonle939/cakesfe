@@ -1,10 +1,25 @@
 <template>
-  <div class="navbar">
+  <div
+    :class="
+      backgroundWeb ? 'background-black navbar' : 'background-white navbar'
+    "
+  >
     <div class="navbar_left">
-      <img src="../assets/logonavbarxoaphong.png" alt="" />
+      <img
+        src="../assets/logonavbarxoaphong.png"
+        alt=""
+        v-if="backgroundWeb === false"
+      />
+      <img src="../assets/logobgrblack.png" alt="" v-else class="logo_black" />
     </div>
     <div class="navbar_right">
-      <label>
+      <label
+        :class="
+          backgroundWeb
+            ? 'background-white navbar_right label '
+            : 'navbar_right label '
+        "
+      >
         <i class="bx bx-search-alt"></i>
         <input type="text" placeholder="Tìm kiếm thông tin..." />
       </label>
@@ -102,7 +117,7 @@
 <script>
 import { ref } from "vue";
 import { createToast } from "mosha-vue-toastify";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Navbar",
@@ -163,7 +178,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["idloginstudent", "idloginteacher", "getstudentidinform"]),
+    ...mapGetters([
+      "idloginstudent",
+      "idloginteacher",
+      "getstudentidinform",
+      "backgroundWeb",
+    ]),
     countStudentsWithFalseHandle() {
       return this.getstudentidinform.filter((student) => student.Isread === 0)
         .length;
@@ -171,6 +191,7 @@ export default {
   },
   methods: {
     ...mapActions(["updateIteminform"]),
+    ...mapMutations(["HANDLEBACKGROUND"]),
     onSubmitUpdate() {
       try {
         this.getstudentidinform.forEach((item) => {

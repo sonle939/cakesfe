@@ -1,9 +1,16 @@
 <template>
   <div class="student">
     <Navbar />
-    <div class="d-flex">
+    <div
+      :class="[
+        backgroundWeb ? 'background-black d-flex' : 'background-white d-flex',
+        directiondiv && 'navigate_div',
+      ]"
+    >
       <Sidebar />
-      <div class="page_content">
+      <div
+        :class="directiondiv ? 'page_content border_design' : 'page_content '"
+      >
         <HeaderContent text="Quản lý hạnh kiểm" :showform="authenClickInsert" />
         <div class="search_table">
           <div class="search_filter">
@@ -504,6 +511,8 @@ export default {
       "loadingconduct",
       "selectedItemsconduct",
       "idloginteacher",
+      "backgroundWeb",
+      "directiondiv",
     ]),
     filteredSemester() {
       return this.semester.filter((data) => data.SemesterName !== "Cả năm");

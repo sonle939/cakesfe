@@ -1,9 +1,14 @@
 <template>
   <div class="student">
     <Navbar />
-    <div class="d-flex">
+    <div
+      :class="[
+        backgroundWeb ? 'background-black d-flex' : 'background-white d-flex',
+        directiondiv && 'navigate_div',
+      ]"
+    >
       <Sidebar />
-      <div class="page_content">
+      <div :class="directiondiv ? 'page_content border_design':'page_content '">
         <HeaderContent text="Quản lý học sinh" :showform="authenClickInsert" />
         <div class="search_table">
           <div class="search_filter">
@@ -441,6 +446,8 @@ export default {
       "loadingstudent",
       "selectedItemsstudent",
       "idloginteacher",
+      "backgroundWeb",
+      "directiondiv",
     ]),
     filteredClassroom() {
       const keyword = this.selectedOption.toLowerCase();
@@ -470,4 +477,11 @@ export default {
 </script>
 
 <style>
+.navigate_div {
+  flex-direction: row-reverse;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
 </style>

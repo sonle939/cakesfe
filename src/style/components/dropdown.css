@@ -10,6 +10,10 @@
   justify-content: space-between;
   position: relative;
 }
+.dropdown.event_click {
+  pointer-events: none;
+  background-color: #999999;
+}
 .dropdown input {
   height: 17px;
   font-size: 14px;
@@ -79,4 +83,10 @@
 }
 .overlaylist li:hover {
   background-color: rgba(80, 184, 60, 0.1);
+}
+.background-white {
+  background-color: #fff;
+}
+.background-black {
+  background-color: #000;
 }

@@ -186,3 +186,9 @@
     transform: rotate(15deg);
   }
 }
+.background-white {
+  background-color: #fff;
+}
+.background-black {
+  background-color: #000;
+}

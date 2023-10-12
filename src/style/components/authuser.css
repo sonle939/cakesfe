@@ -242,3 +242,9 @@
   border: 1px solid #50b83c;
   outline: none;
 }
+.background-white {
+  background-color: #fff;
+}
+.background-black {
+  background-color: #000;
+}

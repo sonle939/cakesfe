@@ -1,9 +1,16 @@
 <template>
   <div class="feedback">
     <Navbar />
-    <div class="d-flex">
+    <div
+      :class="[
+        backgroundWeb ? 'background-black d-flex' : 'background-white d-flex',
+        directiondiv && 'navigate_div',
+      ]"
+    >
       <Sidebar />
-      <div class="page_content">
+      <div
+        :class="directiondiv ? 'page_content border_design' : 'page_content '"
+      >
         <h3
           style="
             color: #1f1f20;
@@ -308,6 +315,7 @@ export default {
       "loadingfeedback",
       "selectedItemsfeedback",
       "getByIdFeedback",
+      "backgroundWeb",
     ]),
     filteredHandle() {
       const keyword = this.selectedOption.toLowerCase();
@@ -351,6 +359,7 @@ export default {
       "exportExcelFeedback",
       "updateItemfeedback",
       "addinform",
+      "directiondiv",
     ]),
     formattedDate(data) {
       try {

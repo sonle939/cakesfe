@@ -77,3 +77,20 @@
   width: 23px;
   height: 20px;
 }
+.background-white {
+  background-color: #fff;
+}
+.background-black {
+  background-color: #000;
+}
+.navigate_div {
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+}
+.border_design {
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}

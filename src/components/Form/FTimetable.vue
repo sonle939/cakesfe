@@ -182,35 +182,6 @@
             </div>
           </div>
         </label>
-        <label class="slabel" @click="toggleDropdownteacher">
-          Thông tin giáo viên
-          <div class="dropdown" style="margin-top: 8px">
-            <input
-              type="text"
-              v-model="selectedOptionteacher"
-              placeholder="Chọn giá trị lọc"
-            />
-            <i
-              @click="toggleDropdownteacher"
-              :class="
-                isOpensteacher
-                  ? 'bx bx-chevron-down active'
-                  : 'bx bx-chevron-down'
-              "
-            ></i>
-            <div class="overlaylist" v-show="isOpensteacher">
-              <ul ref="list">
-                <li
-                  v-for="data in filteredTeacher"
-                  :key="data.TeacherId"
-                  @click="selectOptionteacher(data.TeacherId, data.TeacherName)"
-                >
-                  {{ data.TeacherName }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </label>
         <label
           class="slabel"
           @click="toggleDropdownclassroom"
@@ -245,6 +216,42 @@
                   "
                 >
                   {{ data.ClassRoomName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
+        <label class="slabel" @click="toggleDropdownteacher">
+          Thông tin giáo viên
+          <div
+            :class="
+              selectedOptionclassroom === '' && selectedOptionsubject === ''
+                ? 'dropdown event_click'
+                : 'dropdown'
+            "
+            style="margin-top: 8px"
+          >
+            <input
+              type="text"
+              v-model="selectedOptionteacher"
+              placeholder="Chọn giá trị lọc"
+            />
+            <i
+              @click="toggleDropdownteacher"
+              :class="
+                isOpensteacher
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div class="overlaylist" v-show="isOpensteacher">
+              <ul ref="list">
+                <li
+                  v-for="data in filteredTeacher"
+                  :key="data.TeacherId"
+                  @click="selectOptionteacher(data.TeacherId, data.TeacherName)"
+                >
+                  {{ data.TeacherName }}
                 </li>
               </ul>
             </div>
@@ -425,37 +432,6 @@
             </div>
           </div>
         </label>
-        <label class="slabel" @click="toggleDropdownteacherUpdate">
-          Thông tin giáo viên
-          <div class="dropdown" style="margin-top: 8px">
-            <input
-              type="text"
-              v-model="getByIdtimetable.TeacherName"
-              placeholder="Chọn giá trị lọc"
-            />
-            <i
-              @click="toggleDropdownteacherUpdate"
-              :class="
-                isOpensteacherUpdate
-                  ? 'bx bx-chevron-down active'
-                  : 'bx bx-chevron-down'
-              "
-            ></i>
-            <div class="overlaylist" v-show="isOpensteacherUpdate">
-              <ul ref="list">
-                <li
-                  v-for="data in filteredTeacherUpdate"
-                  :key="data.TeacherId"
-                  @click="
-                    selectOptionteacherUpdate(data.TeacherId, data.TeacherName)
-                  "
-                >
-                  {{ data.TeacherName }}
-                </li>
-              </ul>
-            </div>
-          </div>
-        </label>
         <label
           class="slabel"
           @click="toggleDropdownclassroomUpdate"
@@ -498,6 +474,37 @@
             </div>
           </div>
         </label>
+        <label class="slabel" @click="toggleDropdownteacherUpdate">
+          Thông tin giáo viên
+          <div class="dropdown" style="margin-top: 8px">
+            <input
+              type="text"
+              v-model="getByIdtimetable.TeacherName"
+              placeholder="Chọn giá trị lọc"
+            />
+            <i
+              @click="toggleDropdownteacherUpdate"
+              :class="
+                isOpensteacherUpdate
+                  ? 'bx bx-chevron-down active'
+                  : 'bx bx-chevron-down'
+              "
+            ></i>
+            <div class="overlaylist" v-show="isOpensteacherUpdate">
+              <ul ref="list">
+                <li
+                  v-for="data in filteredTeacherUpdate"
+                  :key="data.TeacherId"
+                  @click="
+                    selectOptionteacherUpdate(data.TeacherId, data.TeacherName)
+                  "
+                >
+                  {{ data.TeacherName }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </label>
       </div>
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_TIMETABLE" />
@@ -510,7 +517,7 @@
   </div>
 </template>
     
-    <script>
+<script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import VButton from "../Button/VButton.vue";
 import { createToast } from "mosha-vue-toastify";
@@ -648,13 +655,20 @@ export default {
     filteredTeacher() {
       if (this.selectedOptionteacher) {
         const teacherKeyword = this.selectedOptionteacher.toLowerCase();
-        return this.teachertimetable.filter((data) =>
-          data.TeacherName.toLowerCase().includes(teacherKeyword)
+        return this.teachertimetable.filter(
+          (data) =>
+            data.TeacherName &&
+            data.TeacherName.toLowerCase().includes(teacherKeyword)
         );
-      } else if (this.selectedOptionsubject) {
+      } else if (this.selectedOptionsubject && this.selectedOptionclassroom) {
         const subjectKeyword = this.selectedOptionsubject.toLowerCase();
-        return this.teachertimetable.filter((data) =>
-          data.SubjectName.toLowerCase().includes(subjectKeyword)
+        const classroomKeyword = this.selectedOptionclassroom.toLowerCase();
+        return this.teachertimetable.filter(
+          (data) =>
+            data.SubjectName &&
+            data.ClassRoomName &&
+            data.SubjectName.toLowerCase().includes(subjectKeyword) &&
+            data.ClassRoomName.toLowerCase().includes(classroomKeyword)
         );
       } else {
         // Trả về toàn bộ danh sách sinh viên nếu cả hai selectedOptionteacher và selectedOptionsubject đều là null
@@ -664,13 +678,24 @@ export default {
     filteredTeacherUpdate() {
       if (this.getByIdtimetable.TeacherName) {
         const teacherKeyword = this.getByIdtimetable.TeacherName.toLowerCase();
-        return this.teachertimetable.filter((data) =>
-          data.TeacherName.toLowerCase().includes(teacherKeyword)
+        return this.teachertimetable.filter(
+          (data) =>
+            data.TeacherName &&
+            data.TeacherName.toLowerCase().includes(teacherKeyword)
         );
-      } else if (this.getByIdtimetable.SubjectName) {
+      } else if (
+        this.getByIdtimetable.SubjectName &&
+        this.getByIdtimetable.ClassRoomName
+      ) {
         const subjectKeyword = this.getByIdtimetable.SubjectName.toLowerCase();
-        return this.teachertimetable.filter((data) =>
-          data.SubjectName.toLowerCase().includes(subjectKeyword)
+        const classroomKeyword =
+          this.getByIdtimetable.ClassRoomName.toLowerCase();
+        return this.teachertimetable.filter(
+          (data) =>
+            data.SubjectName &&
+            data.ClassRoomName &&
+            data.SubjectName.toLowerCase().includes(subjectKeyword) &&
+            data.ClassRoomName.toLowerCase().includes(classroomKeyword)
         );
       } else {
         // Trả về toàn bộ danh sách sinh viên nếu cả hai selectedOptionteacher và selectedOptionsubject đều là null
@@ -773,6 +798,7 @@ export default {
       "timetablemaxcode",
       "formModetimetable",
       "getByIdtimetable",
+      "assignmentAll",
     ]),
     maxId() {
       // eslint-disable-next-line vue/no-side-effects-in-computed-properties
@@ -1026,6 +1052,7 @@ export default {
       "getMaxCodetimetable",
       "updateItemtimetable",
       "addtimetable",
+      "getassignmentAll",
     ]),
     ...mapMutations(["SHOW_FORM_TIMETABLE"]),
   },
@@ -1038,6 +1065,7 @@ export default {
     this.getteachertimetable();
     this.getclassroomtimetable();
     this.getMaxCodetimetable();
+    this.getassignmentAll();
   },
   components: {
     VButton,

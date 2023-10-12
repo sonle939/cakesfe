@@ -1,14 +1,35 @@
 <template>
-  <div :class="hide ? 'sidebar' : 'sidebar active'">
-    <ul :class="hide ? '' : 'sidebar ul active'">
+  <div
+    :class="[
+      hide ? 'sidebar' : 'sidebar active',
+      backgroundWeb ? 'background-black' : 'background-white',
+    ]"
+  >
+    <ul
+      :class="[
+        hide ? '' : 'sidebar ul active',
+        backgroundWeb ? 'background-black' : 'background-white',
+      ]"
+    >
       <li
         v-for="item in filteredSideBar"
         :key="item.id"
-        :class="hide ? 'sidebar ul li' : 'sidebar ul li active'"
+        :class="[
+          hide ? 'sidebar ul li' : 'sidebar ul li active',
+          backgroundWeb ? 'background-black' : 'background-white',
+        ]"
       >
         <router-link :to="item.nameRouter">
-          <div :class="item.classIcon"></div>
-          <p :class="hide ? 'p' : 'p active'">
+          <div
+            :class="[item.classIcon, backgroundWeb === true && 'color-white']"
+          ></div>
+          <p
+            :class="[
+              hide ? 'p' : 'p active',
+              backgroundWeb === true && 'color-white',
+              directiondiv ? 'left-div' : '', // Thêm class 'left-div' khi directiondiv là true
+            ]"
+          >
             {{ item.name }}
           </p>
         </router-link>
@@ -27,7 +48,11 @@
         </div>
         <label
           for="switchButton"
-          :class="hide ? 'switch_wrapper text' : 'switch_wrapper text active'"
+          :class="[
+            hide ? 'switch_wrapper text' : 'switch_wrapper text active',
+            backgroundWeb === true && 'color-white',
+            directiondiv ? 'left-div' : '',
+          ]"
           >Chế độ tối</label
         >
       </div>
@@ -43,7 +68,11 @@
         </div>
         <label
           for="switchButton1"
-          :class="hide ? 'switch_wrapper text' : 'switch_wrapper text active'"
+          :class="[
+            hide ? 'switch_wrapper text' : 'switch_wrapper text active',
+            backgroundWeb === true && 'color-white',
+            directiondiv ? 'left-div' : '',
+          ]"
           >Điều hướng thẻ</label
         >
       </div>
@@ -52,7 +81,7 @@
           src="../assets/bubble-left.svg"
           alt=""
           @click="handleHide"
-          :class="hide ? 'collapse img ' : 'collapse img active'"
+          :class="[hide ? 'collapse img' : 'collapse img active']"
         />
       </div>
     </div>
@@ -60,6 +89,7 @@
 </template> 
 
 <script>
+import { mapGetters, mapMutations } from "vuex";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Sidebar",
@@ -67,8 +97,6 @@ export default {
     return {
       hide: true,
       selectedItemId: 2,
-      switchValue: false,
-      switchValue1: false,
       dataRole: "",
       dataSideBar: [
         {
@@ -82,6 +110,12 @@ export default {
           name: "Phản hồi",
           classIcon: "bx bx-message-rounded-dots",
           nameRouter: "/admin/feedback",
+        },
+        {
+          id: 14,
+          name: "Phân công",
+          classIcon: "bx bx-git-repo-forked",
+          nameRouter: "/admin/assignments",
         },
         {
           id: 1,
@@ -169,13 +203,27 @@ export default {
         return []; // Trả về mảng rỗng cho các vai trò khác
       }
     },
+    ...mapGetters([
+      "backgroundWeb",
+      "directiondiv",
+      "switchValue",
+      "switchValue1",
+    ]),
   },
   methods: {
+    ...mapMutations([
+      "HANDLEBACKGROUND",
+      "HANDLEDIRECTIVE",
+      "HANDLESWITCH",
+      "HANDLESWITCH1",
+    ]),
     toggleSwitch() {
-      this.switchValue = !this.switchValue;
+      this.HANDLESWITCH();
+      this.HANDLEBACKGROUND();
     },
     toggleSwitch1() {
-      this.switchValue1 = !this.switchValue1;
+      this.HANDLESWITCH1();
+      this.HANDLEDIRECTIVE();
     },
     //TẠO 1 HÀM DÙNG ĐỂ ĐÓNG MỞ SIDEBAR
     handleHide() {

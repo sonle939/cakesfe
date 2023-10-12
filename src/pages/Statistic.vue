@@ -1,9 +1,16 @@
 <template>
   <div class="point">
     <Navbar />
-    <div class="d-flex">
+    <div
+      :class="[
+        backgroundWeb ? 'background-black d-flex' : 'background-white d-flex',
+        directiondiv && 'navigate_div',
+      ]"
+    >
       <Sidebar />
-      <div class="page_content">
+      <div
+        :class="directiondiv ? 'page_content border_design' : 'page_content '"
+      >
         <div class="chart_container">
           <div class="chart_item">bieu do 1</div>
           <div class="chart_item">bieu do 2</div>
@@ -216,6 +223,8 @@ export default {
       "schoolyear",
       "loadingpoint",
       "point",
+      "backgroundWeb",
+      "directiondiv",
     ]),
   },
   methods: {

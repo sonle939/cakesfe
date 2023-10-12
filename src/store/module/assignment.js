@@ -5,6 +5,7 @@ const API_BASE_URL = 'https://localhost:7199/api/v2/';
 const assignmentModule = {
     state: {
         assignment: [],
+        assignmentAll: [],
         getByIdAssignment: [],
         loadingassignment: false,
         checkAllassignment: false,
@@ -24,6 +25,7 @@ const assignmentModule = {
     },
     getters: {
         assignment: state => state.assignment,
+        assignmentAll: state => state.assignmentAll,
         getByIdAssignment: state => state.getByIdAssignment,
         gradeassignment: state => state.gradeassignment,
         loadingassignment: state => state.loadingassignment,
@@ -43,7 +45,7 @@ const assignmentModule = {
         totalRecordsassignment: state => state.totalRecordsassignment,
         pageNumberassignment: state => state.pageNumberassignment,
         totalPagesassignment: state => state.totalPagesassignment,
-        pageSizeassignment: state => state.totalPagesassignment,
+        pageSizeassignment: state => state.pageSizeassignment,
     },
     actions: {
         async getAssignment({ commit, state }) {
@@ -54,6 +56,14 @@ const assignmentModule = {
                 commit('SET_ASSIGNMENT', res.data.data)
                 commit('SET_TOTAL_PAGES_ASSIGNMENT', res.data.totalRecords)
                 commit('SET_ALLPAGE_ASSIGNMENT', res.data.totalPages);
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getassignmentAll({ commit }) {
+            try {
+                const res = await axios.get(`${API_BASE_URL}Assignments/`)
+                commit('SET_ASSIGNMENT_ALL', res.data)
             } catch (error) {
                 console.log(error)
             }
@@ -201,6 +211,13 @@ const assignmentModule = {
         SET_ASSIGNMENT(state, assignment) {
             try {
                 state.assignment = assignment;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        SET_ASSIGNMENT_ALL(state, assignmentAll) {
+            try {
+                state.assignmentAll = assignmentAll;
             } catch (error) {
                 console.log(error);
             }

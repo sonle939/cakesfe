@@ -85,3 +85,9 @@
   width: 100%;
   padding-right: 40px;
 }
+.background-white {
+  background-color: #fff;
+}
+.background-black {
+  background-color: #000;
+}

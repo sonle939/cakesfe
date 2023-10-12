@@ -186,3 +186,9 @@ table td {
   display: flex;
   align-items: center;
 }
+.background-white {
+  background-color: #fff;
+}
+.background-black {
+  background-color: #000;
+}

@@ -96,7 +96,7 @@
           </div>
           <div
             :class="
-              loadingpoint
+              loadingstatistic
                 ? 'table-wrapper active mg-bot'
                 : 'table-wrapper mg-bot'
             "
@@ -118,12 +118,11 @@
                   <th style="min-width: 170px">Giới tính</th>
                   <th style="min-width: 155px">Ngày sinh</th>
                   <th style="min-width: 155px">Email</th>
-                  <th style="min-width: 185px">Điểm trung bình môn cả năm</th>
-                  <th style="min-width: 185px">Hạnh kiểm cả năm</th>
+                  <th style="min-width: 185px">Điểm tổng kết</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="data in point" :key="data.PointId">
+                <tr v-for="data in pointResaultAll" :key="data.StudentId">
                   <td>
                     {{ data.StudentCode }}
                   </td>
@@ -155,33 +154,28 @@
                     </tippy>
                   </td>
                   <td class="text_left">
-                    <tippy :content="data.ĐĐGTX1">
-                      {{ data.ĐĐGTX1 }}
+                    <tippy :content="formattedDate(data.DateOfBirth)">
+                      {{ formattedDate(data.DateOfBirth) }}
                     </tippy>
                   </td>
                   <td class="text_left">
-                    <tippy :content="data.ĐĐGTX2">
-                      {{ data.ĐĐGTX2 }}
+                    <tippy :content="data.Email">
+                      {{ data.Email }}
                     </tippy>
                   </td>
                   <td class="text_left">
-                    <tippy :content="data.ĐĐGTX3">
-                      {{ data.ĐĐGTX3 }}
-                    </tippy>
-                  </td>
-                  <td class="text_left">
-                    <tippy :content="data.ĐĐGTX3">
-                      {{ data.ĐĐGTX3 }}
+                    <tippy :content="data.ĐIEMCANAM">
+                      {{ data.ĐIEMCANAM }}
                     </tippy>
                   </td>
                 </tr>
               </tbody>
             </table>
-            <div class="noData" v-if="point.length == 0">
+            <div class="noData" v-if="pointResaultAll.length == 0">
               <img src="../assets/nodata.svg" alt="" />
               <h3>Không có dữ liệu</h3>
             </div>
-            <Loading v-show="loadingpoint" style="margin-top: -350px" />
+            <Loading v-show="loadingstatistic" style="margin-top: -350px" />
           </div>
         </div>
       </div>
@@ -195,6 +189,7 @@ import Sidebar from "../components/Sidebar.vue";
 import { mapActions, mapGetters } from "vuex";
 import { ref } from "vue";
 import Loading from "../components/Loading.vue";
+import { format } from 'date-fns';
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -202,29 +197,24 @@ export default {
   setup() {
     const isOpenclassroom = ref(false);
     const selectedOptionclassroom = ref("Lớp 6A");
-    const isOpensubject = ref(false);
-    const selectedOptionsubject = ref("Toán học");
     const isOpenschoolyear = ref(false);
     const selectedOptionschoolyear = ref("2021-2022");
     return {
       isOpenclassroom,
       selectedOptionclassroom,
       isOpenschoolyear,
-      isOpensubject,
       selectedOptionschoolyear,
-      selectedOptionsubject,
     };
   },
   computed: {
     ...mapGetters([
       "gradeclassroom",
       "classroom",
-      "subject",
       "schoolyear",
-      "loadingpoint",
-      "point",
+      "loadingstatistic",
       "backgroundWeb",
       "directiondiv",
+      "pointResaultAll",
     ]),
   },
   methods: {
@@ -237,18 +227,7 @@ export default {
     },
     handleClassroomClick(data) {
       this.selectOptionclassroom(data.ClassRoomName);
-      this.setFilterclassroomidpoint(data.ClassRoomId);
-    },
-    toggleDropdownsubject() {
-      this.isOpensubject = !this.isOpensubject;
-    },
-    selectOptionsubject(options) {
-      this.selectedOptionsubject = options;
-      this.isOpensubject = false;
-    },
-    handleSubjectClick(data) {
-      this.selectOptionsubject(data.SubjectName);
-      this.setFiltersubjectidpoint(data.SubjectId);
+      this.setFilterclassroomResaultall(data.ClassRoomId);
     },
     toggleDropdownschoolyear() {
       this.isOpenschoolyear = !this.isOpenschoolyear;
@@ -259,28 +238,30 @@ export default {
     },
     handleschoolyearClick(data) {
       this.selectOptionschoolyear(data.SchoolYearName);
-      this.setFilterschoolyearpoint(data.SchoolYearId);
+      this.setFilterschoolyearResaultall(data.SchoolYearId);
+    },
+    formattedDate(data) {
+      try {
+        return format(new Date(data), "dd/MM/yyyy");
+      } catch (error) {
+        console.log(error);
+      }
     },
     ...mapActions([
       "getGradeclassroom",
       "getClassRoom",
-      "getsubject",
       "getschoolyear",
-      "getIDpoint",
-      "getpoint",
       //phan trnag
-      "setFilterschoolyearpoint",
-      "setFiltersemesterpoint",
-      "setFiltersubjectidpoint",
-      "setFilterclassroomidpoint",
+      "setFilterschoolyearResaultall",
+      "setFilterclassroomResaultall",
+      "getpointresaultAll",
     ]),
   },
   mounted() {
-    this.getpoint();
     this.getClassRoom();
     this.getGradeclassroom();
-    this.getsubject();
     this.getschoolyear();
+    this.getpointresaultAll();
   },
   components: {
     Navbar,

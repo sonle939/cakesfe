@@ -8,6 +8,7 @@ const pointModule = {
         pointStudentId: [],
         pointAll: [],
         getByIdpoint: [],
+        pointResaultAll: [],
         loadingpoint: false,
         checkAllpoint: false,
         isHidepoint: false,
@@ -23,6 +24,8 @@ const pointModule = {
         classroomid: '677132b4-2a33-68d1-26c2-579daad24557',
         semesterId: '3f7bb059-6c87-1b53-7f6a-e0860b0602ba',
         schoolyearId: '17ae2be6-2c6a-5cab-3bcb-6f55ff55ddab',
+        classroomidResault: '677132b4-2a33-68d1-26c2-579daad24557',
+        schoolyearIdResault: '17ae2be6-2c6a-5cab-3bcb-6f55ff55ddab',
         totalRecordspoint: 1,
         totalPagespoint: null,
         //ket thuc khai bao bien phan trang
@@ -38,6 +41,7 @@ const pointModule = {
         isCheckedpoint: state => state.point.isChecked,
         pointmaxcode: state => state.pointmaxcode,
         formModepoint: state => state.formModepoint,
+        pointResaultAll: state => state.pointResaultAll,
         //dùng để đếm số lượng dữ liệu (phân trang)
         allPoint: state => state.point.length,
         showIsHidepoint: state => state.isHidepoint,
@@ -100,6 +104,14 @@ const pointModule = {
             try {
                 const response = await axios.get(`${API_BASE_URL}Points/StudentId?recordId=${object.StudentId}`)
                 commit('GETSTUDENTIDPOINT', response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getpointresaultAll({ commit }, object) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Points/ResaultAll?classRoomId=${object.classroomid}&schoolYearId=${object.schoolyearId}`)
+                commit('GETPOINTRESAULTALL', response.data)
             } catch (error) {
                 console.log(error)
             }
@@ -229,6 +241,23 @@ const pointModule = {
                 console.error(error)
             }
         },
+        async setFilterschoolyearResaultall({ commit, dispatch }, filter) {
+            try {
+                commit('FILTER_SCHOOLYEARID_RESAULTALL', filter);
+                dispatch('getpointresaultAll');
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        async setFilterclassroomResaultall({ commit, dispatch }, filter) {
+            try {
+                commit('FILTER_CLASSROOMID_RESAULTALL', filter);
+                dispatch('getpointresaultAll');
+            } catch (error) {
+                console.error(error)
+            }
+        },
+
     },
     //MUTATIONS DÙNG ĐỂ THAO TÁC(thay doi trang thai state) VỚI STATE TRONG STORE
     mutations: {
@@ -243,6 +272,14 @@ const pointModule = {
         GETSTUDENTIDPOINT(state, data) {
             try {
                 state.pointStudentId = data
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        GETPOINTRESAULTALL(state, data) {
+            try {
+                state.pointResaultAll = data
             } catch (error) {
                 console.log(error);
             }
@@ -422,6 +459,20 @@ const pointModule = {
         FILTER_CLASSROOMID_POINT(state, classroomid) {
             try {
                 state.classroomid = classroomid;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        FILTER_CLASSROOMID_RESAULTALL(state, classroomidResault) {
+            try {
+                state.classroomidResault = classroomidResault;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        FILTER_SCHOOLYEARID_RESAULTALL(state, schoolyearIdResault) {
+            try {
+                state.schoolyearIdResault = schoolyearIdResault;
             } catch (error) {
                 console.log(error);
             }

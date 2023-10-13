@@ -15,6 +15,7 @@ import conduct from './module/conduct';
 import summarise from './module/summarise';
 import assignment from "./module/assignment";
 import inform from "./module/inform";
+import statistic from "./module/statistic";
 import { createStore } from 'vuex';
 
 const store = createStore({
@@ -35,7 +36,8 @@ const store = createStore({
         conduct,
         summarise,
         assignment,
-        inform
+        inform,
+        statistic
     }
 });
 export default store;

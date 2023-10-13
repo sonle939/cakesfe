@@ -79,7 +79,7 @@
             </div>
           </div>
         </div>
-        <div class="icon_item">
+        <div class="icon_item" @click="toggleFullscreen">
           <i class="bx bx-fullscreen"></i>
         </div>
       </div>
@@ -118,6 +118,7 @@
 import { ref } from "vue";
 import { createToast } from "mosha-vue-toastify";
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import { useFullscreen } from '@vueblocks/vue-use-core'
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Navbar",
@@ -163,6 +164,12 @@ export default {
     };
     const isInform = ref(false);
     const isShowRead = ref(false);
+    //full screen
+    const imgRef = ref(null)
+    const {
+      isFullscreen,
+      toggleFullscreen
+    } = useFullscreen(imgRef)
     return {
       isshowOverlaylist,
       isInform,
@@ -175,6 +182,9 @@ export default {
       handleRead,
       toastError,
       toastSuccess,
+      imgRef,
+      isFullscreen,
+      toggleFullscreen
     };
   },
   computed: {

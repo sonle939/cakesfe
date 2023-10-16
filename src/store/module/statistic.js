@@ -4,13 +4,15 @@ const API_BASE_URL = 'https://localhost:7199/api/v2/';
 const pointModule = {
     state: {
         pointResaultAll: [],
+        pointResaultSchoolyear: [],
         loadingstatistic: false,
         classroomidResault: '677132b4-2a33-68d1-26c2-579daad24557',
         schoolyearIdResault: '17ae2be6-2c6a-5cab-3bcb-6f55ff55ddab',
     },
     getters: {
         pointResaultAll: state => state.pointResaultAll,
-        loadingstatistic: state => state.loadingstatistic
+        loadingstatistic: state => state.loadingstatistic,
+        pointResaultSchoolyear: state => state.pointResaultSchoolyear
     },
     actions: {
         async getpointresaultAll({ commit, state }) {
@@ -18,6 +20,15 @@ const pointModule = {
                 commit('SET_LOADING_POINTRESAULT')
                 const response = await axios.get(`${API_BASE_URL}Points/ResaultAll?classRoomId=${state.classroomidResault}&schoolYearId=${state.schoolyearIdResault}`)
                 commit('GETPOINTRESAULTALL', response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getpointresaultSchoolyear({ commit, state }) {
+            try {
+                commit('SET_LOADING_POINTRESAULT')
+                const response = await axios.get(`${API_BASE_URL}Points/ResaultChoolYear?schoolYearId=${state.schoolyearIdResault}`)
+                commit('GETPOINTRESAULTSCHOOLYEAR', response.data)
             } catch (error) {
                 console.log(error)
             }
@@ -57,6 +68,14 @@ const pointModule = {
         GETPOINTRESAULTALL(state, data) {
             try {
                 state.pointResaultAll = data
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
+        GETPOINTRESAULTSCHOOLYEAR(state, data) {
+            try {
+                state.pointResaultSchoolyear = data
             } catch (error) {
                 console.log(error);
             }

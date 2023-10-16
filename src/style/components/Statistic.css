@@ -12,4 +12,38 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+.overlay_chart {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.overlay_container {
+  position: absolute;
+  top: 33px;
+  right: 10px;
+  padding: 5px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border-radius: 8px;
+}
+.overlay_item {
+  padding: 5px 8px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+.overlay_item:hover {
+  background-color: #e7e7e7;
+  color: black;
+}
+.overlay_chart i {
+  font-size: 30px;
+}
+.chart_item:nth-child(2) {
+  width: 68%;
+}
+.chart_wrapper {
+  width: 500px;
+  height: 350px;
 }

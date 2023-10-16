@@ -1,5 +1,5 @@
 <template>
-  <div class="classroom">
+  <div class="assignment">
     <Navbar />
     <div
       :class="[

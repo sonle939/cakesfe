@@ -12,9 +12,39 @@
         :class="directiondiv ? 'page_content border_design' : 'page_content '"
       >
         <div class="chart_container">
-          <div class="chart_item">bieu do 1</div>
-          <div class="chart_item">bieu do 2</div>
-          <div class="chart_item">bieu do 3</div>
+          <div class="chart_item">
+            <div class="chart_wrapper">
+              <Doughnut :data="data" :options="options" ref="chart" />
+              <div class="year-switch">
+                <span
+                  @click="switchData('2022', data2022)"
+                  :class="{ active: activeYear === '2022' }"
+                  >2022</span
+                >
+                <span
+                  @click="switchData('2023', data2023)"
+                  :class="{ active: activeYear === '2023' }"
+                  >2023</span
+                >
+              </div>
+            </div>
+            <div class="overlay_chart" @click="toggleOverlay()">
+              <i class="bx bx-dots-horizontal-rounded"></i>
+            </div>
+            <div class="overlay_container" v-if="overlayShow">
+              <div
+                class="overlay_item"
+                v-for="data in schoolyear"
+                :key="data.SchoolYearId"
+                @click="toggleOverlay()"
+              >
+                {{ data.SchoolYearName }}
+              </div>
+            </div>
+          </div>
+          <div class="chart_item">
+            <div class="chartbar_wrapper"></div>
+          </div>
         </div>
         <div class="search_table">
           <div class="search_filter">
@@ -189,8 +219,11 @@ import Sidebar from "../components/Sidebar.vue";
 import { mapActions, mapGetters } from "vuex";
 import { ref } from "vue";
 import Loading from "../components/Loading.vue";
-import { format } from 'date-fns';
+import { format } from "date-fns";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Doughnut } from "vue-chartjs";
 
+ChartJS.register(ArcElement, Tooltip, Legend);
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Statistic",
@@ -199,11 +232,47 @@ export default {
     const selectedOptionclassroom = ref("Lớp 6A");
     const isOpenschoolyear = ref(false);
     const selectedOptionschoolyear = ref("2021-2022");
+    const chart = ref(null); // Define chart as a ref
+    const overlayShow = ref(false);
+    const data2022 = ref({
+      labels: ["HS giỏi", "HS khá", "HS trung bình", "HS yếu"],
+      datasets: [
+        {
+          backgroundColor: ["#22c55e", "#14b8a6", "#f97316", "#dc2626"],
+          data: [],
+        },
+      ],
+    });
+
+    const data2023 = ref({
+      labels: ["HS giỏi", "HS khá", "HS trung bình", "HS yếu"],
+      datasets: [
+        {
+          backgroundColor: ["#22c55e", "#14b8a6", "#f97316", "#dc2626"],
+          data: [],
+        },
+      ],
+    });
+
+    const data = ref(data2022.value);
+    const activeYear = ref("2022");
+    const options = ref({
+      responsive: true,
+      maintainAspectRatio: false,
+    });
+
     return {
       isOpenclassroom,
       selectedOptionclassroom,
       isOpenschoolyear,
       selectedOptionschoolyear,
+      data,
+      options,
+      activeYear,
+      chart,
+      overlayShow,
+      data2023,
+      data2022,
     };
   },
   computed: {
@@ -215,9 +284,71 @@ export default {
       "backgroundWeb",
       "directiondiv",
       "pointResaultAll",
+      "pointResaultSchoolyear",
     ]),
+    highScoreCounts() {
+      const gioiCount = this.pointResaultSchoolyear.filter(
+        (item) => item.ĐIEMCANAM >= 8.0
+      ).length;
+
+      const khaCount = this.pointResaultSchoolyear.filter(
+        (item) => item.ĐIEMCANAM > 6.5 && item.ĐIEMCANAM < 8.0
+      ).length;
+
+      const trungbinhCount = this.pointResaultSchoolyear.filter(
+        (item) => item.ĐIEMCANAM > 5.0 && item.ĐIEMCANAM < 6.5
+      ).length;
+
+      const yeuCount = this.pointResaultSchoolyear.filter(
+        (item) => item.ĐIEMCANAM < 5.0
+      ).length;
+
+      return [gioiCount, khaCount, trungbinhCount, yeuCount];
+    },
+    highScoreCounts1() {
+      const gioiCount = this.pointResaultSchoolyear.filter(
+        (item) => item.ĐIEMCANAM >= 8.0
+      ).length;
+
+      const khaCount = this.pointResaultSchoolyear.filter(
+        (item) => item.ĐIEMCANAM > 6.5 && item.ĐIEMCANAM < 8.0
+      ).length;
+
+      const trungbinhCount = this.pointResaultSchoolyear.filter(
+        (item) => item.ĐIEMCANAM > 5.0 && item.ĐIEMCANAM < 6.5
+      ).length;
+
+      const yeuCount = this.pointResaultSchoolyear.filter(
+        (item) => item.ĐIEMCANAM < 5.0
+      ).length;
+
+      return [gioiCount, khaCount, trungbinhCount, yeuCount];
+    },
+    // updatedData() {
+    //   const newData = { ...this.data };
+    //   newData.datasets[0].data = this.highScoreCounts;
+    //   return newData;
+    // },
   },
   methods: {
+    toggleOverlay() {
+      try {
+        this.overlayShow = !this.overlayShow;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    switchData(year, data) {
+      try {
+        this.data = data;
+        this.activeYear = year;
+        if (this.chart) {
+          this.chart.render();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     toggleDropdownclassroom() {
       this.isOpenclassroom = !this.isOpenclassroom;
     },
@@ -247,6 +378,13 @@ export default {
         console.log(error);
       }
     },
+    chartMouted() {
+      try {
+        this.chart.value.render();
+      } catch (error) {
+        console.log(error);
+      }
+    },
     ...mapActions([
       "getGradeclassroom",
       "getClassRoom",
@@ -255,6 +393,7 @@ export default {
       "setFilterschoolyearResaultall",
       "setFilterclassroomResaultall",
       "getpointresaultAll",
+      "getpointresaultSchoolyear",
     ]),
   },
   mounted() {
@@ -262,11 +401,48 @@ export default {
     this.getGradeclassroom();
     this.getschoolyear();
     this.getpointresaultAll();
+    this.getpointresaultSchoolyear();
+    this.chartMouted();
   },
+  watch: {
+    highScoreCounts: {
+      handler(newCounts) {
+        // Tạo một bản sao của data hiện tại
+        const newData = { ...this.data2022 };
+        // Cập nhật dữ liệu của dataset trong newData
+        newData.datasets[0].data = newCounts;
+        // Gán newData cho data
+        this.data = newData;
+      },
+      deep: true, // Đặt deep thành true nếu bạn muốn theo dõi thay đổi sâu hơn trong mảng pointResaultSchoolyear.
+    },
+    highScoreCounts1: {
+      handler(newCounts) {
+        // Tạo một bản sao của data hiện tại
+        const newData = { ...this.data2023 };
+        // Cập nhật dữ liệu của dataset trong newData
+        newData.datasets[0].data = newCounts;
+        // Gán newData cho data
+        this.data = newData;
+      },
+      deep: true, // Đặt deep thành true nếu bạn muốn theo dõi thay đổi sâu hơn trong mảng pointResaultSchoolyear.
+    },
+    // "data2022.datasets[0].data"(newData) {
+    //   if (newData.length === 0) {
+    //     this.highScoreCounts = newData; // Gán giá trị cho highScoreCounts nếu mảng rỗng
+    //   } else {
+    //     // Xử lý logic khác nếu mảng không rỗng
+    //     // Ví dụ: tính highScoreCounts từ newData
+    //     this.highScoreCounts = newData.reduce((acc, val) => acc + val, 0);
+    //   }
+    // },
+  },
+
   components: {
     Navbar,
     Sidebar,
     Loading,
+    Doughnut,
   },
 };
 </script>

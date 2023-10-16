@@ -229,7 +229,6 @@
         </div>
       </div>
     </div>
-    <FTeacher />
   </div>
 </template>
 
@@ -239,7 +238,6 @@ import Sidebar from "../components/Sidebar.vue";
 import AdminPaginnation from "../components/Paginnation/AdminPaginnation.vue";
 import { format } from "date-fns";
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import FTeacher from "../components/Form/FTeacher.vue";
 import Loading from "../components/Loading.vue";
 import VButton from "../components/Button/VButton.vue";
 import { createToast } from "mosha-vue-toastify";
@@ -316,6 +314,7 @@ export default {
       "selectedItemsfeedback",
       "getByIdFeedback",
       "backgroundWeb",
+      "directiondiv",
     ]),
     filteredHandle() {
       const keyword = this.selectedOption.toLowerCase();
@@ -403,7 +402,6 @@ export default {
     Navbar,
     Sidebar,
     AdminPaginnation,
-    FTeacher,
     Loading,
     VButton,
   },

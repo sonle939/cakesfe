@@ -198,7 +198,7 @@
                       </li>
                     </ul>
                   </div>
-                  <div class="point_conductandavg">
+                  <!-- <div class="point_conductandavg">
                     <div class="point_conduct">
                       <h3>Điểm hạnh kiểm</h3>
                       <div class="us_conductlist">
@@ -229,7 +229,7 @@
                       <h3>Điểm trung bình cả năm {{ schoolYear }}</h3>
                       <span> {{ averageOverallScore }}</span>
                     </div>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>

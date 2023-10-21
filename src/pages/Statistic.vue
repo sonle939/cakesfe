@@ -9,23 +9,59 @@
     >
       <Sidebar />
       <div
-        :class="directiondiv ? 'page_content border_design' : 'page_content '"
+        :class="
+          directiondiv
+            ? 'page_content page_hidden border_design'
+            : 'page_content page_hidden'
+        "
       >
+        <div class="amount_statistical">
+          <div class="amount_item">
+            <div class="amount_number">
+              <h3>Học sinh</h3>
+              <b>{{ studentAll.length }}</b>
+            </div>
+            <div class="amount_image">
+              <img src="../assets/studenticon.png" alt="" />
+            </div>
+          </div>
+          <div class="amount_item">
+            <div class="amount_number">
+              <h3>Giáo viên</h3>
+              <b>{{ teacherAll.length }}</b>
+            </div>
+            <div class="amount_image">
+              <img src="../assets/teachericon.png" alt="" />
+            </div>
+          </div>
+          <div class="amount_item">
+            <div class="amount_number">
+              <h3>Lớp học</h3>
+              <b>{{ classroom.length }}</b>
+            </div>
+            <div class="amount_image">
+              <img src="../assets/classroomicon.png" alt="" />
+            </div>
+          </div>
+          <div class="amount_item">
+            <div class="amount_number">
+              <h3>Môn học</h3>
+              <b>{{ subject.length }}</b>
+            </div>
+            <div class="amount_image">
+              <img src="../assets/accounticon.png" alt="" />
+            </div>
+          </div>
+        </div>
         <div class="chart_container">
           <div class="chart_item">
             <div class="chart_wrapper">
               <Doughnut :data="data" :options="options" ref="chart" />
-              <div class="year-switch">
-                <span
-                  @click="switchData('2022', data2022)"
-                  :class="{ active: activeYear === '2022' }"
-                  >2022</span
-                >
-                <span
-                  @click="switchData('2023', data2023)"
-                  :class="{ active: activeYear === '2023' }"
-                  >2023</span
-                >
+              <div
+                class="year-switch"
+                style="width: 100%; text-align: center; font-weight: 700"
+              >
+                Tổng số lượng danh hiệu học sinh theo năm học
               </div>
             </div>
             <div class="overlay_chart" @click="toggleOverlay()">
@@ -36,14 +72,21 @@
                 class="overlay_item"
                 v-for="data in schoolyear"
                 :key="data.SchoolYearId"
-                @click="toggleOverlay()"
+                @click="
+                  toggleOverlay();
+                  setFilterschoolyearResaultall(data.SchoolYearId);
+                "
               >
                 {{ data.SchoolYearName }}
               </div>
             </div>
           </div>
           <div class="chart_item">
-            <div class="chartbar_wrapper"></div>
+            <BarMultuipVue />
+          </div>
+          <div class="chart_item">
+            <ChartPolarAreaVue />
+            <p>Số lượng học sinh của các lớp</p>
           </div>
         </div>
         <div class="search_table">
@@ -220,10 +263,29 @@ import { mapActions, mapGetters } from "vuex";
 import { ref } from "vue";
 import Loading from "../components/Loading.vue";
 import { format } from "date-fns";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  Title,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from "chart.js";
 import { Doughnut } from "vue-chartjs";
+import BarMultuipVue from "../components/chart/BarMultuip.vue";
+import ChartPolarAreaVue from "../components/chart/ChartPolarArea.vue";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  Title,
+  BarElement,
+  CategoryScale,
+  LinearScale
+);
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Statistic",
@@ -238,7 +300,12 @@ export default {
       labels: ["HS giỏi", "HS khá", "HS trung bình", "HS yếu"],
       datasets: [
         {
-          backgroundColor: ["#22c55e", "#14b8a6", "#f97316", "#dc2626"],
+          backgroundColor: [
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(255, 99, 132, 1)",
+            "dc2626",
+          ],
           data: [],
         },
       ],
@@ -248,12 +315,16 @@ export default {
       labels: ["HS giỏi", "HS khá", "HS trung bình", "HS yếu"],
       datasets: [
         {
-          backgroundColor: ["#22c55e", "#14b8a6", "#f97316", "#dc2626"],
+          backgroundColor: [
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(255, 99, 132, 0.2)",
+            "rgba(255, 99, 132, 1)",
+            "dc2626",
+          ],
           data: [],
         },
       ],
     });
-
     const data = ref(data2022.value);
     const activeYear = ref("2022");
     const options = ref({
@@ -271,8 +342,8 @@ export default {
       activeYear,
       chart,
       overlayShow,
-      data2023,
       data2022,
+      data2023,
     };
   },
   computed: {
@@ -285,6 +356,9 @@ export default {
       "directiondiv",
       "pointResaultAll",
       "pointResaultSchoolyear",
+      "studentAll",
+      "subject",
+      "teacherAll",
     ]),
     highScoreCounts() {
       const gioiCount = this.pointResaultSchoolyear.filter(
@@ -292,11 +366,11 @@ export default {
       ).length;
 
       const khaCount = this.pointResaultSchoolyear.filter(
-        (item) => item.ĐIEMCANAM > 6.5 && item.ĐIEMCANAM < 8.0
+        (item) => item.ĐIEMCANAM >= 6.5 && item.ĐIEMCANAM < 8.0
       ).length;
 
       const trungbinhCount = this.pointResaultSchoolyear.filter(
-        (item) => item.ĐIEMCANAM > 5.0 && item.ĐIEMCANAM < 6.5
+        (item) => item.ĐIEMCANAM >= 5.0 && item.ĐIEMCANAM < 6.5
       ).length;
 
       const yeuCount = this.pointResaultSchoolyear.filter(
@@ -311,11 +385,11 @@ export default {
       ).length;
 
       const khaCount = this.pointResaultSchoolyear.filter(
-        (item) => item.ĐIEMCANAM > 6.5 && item.ĐIEMCANAM < 8.0
+        (item) => item.ĐIEMCANAM >= 6.5 && item.ĐIEMCANAM < 8.0
       ).length;
 
       const trungbinhCount = this.pointResaultSchoolyear.filter(
-        (item) => item.ĐIEMCANAM > 5.0 && item.ĐIEMCANAM < 6.5
+        (item) => item.ĐIEMCANAM >= 5.0 && item.ĐIEMCANAM < 6.5
       ).length;
 
       const yeuCount = this.pointResaultSchoolyear.filter(
@@ -331,13 +405,6 @@ export default {
     // },
   },
   methods: {
-    toggleOverlay() {
-      try {
-        this.overlayShow = !this.overlayShow;
-      } catch (error) {
-        console.log(error);
-      }
-    },
     switchData(year, data) {
       try {
         this.data = data;
@@ -345,6 +412,13 @@ export default {
         if (this.chart) {
           this.chart.render();
         }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    toggleOverlay() {
+      try {
+        this.overlayShow = !this.overlayShow;
       } catch (error) {
         console.log(error);
       }
@@ -387,8 +461,11 @@ export default {
     },
     ...mapActions([
       "getGradeclassroom",
-      "getClassRoom",
       "getschoolyear",
+      "getStudentAll",
+      "getteacherAll",
+      "getClassRoom",
+      "getsubject",
       //phan trnag
       "setFilterschoolyearResaultall",
       "setFilterclassroomResaultall",
@@ -399,7 +476,10 @@ export default {
   mounted() {
     this.getClassRoom();
     this.getGradeclassroom();
+    this.getteacherAll();
+    this.getStudentAll();
     this.getschoolyear();
+    this.getsubject();
     this.getpointresaultAll();
     this.getpointresaultSchoolyear();
     this.chartMouted();
@@ -427,15 +507,6 @@ export default {
       },
       deep: true, // Đặt deep thành true nếu bạn muốn theo dõi thay đổi sâu hơn trong mảng pointResaultSchoolyear.
     },
-    // "data2022.datasets[0].data"(newData) {
-    //   if (newData.length === 0) {
-    //     this.highScoreCounts = newData; // Gán giá trị cho highScoreCounts nếu mảng rỗng
-    //   } else {
-    //     // Xử lý logic khác nếu mảng không rỗng
-    //     // Ví dụ: tính highScoreCounts từ newData
-    //     this.highScoreCounts = newData.reduce((acc, val) => acc + val, 0);
-    //   }
-    // },
   },
 
   components: {
@@ -443,6 +514,8 @@ export default {
     Sidebar,
     Loading,
     Doughnut,
+    BarMultuipVue,
+    ChartPolarAreaVue,
   },
 };
 </script>

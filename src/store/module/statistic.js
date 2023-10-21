@@ -5,13 +5,16 @@ const pointModule = {
     state: {
         pointResaultAll: [],
         pointResaultSchoolyear: [],
+        pointBarMultip: [],
         loadingstatistic: false,
         classroomidResault: '677132b4-2a33-68d1-26c2-579daad24557',
         schoolyearIdResault: '17ae2be6-2c6a-5cab-3bcb-6f55ff55ddab',
+        barschoolyear: '17ae2be6-2c6a-5cab-3bcb-6f55ff55ddab'
     },
     getters: {
         pointResaultAll: state => state.pointResaultAll,
         loadingstatistic: state => state.loadingstatistic,
+        pointBarMultip: state => state.pointBarMultip,
         pointResaultSchoolyear: state => state.pointResaultSchoolyear
     },
     actions: {
@@ -26,9 +29,16 @@ const pointModule = {
         },
         async getpointresaultSchoolyear({ commit, state }) {
             try {
-                commit('SET_LOADING_POINTRESAULT')
                 const response = await axios.get(`${API_BASE_URL}Points/ResaultChoolYear?schoolYearId=${state.schoolyearIdResault}`)
                 commit('GETPOINTRESAULTSCHOOLYEAR', response.data)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+        async getpointbarmultip({ commit, state }) {
+            try {
+                const response = await axios.get(`${API_BASE_URL}Points/BarMultip?schoolYearId=${state.barschoolyear}`)
+                commit('GETPOINTBAR', response.data)
             } catch (error) {
                 console.log(error)
             }
@@ -36,7 +46,15 @@ const pointModule = {
         async setFilterschoolyearResaultall({ commit, dispatch }, filter) {
             try {
                 commit('FILTER_SCHOOLYEARID_RESAULTALL', filter);
-                dispatch('getpointresaultAll');
+                dispatch('getpointresaultSchoolyear');
+            } catch (error) {
+                console.error(error)
+            }
+        },
+        async setFilterbarschoolyear({ commit, dispatch }, filter) {
+            try {
+                commit('FILTER_SCHOOLYEARID_BAR', filter);
+                dispatch('getpointbarmultip');
             } catch (error) {
                 console.error(error)
             }
@@ -44,7 +62,7 @@ const pointModule = {
         async setFilterclassroomResaultall({ commit, dispatch }, filter) {
             try {
                 commit('FILTER_CLASSROOMID_RESAULTALL', filter);
-                dispatch('getpointresaultAll');
+                dispatch('getpointresaultSchoolyear');
             } catch (error) {
                 console.error(error)
             }
@@ -73,6 +91,14 @@ const pointModule = {
             }
 
         },
+        GETPOINTBAR(state, data) {
+            try {
+                state.pointBarMultip = data
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
         GETPOINTRESAULTSCHOOLYEAR(state, data) {
             try {
                 state.pointResaultSchoolyear = data
@@ -91,6 +117,13 @@ const pointModule = {
         FILTER_SCHOOLYEARID_RESAULTALL(state, schoolyearIdResault) {
             try {
                 state.schoolyearIdResault = schoolyearIdResault;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        FILTER_SCHOOLYEARID_BAR(state, barschoolyear) {
+            try {
+                state.barschoolyear = barschoolyear;
             } catch (error) {
                 console.log(error);
             }

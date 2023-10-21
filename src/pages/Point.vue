@@ -11,7 +11,7 @@
       <div
         :class="directiondiv ? 'page_content border_design' : 'page_content '"
       >
-        <HeaderContent text="Quản lý bảng điểm" :showform="modeFormInsert" />
+        <HeaderContent text="Quản lý bảng điểm" :showform="authenClickInsert" />
         <div class="search_table">
           <div class="search_filter">
             <div class="dropdown_wrapper">
@@ -307,7 +307,7 @@
                     <div class="control_table">
                       <span
                         content="Cập nhật"
-                        @click="modeFormUpdate(data)"
+                        @click="authenClickUpdate(data)"
                         v-tippy="{ arrow: true, arrowType: 'round' }"
                       >
                         <i class="bx bxs-pencil"></i>

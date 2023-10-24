@@ -49,7 +49,7 @@
               <b>{{ subject.length }}</b>
             </div>
             <div class="amount_image">
-              <img src="../assets/accounticon.png" alt="" />
+              <img src="../assets/subjecticon.png" alt="" />
             </div>
           </div>
         </div>

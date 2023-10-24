@@ -233,8 +233,8 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_ACCOUNT" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu" />
-          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+          <VButton text="Cất"  @click="build = true" class="btn_phu" />
+          <VButton type="submit"  @click="build = false" class="ml-8" text="Cất và thêm" />
         </div>
       </div>
     </form>
@@ -458,8 +458,7 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_ACCOUNT" />
         <div class="btn_wp">
-          <VButton text="Cất" @click="this.toastUpdate()" class="btn_phu" />
-          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+          <VButton text="Cập nhật" @click="this.toastUpdate();" />
         </div>
       </div>
     </form>
@@ -506,7 +505,7 @@ export default {
         },
         {
           type: "success",
-          timeout: 5000,
+          timeout: 2000,
           transition: "bounce",
           showIcon: "true",
         }
@@ -520,7 +519,7 @@ export default {
         },
         {
           type: "warning",
-          timeout: 5000,
+          timeout: 2000,
           transition: "bounce",
           showIcon: "true",
         }
@@ -807,7 +806,10 @@ export default {
           this.selectedOption = null;
           this.selectedOptionstudent = null;
           this.selectedOptionteacher = null;
-          this.SHOW_FORM_ACCOUNT();
+          if(this.build === true){
+              this.SHOW_FORM_ACCOUNT();
+              this.formData = { AccountCode: this.accountmaxcode };
+          }
           this.checkForm = false;
           return false;
         }

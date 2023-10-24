@@ -25,7 +25,7 @@
     >
       <div class="info_title">
         <div class="title_left">
-          <h1>Thêm mới học kỳ</h1>
+          <h1>Thêm mới Khối lớp</h1>
         </div>
         <div class="title_close">
           <i class="bx bx-help-circle"></i>
@@ -34,20 +34,20 @@
       </div>
       <div class="info_property">
         <label class="slabel"
-          >Mã học kỳ
+          >Mã khối lớp
           <input
             type="text"
             class="sinput"
-            placeholder="mã học kỳ"
+            placeholder="mã khối lớp"
             v-model="formData.GradeCode"
           />
         </label>
         <label class="slabel"
-          >Tên học kỳ
+          >Tên khối lớp
           <input
             type="text"
             class="sinput"
-            placeholder="tên học kì"
+            placeholder="tên khối lớp"
             v-model="formData.GradeName"
           />
         </label>
@@ -55,10 +55,10 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_GRADE" />
         <div class="btn_wp">
-          <VButton text="Cất" @click="build = false" class="btn_phu" />
+          <VButton text="Cất" @click="build = true" class="btn_phu" />
           <VButton
             type="submit"
-            @click="build = true"
+            @click="build = false"
             class="ml-8"
             text="Cất và thêm"
           />
@@ -73,7 +73,7 @@
     >
       <div class="info_title">
         <div class="title_left">
-          <h1>Cập nhật học kỳ</h1>
+          <h1>Cập nhật khối lớp</h1>
         </div>
         <div class="title_close">
           <i class="bx bx-help-circle"></i>
@@ -82,20 +82,20 @@
       </div>
       <div class="info_property">
         <label class="slabel"
-          >Mã học kỳ
+          >Mã khối lớp
           <input
             type="text"
             class="sinput"
-            placeholder="mã học kỳ"
+            placeholder="mã khối lớp"
             v-model="getByIdgrade.GradeCode"
           />
         </label>
         <label class="slabel"
-          >Tên học kỳ
+          >Tên khối lớp
           <input
             type="text"
             class="sinput"
-            placeholder="tên học kì"
+            placeholder="tên khối lớp"
             v-model="getByIdgrade.GradeName"
           />
         </label>
@@ -103,7 +103,7 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_GRADE" />
         <div class="btn_wp">
-          <VButton type="submit" class="ml-8" text="Cập nhât dữ liệu" />
+          <VButton type="submit" class="ml-8" text="Cập nhât" />
         </div>
       </div>
     </form>
@@ -287,8 +287,9 @@ export default {
           // reset formData
 
           this.formData = { GradeCode: this.grademaxcode };
-          if (this.build === false) {
+          if (this.build === true) {
             this.SHOW_FORM_GRADE();
+            this.formData = { GradeCode: this.grademaxcode };
           }
           this.toast();
           this.checkForm = false;

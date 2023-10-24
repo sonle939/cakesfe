@@ -61,7 +61,7 @@
           </div>
           <div
             :class="loadinggrade ? 'table-wrapper active' : 'table-wrapper'"
-            style="height: auto"
+            style="height: 750px; width: 100%"
           >
             <table style="width: 100%; height: auto">
               <thead>
@@ -131,7 +131,7 @@
               <img src="../assets/nodata.svg" alt="" />
               <h3>Không có dữ liệu</h3>
             </div>
-            <Loading v-show="loadinggrade" style="margin-top: -385px" />
+            <Loading v-show="loadinggrade" />
           </div>
         </div>
       </div>

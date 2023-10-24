@@ -177,7 +177,7 @@
                 >
                   <div class="point_container">
                     <div class="point_schoolyear">
-                      <i class="bx bxl-gitlab bx-spin"></i>
+                      <i class='bx bxs-color bx-spin bx-flip-vertical' ></i>
                       <p>Năm học: {{ schoolYear }}</p>
                     </div>
                     <ul>
@@ -198,38 +198,44 @@
                       </li>
                     </ul>
                   </div>
-                  <!-- <div class="point_conductandavg">
+                  <div class="point_conductandavg">
                     <div class="point_conduct">
                       <h3>Điểm hạnh kiểm</h3>
                       <div class="us_conductlist">
                         <div
-                          v-for="(conductData,index) in filteredConduct(schoolYear)"
+                          v-for="(conductData, index) in filteredConduct(
+                            schoolYear
+                          )"
                           :key="index"
                         >
                           <span>{{ conductData.Hanhkiemki1 }}</span>
                           <p>Hạnh kiểm kì 1</p>
                         </div>
                         <div
-                          v-for="(conductData,index)  in filteredConduct(schoolYear)"
+                          v-for="(conductData, index) in filteredConduct(
+                            schoolYear
+                          )"
                           :key="index"
                         >
                           <span>{{ conductData.Hanhkiemki2 }}</span>
                           <p>Hạnh kiểm kì 2</p>
                         </div>
                         <div
-                          v-for="(conductData,index)  in filteredConduct(schoolYear)"
+                          v-for="(conductData, index) in filteredConduct(
+                            schoolYear
+                          )"
                           :key="index"
                         >
-                          <span>{{ conductData.ConductGradeALL }}</span>
+                          <span>{{ conductData.HanhkiemCanam }}</span>
                           <p>Hạnh kiểm cả năm</p>
                         </div>
                       </div>
                     </div>
                     <div class="pointavgyear">
                       <h3>Điểm trung bình cả năm {{ schoolYear }}</h3>
-                      <span> {{ averageOverallScore }}</span>
+                      <span> {{ averageOverallScore(schoolYear) }}</span>
                     </div>
-                  </div> -->
+                  </div>
                 </div>
               </div>
             </div>
@@ -558,6 +564,7 @@ export default {
       "conductgetstudentid",
       "feedbackmaxcode",
       "feedback",
+      "schoolyear",
     ]),
     filteredDataT2() {
       // Thay thế 'dataList' bằng tên biến chứa dữ liệu của bạn
@@ -622,23 +629,28 @@ export default {
         FeedbackCode: this.feedbackmaxcode,
       });
     },
-    averageOverallScore() {
-      if (this.pointStudentId.length === 0) {
-        return 0; // Trường hợp mảng rỗng hoặc không tồn tại dữ liệu
+  },
+  methods: {
+    averageOverallScore(year) {
+      // Lọc ra danh sách điểm của năm học cần tính điểm trung bình
+      const filteredPoints = this.pointStudentId.filter(
+        (student) => student.SchoolYearName === year
+      );
+
+      if (filteredPoints.length === 0) {
+        return 0; // Trường hợp không có dữ liệu cho năm học cụ thể
       }
 
-      // Sử dụng reduce để tính tổng của tất cả ĐTBMONCANAM
-      const totalScore = this.pointStudentId.reduce((acc, student) => {
+      // Sử dụng reduce để tính tổng của tất cả ĐTBMONCANAM trong năm học cụ thể
+      const totalScore = filteredPoints.reduce((acc, student) => {
         return acc + student.ĐTBMONCANAM;
       }, 0);
 
-      // Tính điểm trung bình cộng
-      const averageScore = totalScore / this.pointStudentId.length;
+      // Tính điểm trung bình cộng cho năm học cụ thể
+      const averageScore = totalScore / filteredPoints.length;
 
       return averageScore.toFixed(1);
     },
-  },
-  methods: {
     filteredSubjects(schoolYear) {
       // Filter subjects based on the selected school year
       return this.pointStudentId.filter(
@@ -659,6 +671,7 @@ export default {
       "getMaxCodefeedback",
       "getFeedback",
       "pointStudentId",
+      "getschoolyear",
     ]),
     validateFormUpdate() {
       try {
@@ -760,6 +773,7 @@ export default {
     //this.getstudent();
     this.loadUserDataFromSessionStorage();
     this.getMaxCodefeedback();
+    this.getschoolyear();
   },
   watch: {
     idloginstudent(newVal) {

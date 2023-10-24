@@ -60,7 +60,7 @@
           </div>
           <div
             :class="loadingsemester ? 'table-wrapper active' : 'table-wrapper'"
-            style="height: auto"
+            style="height: 750px; width: 100%"
           >
             <table style="width: 100%; height: auto">
               <thead>
@@ -130,7 +130,7 @@
               <img src="../assets/nodata.svg" alt="" />
               <h3>Không có dữ liệu</h3>
             </div>
-            <Loading v-show="loadingsemester" style="margin-top: -430px" />
+            <Loading v-show="loadingsemester" />
           </div>
         </div>
       </div>

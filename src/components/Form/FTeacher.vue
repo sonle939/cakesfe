@@ -245,8 +245,8 @@
       <div class="info_btn" style="margin-bottom: 20px">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_TEACHER" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu" />
-          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+          <VButton text="Cất" class="btn_phu"  @click="build = true"/>
+          <VButton type="submit" class="ml-8" text="Cất và thêm"  @click="build = false"/>
         </div>
       </div>
     </form>
@@ -490,8 +490,7 @@
       <div class="info_btn" style="margin-bottom: 20px">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_TEACHER" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu" />
-          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+          <VButton text="Cập nhật" type="submit"/>
         </div>
       </div>
     </form>
@@ -824,7 +823,10 @@ export default {
           this.toast();
           this.selectedOptionsCollaborate = null;
           this.selectedOptionsStandard = null;
-          this.SHOW_FORM_TEACHER();
+          if(this.build === true){
+            this.SHOW_FORM_TEACHER();
+            this.formData = { TeacherCode: this.teachermaxcode };
+          }
           this.checkForm = false;
           return false;
         }

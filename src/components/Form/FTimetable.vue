@@ -223,14 +223,7 @@
         </label>
         <label class="slabel" @click="toggleDropdownteacher">
           Thông tin giáo viên
-          <div
-            :class="
-              selectedOptionclassroom === '' && selectedOptionsubject === ''
-                ? 'dropdown event_click'
-                : 'dropdown'
-            "
-            style="margin-top: 8px"
-          >
+          <div class="dropdown" style="margin-top: 8px">
             <input
               type="text"
               v-model="selectedOptionteacher"
@@ -261,8 +254,8 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_TIMETABLE" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu" />
-          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+          <VButton text="Cất" class="btn_phu"  @click="build = true"/>
+          <VButton type="submit" class="ml-8" text="Cất và thêm"  @click="build = false"/>
         </div>
       </div>
     </form>
@@ -509,8 +502,7 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_TIMETABLE" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu" />
-          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+          <VButton text="Cập nhật" type="submit" />
         </div>
       </div>
     </form>
@@ -652,33 +644,67 @@ export default {
         return []; // Trả về một mảng rỗng nếu không có buổi học nào được chọn hoặc buổi học không tồn tại
       }
     },
+    // filteredTeacher() {
+    //   if (this.selectedOptionteacher) {
+    //     const teacherKeyword = this.selectedOptionteacher.toLowerCase();
+    //     return this.teachertimetable.filter(
+    //       (data) =>
+    //         data.TeacherName &&
+    //         data.TeacherName.toLowerCase().includes(teacherKeyword)
+    //     );
+    //   } else if (this.selectedOptionsubject) {
+    //     const subjectKeyword = this.selectedOptionsubject.toLowerCase();
+    //     return this.teachertimetable.filter(
+    //       (data) =>
+    //         data.SubjectName &&
+    //         data.SubjectName.toLowerCase().includes(subjectKeyword)
+    //     );
+    //   } else {
+    //     // Trả về toàn bộ danh sách sinh viên nếu cả hai selectedOptionteacher và selectedOptionsubject đều là null
+    //     return this.teachertimetable;
+    //   }
+    // },
     filteredTeacher() {
+      const teacherNames = new Set();
+
       if (this.selectedOptionteacher) {
         const teacherKeyword = this.selectedOptionteacher.toLowerCase();
-        return this.teachertimetable.filter(
-          (data) =>
+        return this.assignmentAll.filter((data) => {
+          if (
             data.TeacherName &&
-            data.TeacherName.toLowerCase().includes(teacherKeyword)
-        );
+            data.TeacherName.toLowerCase().includes(teacherKeyword) &&
+            !teacherNames.has(data.TeacherName)
+          ) {
+            teacherNames.add(data.TeacherName);
+            return true;
+          }
+          return false;
+        });
       } else if (this.selectedOptionsubject && this.selectedOptionclassroom) {
         const subjectKeyword = this.selectedOptionsubject.toLowerCase();
-        const classroomKeyword = this.selectedOptionclassroom.toLowerCase();
-        return this.teachertimetable.filter(
-          (data) =>
+        const teacherKeyword = this.selectedOptionclassroom.toLowerCase();
+        return this.assignmentAll.filter((data) => {
+          if (
             data.SubjectName &&
             data.ClassRoomName &&
             data.SubjectName.toLowerCase().includes(subjectKeyword) &&
-            data.ClassRoomName.toLowerCase().includes(classroomKeyword)
-        );
+            data.ClassRoomName.toLowerCase().includes(teacherKeyword) &&
+            !teacherNames.has(data.TeacherName)
+          ) {
+            teacherNames.add(data.TeacherName);
+            return true;
+          }
+          return false;
+        });
       } else {
-        // Trả về toàn bộ danh sách sinh viên nếu cả hai selectedOptionteacher và selectedOptionsubject đều là null
-        return this.teachertimetable;
+        // Trả về toàn bộ danh sách nhiệm vụ (assignments) nếu cả hai selectedOptionteacher và selectedOptionsubject đều là null
+        return this.assignmentAll;
       }
     },
     filteredTeacherUpdate() {
       if (this.getByIdtimetable.TeacherName) {
         const teacherKeyword = this.getByIdtimetable.TeacherName.toLowerCase();
-        return this.teachertimetable.filter(
+        return this.filterAssignment.filter(
           (data) =>
             data.TeacherName &&
             data.TeacherName.toLowerCase().includes(teacherKeyword)
@@ -690,7 +716,7 @@ export default {
         const subjectKeyword = this.getByIdtimetable.SubjectName.toLowerCase();
         const classroomKeyword =
           this.getByIdtimetable.ClassRoomName.toLowerCase();
-        return this.teachertimetable.filter(
+        return this.filterAssignment.filter(
           (data) =>
             data.SubjectName &&
             data.ClassRoomName &&
@@ -699,7 +725,7 @@ export default {
         );
       } else {
         // Trả về toàn bộ danh sách sinh viên nếu cả hai selectedOptionteacher và selectedOptionsubject đều là null
-        return this.teachertimetable;
+        return this.filterAssignment;
       }
     },
     filterTimeEnd() {
@@ -788,6 +814,16 @@ export default {
       } else {
         return this.classroomtimetable;
       }
+    },
+    filterAssignment() {
+      const teacherNames = new Set();
+      return this.assignmentAll.filter((item) => {
+        if (!teacherNames.has(item.TeacherName)) {
+          teacherNames.add(item.TeacherName);
+          return true;
+        }
+        return false;
+      });
     },
     ...mapGetters([
       "subjecttimetable",
@@ -1021,7 +1057,11 @@ export default {
           this.selectedOptiondaylearn = "";
           this.selectedOptionlearntype = "";
           this.selectedOptiontimestart = "";
-          this.SHOW_FORM_TIMETABLE();
+          if (this.build === true) {
+            this.SHOW_FORM_TIMETABLE();
+            this.formData = { TimeTableCode: this.timetablemaxcode };
+          }
+
           this.toast();
           this.checkForm = false;
           return false;

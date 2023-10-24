@@ -103,13 +103,7 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_SUBJECT" />
         <div class="btn_wp">
-          <VButton text="Cất" @click="build = true" class="btn_phu" />
-          <VButton
-            type="submit"
-            @click="build = true"
-            class="ml-8"
-            text="Cất và thêm"
-          />
+          <VButton text="Cập nhật" type="submit" />
         </div>
       </div>
     </form>
@@ -298,7 +292,11 @@ export default {
           // reset formData
           this.formData = { SubjectCode: this.subjectmaxCode };
           this.toast();
-          this.SHOW_FORM_SUBJECT();
+          if (this.build === true) {
+            this.SHOW_FORM_SUBJECT();
+            this.formData = { SubjectCode: this.subjectmaxCode };
+          }
+
           this.checkForm = false;
           return false;
         }

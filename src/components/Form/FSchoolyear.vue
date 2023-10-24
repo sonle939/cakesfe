@@ -55,8 +55,13 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_SCHOOLYEAR" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu" />
-          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+          <VButton text="Cất" class="btn_phu" @click="build = true" />
+          <VButton
+            type="submit"
+            class="ml-8"
+            text="Cất và thêm"
+            @click="build = false"
+          />
         </div>
       </div>
     </form>
@@ -98,8 +103,7 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_SCHOOLYEAR" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu" />
-          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+          <VButton text="Cập nhật" type="submit" />
         </div>
       </div>
     </form>
@@ -284,7 +288,10 @@ export default {
           });
           // reset formData
           this.formData = { SchoolYearCode: this.schoolyearmaxcode };
-          this.SHOW_FORM_SCHOOLYEAR();
+          if (this.build === true) {
+            this.formData = { SchoolYearCode: this.schoolyearmaxcode };
+            this.SHOW_FORM_SCHOOLYEAR();
+          }
           this.toast();
           this.checkForm = false;
           return false;

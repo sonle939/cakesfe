@@ -59,12 +59,12 @@ export default {
           {
             label: "Số lượng học sinh của các lớp",
             backgroundColor: [
-              "#f87979",
-              "#8463c5",
-              "#f2994b",
-              "#f2c14b",
-              "#68b3c8",
-              "#68a5db",
+              "rgba(75, 192, 192, 0.5)", // Đậm hơn một chút
+              "rgba(255, 99, 132, 0.2)",
+              "rgba(54, 162, 235, 0.2)",
+              "rgba(255, 206, 86, 0.2)",
+              "rgba(100, 200, 10, 0.5)", // Đậm hơn một chút
+              "rgba(153, 102, 255, 0.2)",
             ],
             data: this.AmountStudent,
           },

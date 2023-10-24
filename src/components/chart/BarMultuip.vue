@@ -226,8 +226,8 @@ export default {
           {
             label: "Học sinh Trung bình",
             data: this.CountTrungbinh, // Sử dụng CountTrungbinh để cập nhật dữ liệu
-            backgroundColor: "#000",
-            borderColor: "rgba(255, 99, 132, 1)",
+            backgroundColor: "rgba(100, 200, 10, 0.5)",
+            borderColor: "rgba(100, 200, 10, 0.5)",
             borderWidth: 1,
           },
           {

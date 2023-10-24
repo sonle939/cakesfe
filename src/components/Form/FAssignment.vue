@@ -102,8 +102,13 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_ASSIGNMENT" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu" />
-          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+          <VButton text="Cất" @click="build = true" class="btn_phu" />
+          <VButton
+            type="submit"
+            @click="build = false"
+            class="ml-8"
+            text="Cất và thêm"
+          />
         </div>
       </div>
     </form>
@@ -198,8 +203,7 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_ASSIGNMENT" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu" />
-          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+          <VButton text="Câp nhật " type="submit" />
         </div>
       </div>
     </form>
@@ -457,7 +461,11 @@ export default {
           this.formData = { AssignmentCode: this.assignmentmaxcode };
           this.selectedOption = null;
           this.selectedOptionTeacher = null;
-          this.SHOW_FORM_ASSIGNMENT();
+          if (this.build === true) {
+            this.formData = { AssignmentCode: this.assignmentmaxcode };
+            this.SHOW_FORM_ASSIGNMENT();
+          }
+
           this.toast();
           this.checkForm = false;
           return false;

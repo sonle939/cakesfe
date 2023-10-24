@@ -222,8 +222,13 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_CONDUCT" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu" />
-          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+          <VButton text="Cất" class="btn_phu" @click="build = true" />
+          <VButton
+            type="submit"
+            class="ml-8"
+            text="Cất và thêm"
+            @click="build = false"
+          />
         </div>
       </div>
     </form>
@@ -440,8 +445,7 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_CONDUCT" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu" />
-          <VButton type="submit" class="ml-8" text="Cất và thêm" />
+          <VButton text="Cập nhật " type="submit" />
         </div>
       </div>
     </form>
@@ -787,7 +791,10 @@ export default {
           this.selectedOptionschoolyear = "";
           this.selectedOptionconductgrade = "";
           this.selectedOptionstudent = "";
-          this.SHOW_FORM_CONDUCT();
+          if (this.build === true) {
+            this.SHOW_FORM_CONDUCT();
+            this.formData = { ConductCode: this.conductmaxcode };
+          }
           this.toast();
           this.checkForm = false;
           return false;

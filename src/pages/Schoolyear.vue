@@ -62,7 +62,7 @@
             :class="
               loadingschoolyear ? 'table-wrapper active' : 'table-wrapper'
             "
-            style="height: auto"
+            style="width: 100%; height: 750px"
           >
             <table style="width: 100%; height: auto">
               <thead>
@@ -132,7 +132,7 @@
               <img src="../assets/nodata.svg" alt="" />
               <h3>Không có dữ liệu</h3>
             </div>
-            <Loading v-show="loadingschoolyear" style="margin-top: -370px" />
+            <Loading v-show="loadingschoolyear" />
           </div>
         </div>
       </div>

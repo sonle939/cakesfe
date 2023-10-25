@@ -85,7 +85,8 @@
       </div>
       <div class="right_image" @click="handleShow()">
         <div class="image_user">
-          <img src="../assets/avt.jpg" alt="" />
+          <p>{{ nameTea }}</p>
+          <p>{{ nameStu }}</p>
         </div>
         <div class="text_right">
           <h2>{{ userData.StudentName }}</h2>
@@ -118,7 +119,7 @@
 import { ref } from "vue";
 import { createToast } from "mosha-vue-toastify";
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import { useFullscreen } from '@vueblocks/vue-use-core'
+import { useFullscreen } from "@vueblocks/vue-use-core";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Navbar",
@@ -165,11 +166,8 @@ export default {
     const isInform = ref(false);
     const isShowRead = ref(false);
     //full screen
-    const imgRef = ref(null)
-    const {
-      isFullscreen,
-      toggleFullscreen
-    } = useFullscreen(imgRef)
+    const imgRef = ref(null);
+    const { isFullscreen, toggleFullscreen } = useFullscreen(imgRef);
     return {
       isshowOverlaylist,
       isInform,
@@ -184,7 +182,7 @@ export default {
       toastSuccess,
       imgRef,
       isFullscreen,
-      toggleFullscreen
+      toggleFullscreen,
     };
   },
   computed: {
@@ -197,6 +195,38 @@ export default {
     countStudentsWithFalseHandle() {
       return this.getstudentidinform.filter((student) => student.Isread === 0)
         .length;
+    },
+    nameTea() {
+      try {
+        const teacherName = this.teaadmin.TeacherName;
+        const words = teacherName.split(" ");
+
+        if (words.length >= 2) {
+          const initials = words[0][0] + words[1][0];
+          return initials;
+        } else {
+          throw new Error("Tên giáo viên không đủ dài");
+        }
+      } catch (error) {
+        console.error("Lỗi xảy ra: ", error.message);
+        return ""; // Hoặc giá trị mặc định khác tùy theo trường hợp
+      }
+    },
+    nameStu() {
+      try {
+        const teacherName = this.userData.StudentName;
+        const words = teacherName.split(" ");
+
+        if (words.length >= 2) {
+          const initials = words[0][0] + words[1][0];
+          return initials;
+        } else {
+          throw new Error("Tên học sinh không đủ dài");
+        }
+      } catch (error) {
+        console.error("Lỗi xảy ra: ", error.message);
+        return ""; // Hoặc giá trị mặc định khác tùy theo trường hợp
+      }
     },
   },
   methods: {

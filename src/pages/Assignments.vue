@@ -17,7 +17,12 @@
             <div class="search_check">
               <div class="search_list">
                 <i class="bx bx-search-alt-2"></i>
-                <input type="text" placeholder="Tìm kiếm trong danh sách" />
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm trong danh sách"
+                  v-model="valueCode"
+                  @keydown.enter="getfilterAssignment(valueCode)"
+                />
               </div>
               <div class="checked_data" v-show="trueCheckedassignment">
                 <h3>
@@ -202,6 +207,7 @@ export default {
   setup() {
     const isOpen = ref(false);
     const selectedOption = ref("");
+    const valueCode = ref("");
     const toast = () => {
       createToast(
         {
@@ -219,6 +225,7 @@ export default {
       toast,
       isOpen,
       selectedOption,
+      valueCode,
     };
   },
   computed: {
@@ -263,6 +270,7 @@ export default {
       "setSizeassignment",
       "filteridclassroomassignment",
       "filterassignmentcode",
+      "setFilterAssignmentTeacherName",
     ]),
     ...mapMutations([
       "SELECTCHECKEDASSIGNMENT",
@@ -285,6 +293,14 @@ export default {
       try {
         this.ADD_MODE_ASSIGNMENT();
         this.SHOW_FORM_ASSIGNMENT();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    getfilterAssignment(value) {
+      try {
+        this.setFilterAssignmentTeacherName(value);
+        this.valueCode = "";
       } catch (error) {
         console.log(error);
       }

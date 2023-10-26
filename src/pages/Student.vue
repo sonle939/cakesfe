@@ -8,7 +8,9 @@
       ]"
     >
       <Sidebar />
-      <div :class="directiondiv ? 'page_content border_design':'page_content '">
+      <div
+        :class="directiondiv ? 'page_content border_design' : 'page_content '"
+      >
         <HeaderContent text="Quản lý học sinh" :showform="authenClickInsert" />
         <div class="search_table">
           <div class="search_filter">
@@ -18,8 +20,8 @@
                 <input
                   type="text"
                   placeholder="Tìm kiếm trong danh sách"
-                  v-model="searchtext"
-                  @keydown.enter="setFilterstudentcodestudent(searchtext)"
+                  v-model="valueCode"
+                  @keydown.enter="getfilterEmployeeCode(valueCode)"
                 />
               </div>
               <div class="checked_data" v-show="trueCheckedstudent">
@@ -290,9 +292,13 @@ export default {
     const isOpen = ref(false);
     const teaadmin = ref([]);
     const isDisabled = ref(false);
+    const regex = /^[A-Z a-z 0-9]+-\d{0,9}$/;
+    const valueCode = ref("");
     return {
       toast,
       isOpen,
+      regex,
+      valueCode,
       selectedOption,
       searchtext,
       teaadmin,
@@ -312,6 +318,19 @@ export default {
     VButton,
   },
   methods: {
+    getfilterEmployeeCode(value) {
+      try {
+        if (value.match(/^[0-9]+$/) || this.regex.test(value)) {
+          this.setFilterstudentcodestudent(value);
+          this.valueCode = "";
+        } else {
+          this.setFilterStudentName(value);
+          this.valueCode = "";
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     toggleDropdown() {
       this.isOpen = !this.isOpen;
     },
@@ -362,6 +381,7 @@ export default {
       "deleteMultiplestudent",
       "deletestudent",
       "exportExcelStudent",
+      "setFilterStudentName",
     ]),
     formattedDate(data) {
       return format(new Date(data), "dd/MM/yyyy");

@@ -21,6 +21,7 @@ const studentModule = {
         pageNumberstudent: 1, // số trang đang hiển thị
         classroomId: '',
         studentCode: '',
+        studentName: '',
         totalRecordsstudent: 1,
         totalPagesstudent: null,
         //ket thuc khai bao bien phan trang
@@ -57,7 +58,7 @@ const studentModule = {
             try {
                 commit('SET_LOADING_STUDENT')
                 const res = await
-                    axios.get(`${API_BASE_URL}Students/Paging?pageSize=${state.pageSizestudent}&pageNumber=${state.pageNumberstudent}&recordId=${state.classroomId}&recordCode=${state.studentCode}`)
+                    axios.get(`${API_BASE_URL}Students/Paging?pageSize=${state.pageSizestudent}&pageNumber=${state.pageNumberstudent}&recordId=${state.classroomId}&recordCode=${state.studentCode}&recordName=${state.studentName}`)
                 commit('SET_STUDENT', res.data.data)
                 commit('SET_TOTAL_PAGES_STUDENT', res.data.totalRecords)
                 commit('SET_ALLPAGE_STUDENT', res.data.totalPages);
@@ -211,10 +212,26 @@ const studentModule = {
             }
 
         },
+        async setFilterStudentName({ commit, dispatch }, name) {
+            try {
+                commit('SET_FILTER_STUDENTNAME', name);
+                dispatch('getstudent');
+            } catch (error) {
+                console.error(error)
+            }
+        },
 
     },
     //MUTATIONS DÙNG ĐỂ THAO TÁC(thay doi trang thai state) VỚI STATE TRONG STORE
     mutations: {
+        SET_FILTER_STUDENTNAME(state, studentName) {
+            try {
+                state.studentName = studentName
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
         GETBYIDSTUDENT(state, data) {
             try {
                 state.getByIdstudent = data

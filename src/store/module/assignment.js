@@ -20,6 +20,7 @@ const assignmentModule = {
         pageNumberassignment: 1, // số trang đang hiển thị
         classroomId: '',
         assignmentCode: '',
+        teacherName: '',
         totalRecordsassignment: 1,
         totalPagesassignment: null,
     },
@@ -52,7 +53,7 @@ const assignmentModule = {
             try {
                 commit('SET_LOADING_ASSIGNMENT')
                 const res = await
-                    axios.get(`${API_BASE_URL}Assignments/Paging?pageSize=${state.pageSizeassignment}&pageNumber=${state.pageNumberassignment}&recordId=${state.classroomId}&recordCode=${state.assignmentCode}`)
+                    axios.get(`${API_BASE_URL}Assignments/Paging?pageSize=${state.pageSizeassignment}&pageNumber=${state.pageNumberassignment}&recordId=${state.classroomId}&recordCode=${state.assignmentCode}&recordName=${state.teacherName}`)
                 commit('SET_ASSIGNMENT', res.data.data)
                 commit('SET_TOTAL_PAGES_ASSIGNMENT', res.data.totalRecords)
                 commit('SET_ALLPAGE_ASSIGNMENT', res.data.totalPages);
@@ -197,9 +198,25 @@ const assignmentModule = {
             }
 
         },
+        async setFilterAssignmentTeacherName({ commit, dispatch }, name) {
+            try {
+                commit('FILTER__ASIGNMENT_TEACHERNAME', name);
+                dispatch('getAssignment');
+            } catch (error) {
+                console.error(error)
+            }
+        },
     },
     //MUTATIONS DÙNG ĐỂ THAO TÁC(thay doi trang thai state) VỚI STATE TRONG STORE
     mutations: {
+        FILTER__ASIGNMENT_TEACHERNAME(state, teacherName) {
+            try {
+                state.teacherName = teacherName
+            } catch (error) {
+                console.log(error);
+            }
+
+        },
         getByIdAssignment(state, data) {
             try {
                 state.getByIdAssignment = data

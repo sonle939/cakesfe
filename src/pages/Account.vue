@@ -21,7 +21,7 @@
                   type="text"
                   placeholder="Tìm kiếm trong danh sách"
                   v-model="searchCode"
-                  @keydown.enter="setFilteraccountcode(searchCode)"
+                  @keydown.enter="getfilterAccountCode(searchCode)"
                 />
               </div>
               <div class="checked_data" v-show="trueChecked">
@@ -359,6 +359,14 @@ export default {
       try {
         this.ADD_MODE_ACCOUNT();
         this.SHOW_FORM_ACCOUNT();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    getfilterAccountCode(value) {
+      try {
+        this.setFilteraccountcode(value);
+        this.searchCode = "";
       } catch (error) {
         console.log(error);
       }

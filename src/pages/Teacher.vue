@@ -20,8 +20,8 @@
                 <input
                   type="text"
                   placeholder="Tìm kiếm trong danh sách"
-                  v-model="searchText"
-                  @keydown.enter="filterteachercode(searchText)"
+                  v-model="valueCode"
+                  @keydown.enter="getfilterTeacherCode(valueCode)"
                 />
               </div>
               <div class="checked_data" v-show="trueCheckedteacher">
@@ -273,11 +273,15 @@ export default {
     const selectedOption = ref("");
     const searchText = ref("");
     const isOpen = ref(false);
+    const regex = /^[A-Z a-z 0-9]+-\d{0,9}$/;
+    const valueCode = ref("");
     return {
       toast,
       isOpen,
       selectedOption,
       searchText,
+      regex,
+      valueCode,
     };
   },
   computed: {
@@ -338,6 +342,7 @@ export default {
       "getsubjectteacher",
       "filterteachersubject",
       "filterteachercode",
+      "setFilterTeacherName",
       "uncheckItemsteacher",
       "deleteMultipleteacher",
       "deleteteacher",
@@ -360,6 +365,19 @@ export default {
       try {
         this.ADD_MODE_TEACHER();
         this.SHOW_FORM_TEACHER();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    getfilterTeacherCode(value) {
+      try {
+        if (value.match(/^[0-9]+$/) || this.regex.test(value)) {
+          this.filterteachercode(value);
+          this.valueCode = "";
+        } else {
+          this.setFilterTeacherName(value);
+          this.valueCode = "";
+        }
       } catch (error) {
         console.log(error);
       }

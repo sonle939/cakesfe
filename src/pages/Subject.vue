@@ -34,10 +34,7 @@
                   text="Xóa"
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
-                  @click="
-                    deleteMultiplesubject(selectedItemssubject);
-                    toast();
-                  "
+                  @click="deleteOrAuthenMultip()"
                 />
                 <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
@@ -113,13 +110,7 @@
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span
-                        content="Xóa"
-                        v-tippy
-                        @click="
-                          deletesubject(data.SubjectId);
-                          toast();
-                        "
+                      <span content="Xóa" v-tippy @click="messageDel(data)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -163,11 +154,42 @@ export default {
           type: "danger",
           transition: "bounce",
           showIcon: "true",
+          timeout: 3000,
+        }
+      );
+    };
+    const toastWarning = () => {
+      createToast(
+        {
+          title: "Môn học",
+          description: "Không thể xóa bản ghi này vì có dữ liệu liên quan.",
+        },
+        {
+          type: "warning",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 3000,
+        }
+      );
+    };
+    const toastWarningMultip = () => {
+      createToast(
+        {
+          title: "Môn học",
+          description: "Không thể xóa các bản ghi này vì có dữ liệu liên quan.",
+        },
+        {
+          type: "warning",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 3000,
         }
       );
     };
     return {
       toast,
+      toastWarning,
+      toastWarningMultip,
     };
   },
   computed: {
@@ -180,9 +202,36 @@ export default {
       "selectedItemssubject",
       "backgroundWeb",
       "directiondiv",
+      "statusCode",
     ]),
   },
   methods: {
+    async messageDel(data) {
+      try {
+        await this.deletesubject(data.SubjectId);
+        if (this.statusCode === 200) {
+          this.toast();
+          console.log(this.statusCode.status);
+        } else if (this.statusCode === 280) {
+          this.toastWarning();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteOrAuthenMultip() {
+      try {
+        await this.deleteMultiplesubject(this.selectedItemssubject);
+        if (this.statusCode === 200) {
+          this.toast();
+          console.log(this.statusCode.status);
+        } else if (this.statusCode === 280) {
+          this.toastWarning();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     modeFormUpdate(data) {
       try {
         this.UPDATE_MODE_SUBJECT();

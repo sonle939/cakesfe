@@ -11,7 +11,8 @@ const semestermodule = {
         isshowsemester: false,
         selectedItemssemester: [],
         formModesemester: false,
-        semestermaxcode: null
+        semestermaxcode: null,
+        statusCodeHK: 0
     },
     getters: {
         getByIdsemester: state => state.getByIdsemester,
@@ -27,6 +28,7 @@ const semestermodule = {
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
         trueCheckedsemester: state => state.semester.some((item) => item.isChecked == true),
         selectedItemssemester: state => state.selectedItemssemester,
+        statusCodeHK: state => state.statusCodeHK
     },
     actions: {
         async addsemester({ commit, dispatch }, newStaff) {
@@ -63,6 +65,9 @@ const semestermodule = {
                     commit('DELETE_SEMESTER', SemesterId);
                     dispatch('getsemester');
                     dispatch('getMaxCodesemester');
+                    commit('HANDLE_STATUSHK', response.status);
+                } else if (response.status === 280) {
+                    commit('HANDLE_STATUSHK', response.status);
                 }
             } catch (error) {
                 console.log(error)
@@ -78,6 +83,9 @@ const semestermodule = {
                     commit('DELETE_SEMESTER', SemesterIds);
                     dispatch('getsemester');
                     dispatch('getMaxCodesemester');
+                    commit('HANDLE_STATUSHK', response.status)
+                } else if (response.status === 280) {
+                    commit('HANDLE_STATUSHK', response.status)
                 }
             } catch (error) {
                 console.log(error);
@@ -139,6 +147,13 @@ const semestermodule = {
         },
     },
     mutations: {
+        HANDLE_STATUSHK(state, data) {
+            try {
+                state.statusCodeHK = data
+            } catch (error) {
+                console.log(error);
+            }
+        },
         getByIdsemester(state, data) {
             try {
                 state.getByIdsemester = data

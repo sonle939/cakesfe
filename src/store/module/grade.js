@@ -13,6 +13,7 @@ const grademodule = {
         //dung de chuyen doi tu form them sang form sua
         formModegrade: true,
         grademaxcode: null,
+        statusCodeKL: 0
     },
     getters: {
         getByIdgrade: state => state.getByIdgrade,
@@ -28,6 +29,7 @@ const grademodule = {
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
         trueCheckedgrade: state => state.grade.some((item) => item.isChecked == true),
         selectedItemsgrade: state => state.selectedItemsgrade,
+        statusCodeKL: state => state.statusCodeKL
     },
     actions: {
         async addGrade({ commit, dispatch }, newStaff) {
@@ -65,6 +67,9 @@ const grademodule = {
                     commit('DELETE_GRADE', GradeId);
                     dispatch('getGrade');
                     dispatch('getMaxCodeGrade');
+                    commit('HANDLE_STATUSKL', response.status)
+                } else if (response.status === 280) {
+                    commit('HANDLE_STATUSKL', response.status)
                 }
             } catch (error) {
                 console.log(error)
@@ -80,6 +85,9 @@ const grademodule = {
                     commit('DELETE_GRADE', GradeIds);
                     dispatch('getGrade');
                     dispatch('getMaxCodeGrade');
+                    commit('HANDLE_STATUSKL', response.status);
+                } else if (response.status === 280) {
+                    commit('HANDLE_STATUSKL', response.status)
                 }
             } catch (error) {
                 console.log(error);
@@ -148,6 +156,13 @@ const grademodule = {
         },
     },
     mutations: {
+        HANDLE_STATUSKL(state, data) {
+            try {
+                state.statusCodeKL = data
+            } catch (error) {
+                console.log(error);
+            }
+        },
         GETBYIDGRADE(state, data) {
             try {
                 state.getByIdgrade = data

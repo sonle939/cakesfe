@@ -11,7 +11,8 @@ const schoolyearmodule = {
         isshowschoolyear: false,
         selectedItemsschoolyear: [],
         formModeschoolyear: false,
-        schoolyearmaxcode: null
+        schoolyearmaxcode: null,
+        statusCodeNH: 0
     },
     getters: {
         getByIdschoolyear: state => state.getByIdschoolyear,
@@ -27,6 +28,7 @@ const schoolyearmodule = {
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
         trueCheckedschoolyear: state => state.schoolyear.some((item) => item.isChecked == true),
         selectedItemsschoolyear: state => state.selectedItemsschoolyear,
+        statusCodeNH: state => state.statusCodeNH
     },
     actions: {
         async addschoolyear({ commit, dispatch }, newStaff) {
@@ -63,6 +65,9 @@ const schoolyearmodule = {
                     commit('DELETE_SCHOOLYEAR', SchoolYearId);
                     dispatch('getschoolyear');
                     dispatch('getMaxCodeschoolyear')
+                    commit('HANDLE_STATUSNH', response.status)
+                } else if (response.status === 280) {
+                    commit('HANDLE_STATUSNH', response.status)
                 }
             } catch (error) {
                 console.log(error)
@@ -77,7 +82,10 @@ const schoolyearmodule = {
                 if (response.status === 200) {
                     commit('DELETE_SCHOOLYEAR', SchoolYearIds);
                     dispatch('getschoolyear');
-                    dispatch('getMaxCodeschoolyear')
+                    dispatch('getMaxCodeschoolyear');
+                    commit('HANDLE_STATUSNH', response.status);
+                } else if (response.status === 280) {
+                    commit('HANDLE_STATUSNH', response.status)
                 }
             } catch (error) {
                 console.log(error);
@@ -146,6 +154,13 @@ const schoolyearmodule = {
         },
     },
     mutations: {
+        HANDLE_STATUSNH(state, data) {
+            try {
+                state.statusCodeNH = data
+            } catch (error) {
+                console.log(error);
+            }
+        },
         GETBYIDSCHOOLYEAR(state, data) {
             try {
                 state.getByIdschoolyear = data

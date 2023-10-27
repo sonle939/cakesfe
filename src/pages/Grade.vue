@@ -34,10 +34,7 @@
                   text="Xóa"
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
-                  @click="
-                    deleteMultiplegrade(selectedItemsgrade);
-                    toast();
-                  "
+                  @click="deleteOrAuthenMultip()"
                 />
                 <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
@@ -113,13 +110,7 @@
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span
-                        content="Xóa"
-                        v-tippy
-                        @click="
-                          deletegrade(data.GradeId);
-                          toast();
-                        "
+                      <span content="Xóa" v-tippy @click="messageDel(data)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -166,8 +157,38 @@ export default {
         }
       );
     };
+    const toastWarning = () => {
+      createToast(
+        {
+          title: "Khối lớp",
+          description: "Không thể xóa bản ghi này vì có dữ liệu liên quan.",
+        },
+        {
+          type: "warning",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 3000,
+        }
+      );
+    };
+    const toastWarningMultip = () => {
+      createToast(
+        {
+          title: "Khối lớp",
+          description: "Không thể xóa các bản ghi này vì có dữ liệu liên quan.",
+        },
+        {
+          type: "warning",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 3000,
+        }
+      );
+    };
     return {
       toast,
+      toastWarning,
+      toastWarningMultip,
     };
   },
   computed: {
@@ -180,9 +201,36 @@ export default {
       "selectedItemsgrade",
       "backgroundWeb",
       "directiondiv",
+      "statusCodeKL",
     ]),
   },
   methods: {
+    async messageDel(data) {
+      try {
+        await this.deletegrade(data.GradeId);
+        if (this.statusCodeKL === 200) {
+          this.toast();
+          console.log(this.statusCodeKL.status);
+        } else if (this.statusCodeKL === 280) {
+          this.toastWarning();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteOrAuthenMultip() {
+      try {
+        await this.deleteMultiplegrade(this.selectedItemsgrade);
+        if (this.statusCode === 200) {
+          this.toast();
+          console.log(this.statusCode.status);
+        } else if (this.statusCode === 280) {
+          this.toastWarning();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     modeFormUpdate(data) {
       try {
         this.UPDATE_MODE_GRADE();

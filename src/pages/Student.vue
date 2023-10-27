@@ -39,7 +39,7 @@
                   text="Xóa"
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
-                  @click="authenClickDelMulp()"
+                  @click="deleteStudentOrAuthenMultip()"
                 />
                 <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
@@ -184,7 +184,10 @@
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span content="Xóa" v-tippy @click="authenClickDel(data)"
+                      <span
+                        content="Xóa"
+                        v-tippy
+                        @click="deleteStudentOrAuthen(data)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -360,6 +363,19 @@ export default {
         }
       }
     },
+    async messageDel(data) {
+      try {
+        await this.deletestudent(data.StudentId);
+        if (this.statusCodeHS === 200) {
+          this.toast();
+          console.log(this.statusCodeHS.status);
+        } else if (this.statusCodeHS === 280) {
+          this.toastWarning();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     ...mapMutations([
       "SET_PAGE_STUDENT",
       "HIDESTUDENT",
@@ -418,6 +434,40 @@ export default {
         console.log(error);
       }
     },
+    async deleteStudentOrAuthen(data) {
+      try {
+        if (this.teaadmin.Duty === "Giáo viên chủ nhiệm") {
+          await this.deletestudent(data.StudentId);
+          if (this.statusCodeHS === 200) {
+            this.toast();
+            console.log(this.statusCodeHS.status);
+          } else if (this.statusCodeHS === 280) {
+            this.toastWarning();
+          }
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteStudentOrAuthenMultip() {
+      try {
+        if (this.teaadmin.Duty === "Giáo viên chủ nhiệm") {
+          await this.deleteMultiplestudent(this.selectedItemsstudent);
+          if (this.statusCodeHS === 200) {
+            this.toast();
+            console.log(this.statusCodeHS.status);
+          } else if (this.statusCodeHS === 280) {
+            this.toastWarning();
+          }
+        } else {
+          this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     authenClickDelMulp() {
       try {
         if (this.teaadmin.Duty === "Giáo viên chủ nhiệm") {
@@ -425,6 +475,19 @@ export default {
           this.toast();
         } else {
           this.toastAuthen();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async messageDelMultip() {
+      try {
+        await this.deleteMultiplestudent(this.selectedItemsstudent);
+        if (this.statusCodeHS === 200) {
+          this.toast();
+          console.log(this.statusCodeHS.status);
+        } else if (this.statusCodeHS === 280) {
+          this.toastWarning();
         }
       } catch (error) {
         console.log(error);
@@ -468,6 +531,7 @@ export default {
       "idloginteacher",
       "backgroundWeb",
       "directiondiv",
+      "statusCodeHS",
     ]),
     filteredClassroom() {
       const keyword = this.selectedOption.toLowerCase();

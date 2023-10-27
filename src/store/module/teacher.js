@@ -26,6 +26,7 @@ const teacherModule = {
         teacherName: '',
         totalRecordsteacher: 1,
         totalPagesteacher: null,
+        statusCodeGV: 0
         //ket thuc khai bao bien phan trang
     },
     getters: {
@@ -53,6 +54,7 @@ const teacherModule = {
         pageNumberteacher: state => state.pageNumberteacher,
         totalPagesteacher: state => state.totalPagesteacher,
         pageSizeteacher: state => state.pageSizeteacher,
+        statusCodeGV: state => state.statusCodeGV
         //ket thuc getter phan trang
 
     },
@@ -119,7 +121,10 @@ const teacherModule = {
                 if (response.status === 200) {
                     commit('DELETE_TEACHER', TeacherId);
                     dispatch('getteacher');
-                    dispatch('getMaxCodeteacher')
+                    dispatch('getMaxCodeteacher');
+                    commit('HANDLE_STATUSGV', response.status)
+                } else if (response.status === 280) {
+                    commit('HANDLE_STATUSGV', response.status)
                 }
             } catch (error) {
                 console.log(error)
@@ -135,6 +140,9 @@ const teacherModule = {
                     commit('DELETE_TEACHER', TeacherIds);
                     dispatch('getteacher');
                     dispatch('getMaxCodeteacher');
+                    commit('HANDLE_STATUSGV', response.status)
+                } else if (response.status === 280) {
+                    commit('HANDLE_STATUSGV', response.status)
                 }
             } catch (error) {
                 console.log(error);
@@ -234,6 +242,13 @@ const teacherModule = {
     },
     //MUTATIONS DÙNG ĐỂ THAO TÁC(thay doi trang thai state) VỚI STATE TRONG STORE
     mutations: {
+        HANDLE_STATUSGV(state, data) {
+            try {
+                state.statusCodeGV = data
+            } catch (error) {
+                console.log(error);
+            }
+        },
         SET_FILTER_TEACHERNAME(state, teacherName) {
             try {
                 state.teacherName = teacherName

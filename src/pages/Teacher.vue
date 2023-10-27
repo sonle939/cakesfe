@@ -39,10 +39,7 @@
                   text="Xóa"
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
-                  @click="
-                    deleteMultipleteacher(selectedItemsteacher);
-                    toast();
-                  "
+                  @click="deleteOrAuthenMultip()"
                 />
                 <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
@@ -204,13 +201,7 @@
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span
-                        content="Xóa"
-                        v-tippy
-                        @click="
-                          deleteteacher(data.TeacherId);
-                          toast();
-                        "
+                      <span content="Xóa" v-tippy @click="messageDel(data)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -267,6 +258,35 @@ export default {
           type: "danger",
           transition: "bounce",
           showIcon: "true",
+          timeout: 2500,
+        }
+      );
+    };
+    const toastWarning = () => {
+      createToast(
+        {
+          title: "Giáo viên",
+          description: "Không thể xóa bản ghi này vì có dữ liệu liên quan.",
+        },
+        {
+          type: "warning",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 3000,
+        }
+      );
+    };
+    const toastWarningMultip = () => {
+      createToast(
+        {
+          title: "Giáo viên",
+          description: "Không thể xóa các bản ghi này vì có dữ liệu liên quan.",
+        },
+        {
+          type: "warning",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 3000,
         }
       );
     };
@@ -277,6 +297,8 @@ export default {
     const valueCode = ref("");
     return {
       toast,
+      toastWarning,
+      toastWarningMultip,
       isOpen,
       selectedOption,
       searchText,
@@ -302,6 +324,7 @@ export default {
       "selectedItemsteacher",
       "backgroundWeb",
       "directiondiv",
+      "statusCodeGV",
     ]),
     filteredSubject() {
       const keyword = this.selectedOption.toLowerCase();
@@ -322,6 +345,32 @@ export default {
     clearFilterCondition() {
       try {
         this.getteacher();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async messageDel(data) {
+      try {
+        await this.deleteteacher(data.TeacherId);
+        if (this.statusCodeGV === 200) {
+          this.toast();
+          console.log(this.statusCodeGV.status);
+        } else if (this.statusCodeGV === 280) {
+          this.toastWarning();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteOrAuthenMultip() {
+      try {
+        await this.deleteMultipleteacher(this.selectedItemsteacher);
+        if (this.statusCodeGV === 200) {
+          this.toast();
+          console.log(this.statusCodeGV.status);
+        } else if (this.statusCodeGV === 280) {
+          this.toastWarning();
+        }
       } catch (error) {
         console.log(error);
       }

@@ -34,10 +34,7 @@
                   text="Xóa"
                   leftIcon="fa fa-times remove_icon"
                   class="remove_btn"
-                  @click="
-                    deleteMultiplesemester(selectedItemssemester);
-                    toast();
-                  "
+                  @click="deleteOrAuthenMultip()"
                 />
                 <VButtonicon oneIcon="bx bx-dots-horizontal-rounded" />
               </div>
@@ -112,13 +109,7 @@
                       >
                         <i class="bx bxs-pencil"></i>
                       </span>
-                      <span
-                        content="Xóa"
-                        v-tippy
-                        @click="
-                          deletesemester(data.SemesterId);
-                          toast();
-                        "
+                      <span content="Xóa" v-tippy @click="messageDel(data)"
                         ><i class="bx bxs-trash-alt"></i
                       ></span>
                     </div>
@@ -165,8 +156,38 @@ export default {
         }
       );
     };
+    const toastWarning = () => {
+      createToast(
+        {
+          title: "Học kì",
+          description: "Không thể xóa bản ghi này vì có dữ liệu liên quan.",
+        },
+        {
+          type: "warning",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 3000,
+        }
+      );
+    };
+    const toastWarningMultip = () => {
+      createToast(
+        {
+          title: "Học kì",
+          description: "Không thể xóa các bản ghi này vì có dữ liệu liên quan.",
+        },
+        {
+          type: "warning",
+          transition: "bounce",
+          showIcon: "true",
+          timeout: 3000,
+        }
+      );
+    };
     return {
       toast,
+      toastWarning,
+      toastWarningMultip,
     };
   },
   computed: {
@@ -179,9 +200,36 @@ export default {
       "selectedItemssemester",
       "backgroundWeb",
       "directiondiv",
+      "statusCodeHK",
     ]),
   },
   methods: {
+    async messageDel(data) {
+      try {
+        await this.deletesemester(data.SemesterId);
+        if (this.statusCodeHK === 200) {
+          this.toast();
+          console.log(this.statusCodeHK.status);
+        } else if (this.statusCodeHK === 280) {
+          this.toastWarning();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteOrAuthenMultip() {
+      try {
+        await this.deleteMultiplesemester(this.selectedItemssemester);
+        if (this.statusCodeHK === 200) {
+          this.toast();
+          console.log(this.statusCodeHK.status);
+        } else if (this.statusCodeHK === 280) {
+          this.toastWarning();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     ...mapActions([
       "getsemester",
       "toggleAllSelectionsemester",

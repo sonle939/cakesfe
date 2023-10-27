@@ -12,7 +12,8 @@ const subjectmodule = {
         formModesubject: true,
         isshowsubject: false,
         selectedItemssubject: [],
-        subjectmaxCode: null
+        subjectmaxCode: null,
+        statusCode: 0
     },
     getters: {
         getByIdsubject: state => state.getByIdsubject,
@@ -28,6 +29,7 @@ const subjectmodule = {
         //dùng để làm điều khiện ân hiển chức năng xóa nhiều bản ghi
         trueCheckedsubject: state => state.subject.some((item) => item.isChecked == true),
         selectedItemssubject: state => state.selectedItemssubject,
+        statusCode: state => state.statusCode
     },
     actions: {
         async addsubject({ commit, dispatch }, newStaff) {
@@ -64,6 +66,10 @@ const subjectmodule = {
                     commit('DELETE_SUBJECT', SubjectId);
                     dispatch('getsubject');
                     dispatch('getMaxCodeSubject');
+                    console.log(response.status);
+                    commit('HANDLE_STATUS', response.status)
+                } else if (response.status === 280) {
+                    commit('HANDLE_STATUS', response.status)
                 }
             } catch (error) {
                 console.log(error)
@@ -79,6 +85,9 @@ const subjectmodule = {
                     commit('DELETE_SUBJECT', SubjectIds);
                     dispatch('getsubject');
                     dispatch('getMaxCodeSubject');
+                    commit('HANDLE_STATUS', response.status)
+                } else if (response.status === 280) {
+                    commit('HANDLE_STATUS', response.status)
                 }
             } catch (error) {
                 console.log(error);
@@ -142,6 +151,13 @@ const subjectmodule = {
         },
     },
     mutations: {
+        HANDLE_STATUS(state, data) {
+            try {
+                state.statusCode = data
+            } catch (error) {
+                console.log(error);
+            }
+        },
         getByIdsubject(state, data) {
             try {
                 state.getByIdsubject = data

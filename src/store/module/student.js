@@ -25,6 +25,7 @@ const studentModule = {
         totalRecordsstudent: 1,
         totalPagesstudent: null,
         //ket thuc khai bao bien phan trang
+        statusCodeHS: 0
     },
     getters: {
         student: state => state.student,
@@ -51,7 +52,7 @@ const studentModule = {
         totalPagesstudent: state => state.totalPagesstudent,
         pageSizestudent: state => state.pageSizestudent,
         //ket thuc getter phan trang
-
+        statusCodeHS: state => state.statusCodeHS
     },
     actions: {
         async getstudent({ commit, state }) {
@@ -117,6 +118,9 @@ const studentModule = {
                     commit('DELETE_STUDENT', StudentId);
                     dispatch('getstudent');
                     dispatch('getMaxCodestudent');
+                    commit('HANDLE_STATUSHS', response.status)
+                } else if (response.status === 280) {
+                    commit('HANDLE_STATUSHS', response.status)
                 }
             } catch (error) {
                 console.log(error)
@@ -132,6 +136,9 @@ const studentModule = {
                     commit('DELETE_STUDENT', StudentIds);
                     dispatch('getstudent');
                     dispatch('getMaxCodestudent');
+                    commit('HANDLE_STATUSHS', response.status)
+                } else if (response.status === 280) {
+                    commit('HANDLE_STATUSHS', response.status)
                 }
             } catch (error) {
                 console.log(error);
@@ -224,6 +231,13 @@ const studentModule = {
     },
     //MUTATIONS DÙNG ĐỂ THAO TÁC(thay doi trang thai state) VỚI STATE TRONG STORE
     mutations: {
+        HANDLE_STATUSHS(state, data) {
+            try {
+                state.statusCodeHS = data
+            } catch (error) {
+                console.log(error);
+            }
+        },
         SET_FILTER_STUDENTNAME(state, studentName) {
             try {
                 state.studentName = studentName

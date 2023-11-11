@@ -111,7 +111,7 @@ const informModule = {
         async getStudentIDinform({ commit }, object) {
             try {
                 const response = await axios.get(`${API_BASE_URL}Infroms/StudentId?recordId=${object.studentId}`)
-                commit('getstudentidinform', response.data)
+                commit('GETSTUDENTIDINFORM', response.data)
             } catch (error) {
                 console.log(error)
             }
@@ -127,7 +127,7 @@ const informModule = {
             }
 
         },
-        getstudentidinform(state, data) {
+        GETSTUDENTIDINFORM(state, data) {
             try {
                 state.getstudentidinform = data
             } catch (error) {

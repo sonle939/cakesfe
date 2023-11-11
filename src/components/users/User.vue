@@ -177,7 +177,7 @@
                 >
                   <div class="point_container">
                     <div class="point_schoolyear">
-                      <i class='bx bxs-color bx-spin bx-flip-vertical' ></i>
+                      <i class="bx bxs-color bx-spin bx-flip-vertical"></i>
                       <p>Năm học: {{ schoolYear }}</p>
                     </div>
                     <ul>
@@ -649,7 +649,7 @@ export default {
       // Tính điểm trung bình cộng cho năm học cụ thể
       const averageScore = totalScore / filteredPoints.length;
 
-      return averageScore.toFixed(1);
+      return averageScore.toFixed(2);
     },
     filteredSubjects(schoolYear) {
       // Filter subjects based on the selected school year

@@ -309,6 +309,7 @@ export default {
           type: "danger",
           transition: "bounce",
           showIcon: "true",
+          timeout: 2000,
         }
       );
     };

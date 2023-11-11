@@ -31,7 +31,7 @@
           <p class="notify_icon" v-if="countStudentsWithFalseHandle > 0">
             {{ countStudentsWithFalseHandle }}
           </p>
-          <i class="bx bx-bell" @click="handleInform()"></i>
+          <i class="bx bx-bell" @click="ClickLoadDataInform()"></i>
           <div class="overlay_inform" v-if="isInform">
             <div class="inform_top">
               <h3>Thông báo</h3>
@@ -45,14 +45,11 @@
                   @click="
                     handleRead();
                     onSubmitUpdate();
+                    handleInform();
                   "
                 >
                   <i class="bx bx-check-double"></i>
                   Đánh dấu tất cả đã đọc
-                </div>
-                <div class="overlay_icon">
-                  <i class="bx bx-x"></i>
-                  Xóa thông báo
                 </div>
               </div>
             </div>
@@ -127,6 +124,10 @@ export default {
     const userData = ref([]);
     const teaadmin = ref([]);
     const dataRole = ref("");
+    const dataInform = ref({
+      id: 1,
+      studentId: "",
+    });
     const toastSuccess = () => {
       createToast(
         {
@@ -175,6 +176,7 @@ export default {
       userData,
       teaadmin,
       dataRole,
+      dataInform,
       handleShow,
       handleInform,
       handleRead,
@@ -195,6 +197,13 @@ export default {
     countStudentsWithFalseHandle() {
       return this.getstudentidinform.filter((student) => student.Isread === 0)
         .length;
+    },
+    ReanderIdInform() {
+      return this.getstudentidinform.map((item) => item.InformId);
+    },
+    computedStudentId() {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      return (this.dataInform.studentId = this.userData.StudentId);
     },
     nameTea() {
       try {
@@ -230,7 +239,10 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["updateIteminform"]),
+    ...mapActions([
+      "updateIteminform",
+      "getStudentIDinform",
+    ]),
     ...mapMutations(["HANDLEBACKGROUND"]),
     onSubmitUpdate() {
       try {
@@ -285,6 +297,15 @@ export default {
         } catch (error) {
           console.error("Lỗi khi chuyển đổi dữ liệu từ sessionStorage:", error);
         }
+      }
+    },
+    ClickLoadDataInform() {
+      try {
+        this.handleInform();
+        this.getStudentIDinform(this.dataInform);
+        console.log(123);
+      } catch (error) {
+        console.log(error);
       }
     },
   },

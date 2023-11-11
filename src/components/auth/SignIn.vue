@@ -58,22 +58,6 @@
         </div>
         <router-link to="/forgot">Quên mật khẩu ?</router-link>
         <button>Đăng nhập</button>
-        <div class="social">
-          <div class="social_line">
-            <h3>Or Continue with</h3>
-          </div>
-          <div class="social_list">
-            <div class="social_item">
-              <i class="bx bxl-google"></i>
-            </div>
-            <div class="social_item">
-              <i class="bx bxl-facebook-circle"></i>
-            </div>
-            <div class="social_item">
-              <i class="bx bxl-instagram-alt"></i>
-            </div>
-          </div>
-        </div>
       </form>
     </div>
   </div>

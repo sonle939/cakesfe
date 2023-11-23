@@ -30,7 +30,10 @@
         :class="{ active: activeTab === index }"
       >
         <template v-if="activeTab === index">
-          <div v-if="tab.type === 'table'">
+          <div v-if="tab.type === 'home'">
+              <HomeUserVue/>
+          </div>
+          <div v-else-if="tab.type === 'table'">
             <div class="info_wrapper">
               <div class="info_left">
                 <video autoPlay loop muted>
@@ -472,6 +475,7 @@ import VRadio from "../Input/VRadio.vue";
 import VButton from "../Button/VButton.vue";
 import { createToast } from "mosha-vue-toastify";
 import { v4 as uuidv4 } from "uuid";
+import HomeUserVue from '../HomeUser.vue';
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -481,6 +485,7 @@ export default {
     const userData = ref([]);
     const activeMessage = ref(false);
     const tabs = ref([
+      { label: "Trang chủ", type: "home", icon: "bx bx-home" },
       { label: "Thông tin cá nhân", type: "table", icon: "bx-badge-check" },
       {
         label: "Kết quả điểm",
@@ -764,6 +769,7 @@ export default {
     Navbar,
     VRadio,
     VButton,
+    HomeUserVue
   },
   beforeUpdate() {
     this.maxId;

@@ -254,8 +254,13 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_TIMETABLE" />
         <div class="btn_wp">
-          <VButton text="Cất" class="btn_phu"  @click="build = true"/>
-          <VButton type="submit" class="ml-8" text="Cất và thêm"  @click="build = false"/>
+          <VButton text="Cất" class="btn_phu" @click="build = true" />
+          <VButton
+            type="submit"
+            class="ml-8"
+            text="Cất và thêm"
+            @click="build = false"
+          />
         </div>
       </div>
     </form>
@@ -486,7 +491,7 @@
             <div class="overlaylist" v-show="isOpensteacherUpdate">
               <ul ref="list">
                 <li
-                  v-for="data in filteredTeacherUpdate"
+                  v-for="data in filteredTeacher1"
                   :key="data.TeacherId"
                   @click="
                     selectOptionteacherUpdate(data.TeacherId, data.TeacherName)
@@ -683,6 +688,46 @@ export default {
       } else if (this.selectedOptionsubject && this.selectedOptionclassroom) {
         const subjectKeyword = this.selectedOptionsubject.toLowerCase();
         const teacherKeyword = this.selectedOptionclassroom.toLowerCase();
+        return this.assignmentAll.filter((data) => {
+          if (
+            data.SubjectName &&
+            data.ClassRoomName &&
+            data.SubjectName.toLowerCase().includes(subjectKeyword) &&
+            data.ClassRoomName.toLowerCase().includes(teacherKeyword) &&
+            !teacherNames.has(data.TeacherName)
+          ) {
+            teacherNames.add(data.TeacherName);
+            return true;
+          }
+          return false;
+        });
+      } else {
+        // Trả về toàn bộ danh sách nhiệm vụ (assignments) nếu cả hai selectedOptionteacher và selectedOptionsubject đều là null
+        return this.assignmentAll;
+      }
+    },
+    filteredTeacher1() {
+      const teacherNames = new Set();
+      if (this.getByIdtimetable.TeacherName) {
+        const teacherKeyword = this.getByIdtimetable.TeacherName.toLowerCase();
+        return this.assignmentAll.filter((data) => {
+          if (
+            data.TeacherName &&
+            data.TeacherName.toLowerCase().includes(teacherKeyword) &&
+            !teacherNames.has(data.TeacherName)
+          ) {
+            teacherNames.add(data.TeacherName);
+            return true;
+          }
+          return false;
+        });
+      } else if (
+        this.getByIdtimetable.SubjectName &&
+        this.getByIdtimetable.ClassRoomName
+      ) {
+        const subjectKeyword = this.getByIdtimetable.SubjectName.toLowerCase();
+        const teacherKeyword =
+          this.getByIdtimetable.ClassRoomName.toLowerCase();
         return this.assignmentAll.filter((data) => {
           if (
             data.SubjectName &&

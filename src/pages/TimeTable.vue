@@ -18,14 +18,124 @@
         <div class="search_table">
           <div class="search_filter">
             <div class="search_check">
-              <div class="search_list">
-                <i class="bx bx-search-alt-2"></i>
-                <input
-                  type="text"
-                  placeholder="Tìm kiếm trong danh sách"
-                  v-model="searchtext"
-                  @keydown.enter="setFilterclassroomidtimetable(searchtext)"
-                />
+              <div
+                class="sear_item_text"
+                style="display: flex; align-items: center; margin-right: 10px"
+              >
+                <p style="margin-right: 5px; font-size: 17px; font-weight: 700">
+                  Lớp học
+                </p>
+                <div class="dropdown" style="width: 200px">
+                  <input
+                    type="text"
+                    v-model="selectedOption"
+                    placeholder="Chọn giá trị lọc"
+                    @click="toggleDropdown"
+                  />
+                  <i
+                    @click="toggleDropdown"
+                    :class="
+                      isOpen
+                        ? 'bx bx-chevron-down active'
+                        : 'bx bx-chevron-down'
+                    "
+                  ></i>
+                  <div class="overlaylist" v-show="isOpen" style="width: 200px">
+                    <ul ref="list">
+                      <li
+                        v-for="data in filteredClassroom"
+                        :key="data.ClassRoomId"
+                        @click="
+                          selectOption(data.ClassRoomId, data.ClassRoomName)
+                        "
+                      >
+                        {{ data.ClassRoomName }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="sear_item_text"
+                style="display: flex; align-items: center; margin-right: 10px"
+              >
+                <p style="margin-right: 5px; font-size: 17px; font-weight: 700">
+                  Giáo viên
+                </p>
+                <div class="dropdown" style="width: 200px">
+                  <input
+                    type="text"
+                    v-model="selectedOptionTeacher"
+                    placeholder="Chọn giá trị lọc"
+                    @click="toggleDropdownTeacher"
+                  />
+                  <i
+                    @click="toggleDropdownTeacher"
+                    :class="
+                      isOpenTeacher
+                        ? 'bx bx-chevron-down active'
+                        : 'bx bx-chevron-down'
+                    "
+                  ></i>
+                  <div
+                    class="overlaylist"
+                    v-show="isOpenTeacher"
+                    style="width: 200px"
+                  >
+                    <ul ref="list">
+                      <li
+                        v-for="data in filteredTeacher"
+                        :key="data.ClassRoomId"
+                        @click="
+                          selectOptionTeacher(data.TeacherId, data.TeacherName)
+                        "
+                      >
+                        {{ data.TeacherName }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="sear_item_text"
+                style="display: flex; align-items: center; margin-right: 10px"
+              >
+                <p style="margin-right: 5px; font-size: 17px; font-weight: 700">
+                  Môn học
+                </p>
+                <div class="dropdown" style="width: 200px">
+                  <input
+                    type="text"
+                    v-model="selectedOptionSubject"
+                    placeholder="Chọn giá trị lọc"
+                    @click="toggleDropdownSubject"
+                  />
+                  <i
+                    @click="toggleDropdownSubject"
+                    :class="
+                      isOpenSubject
+                        ? 'bx bx-chevron-down active'
+                        : 'bx bx-chevron-down'
+                    "
+                  ></i>
+                  <div
+                    class="overlaylist"
+                    v-show="isOpenSubject"
+                    style="width: 200px"
+                  >
+                    <ul ref="list">
+                      <li
+                        v-for="data in filteredSubject"
+                        :key="data.SubjectId"
+                        @click="
+                          selectOptionSubject(data.SubjectId, data.SubjectName)
+                        "
+                      >
+                        {{ data.SubjectName }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
               <div class="checked_data" v-show="trueCheckedtimetable">
                 <h3>
@@ -51,33 +161,6 @@
               </div>
             </div>
             <div class="filter_item">
-              <div class="dropdown">
-                <input
-                  type="text"
-                  v-model="selectedOption"
-                  placeholder="Chọn giá trị lọc"
-                  @click="toggleDropdown"
-                />
-                <i
-                  @click="toggleDropdown"
-                  :class="
-                    isOpen ? 'bx bx-chevron-down active' : 'bx bx-chevron-down'
-                  "
-                ></i>
-                <div class="overlaylist" v-show="isOpen">
-                  <ul ref="list">
-                    <li
-                      v-for="data in filteredClassroom"
-                      :key="data.ClassRoomId"
-                      @click="
-                        selectOption(data.ClassRoomId, data.ClassRoomName)
-                      "
-                    >
-                      {{ data.ClassRoomName }}
-                    </li>
-                  </ul>
-                </div>
-              </div>
               <div class="wrapper__i">
                 <div class="excel" @click="exportExcelTimetable"></div>
               </div>
@@ -260,12 +343,20 @@ export default {
       );
     };
     const isOpen = ref(false);
+    const isOpenTeacher = ref(false);
     const selectedOption = ref("");
+    const selectedOptionTeacher = ref("");
+    const isOpenSubject = ref(false);
+    const selectedOptionSubject = ref("");
     const searchtext = ref("");
     return {
       toast,
       isOpen,
+      isOpenSubject,
+      isOpenTeacher,
       selectedOption,
+      selectedOptionTeacher,
+      selectedOptionSubject,
       searchtext,
     };
   },
@@ -274,6 +365,18 @@ export default {
       const keyword = this.selectedOption.toLowerCase();
       return this.classroomtimetable.filter((data) =>
         data.ClassRoomName.toLowerCase().includes(keyword)
+      );
+    },
+    filteredTeacher() {
+      const keyword = this.selectedOptionTeacher.toLowerCase();
+      return this.teacherAll.filter((data) =>
+        data.TeacherName.toLowerCase().includes(keyword)
+      );
+    },
+    filteredSubject() {
+      const keyword = this.selectedOptionSubject.toLowerCase();
+      return this.subjecttimetable.filter((data) =>
+        data.SubjectName.toLowerCase().includes(keyword)
       );
     },
     ...mapGetters([
@@ -293,6 +396,7 @@ export default {
       "selectedItemstimetable",
       "backgroundWeb",
       "directiondiv",
+      "teacherAll",
     ]),
   },
   methods: {
@@ -303,6 +407,22 @@ export default {
       this.setFilterclassroomidtimetable(id);
       this.selectedOption = options;
       this.isOpen = false;
+    },
+    toggleDropdownSubject() {
+      this.isOpenSubject = !this.isOpenSubject;
+    },
+    selectOptionSubject(id, options) {
+      this.setFiltersubjectidtimetable(id);
+      this.selectedOptionSubject = options;
+      this.isOpenSubject = false;
+    },
+    toggleDropdownTeacher() {
+      this.isOpenTeacher = !this.isOpenTeacher;
+    },
+    selectOptionTeacher(id, options) {
+      this.setFilterteacheridtimetable(id);
+      this.selectedOptionTeacher = options;
+      this.isOpenTeacher = false;
     },
     clearFilterCondition() {
       try {
@@ -338,6 +458,7 @@ export default {
       "deleteMultipletimetable",
       "deletetimetable",
       "exportExcelTimetable",
+      "getteacherAll",
     ]),
     modeFormUpdate(data) {
       try {
@@ -362,6 +483,7 @@ export default {
     this.getclassroomtimetable();
     this.getsubjecttimetable();
     this.getteachertimetable();
+    this.getteacherAll();
   },
   components: {
     Navbar,

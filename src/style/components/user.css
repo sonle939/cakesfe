@@ -31,11 +31,18 @@
   align-items: center;
   justify-content: center;
 }
+.tabs.heightscroll {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  background-color: white;
+}
 .tabs li {
   width: 200px;
   margin: 0 25px;
   display: flex;
   align-items: center;
+  justify-content: center;
   font-weight: 600;
 }
 

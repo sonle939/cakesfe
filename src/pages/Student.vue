@@ -283,7 +283,7 @@ export default {
           description: "Bạn không đủ quyền để chỉnh sửa",
         },
         {
-          type: "danger",
+          type: "warning",
           transition: "bounce",
           showIcon: "true",
           timeout: 2000,

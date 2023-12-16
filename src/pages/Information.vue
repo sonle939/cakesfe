@@ -102,6 +102,7 @@
             style="width: 250px; height: 56px; border-radius: 12px"
             placeholder="chuyên môn dạy"
             v-model="userData.SubjectName"
+            disabled
           />
         </label>
         <label class="slabel">
@@ -112,6 +113,7 @@
             style="width: 250px; height: 56px; border-radius: 12px"
             placeholder="Tình trạng công tác"
             v-model="userData.Collaborate"
+            disabled
           />
         </label>
         <label class="slabel">
@@ -122,6 +124,7 @@
             style="width: 250px; height: 56px; border-radius: 12px"
             placeholder="Tình trạng công tác"
             v-model="userData.Standard"
+            disabled
           />
         </label>
         <label class="slabel">

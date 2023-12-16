@@ -17,7 +17,11 @@
         <div class="form_signin">
           <div class="signin_item">
             <label
-              :class="validateemail ? 'label bd_error mb_0' : 'label'"
+              :class="
+                validateemail || checkformatemail
+                  ? 'label bd_error mb_0'
+                  : 'label'
+              "
               v-if="isSendEmail"
             >
               <i class="fa fa-envelope" aria-hidden="true"></i>
@@ -30,6 +34,7 @@
               />
             </label>
             <p v-if="validateemail">Vui lòng nhập địa chỉ email</p>
+            <p v-if="checkformatemail">Email nhập không đúng định dạng</p>
           </div>
 
           <div class="verify_form" v-if="isCodeVerify">
@@ -140,6 +145,7 @@ export default {
     const newPassword = ref("");
     const confirmPassword = ref("");
     const validateemail = ref(false);
+    const checkformatemail = ref(false);
     const validatenewpass = ref(false);
     const validateconfirm = ref(false);
     const passwordjoint = ref(false);
@@ -182,6 +188,7 @@ export default {
       showPasswordConfirm,
       emailtext,
       validateemail,
+      checkformatemail,
       newPassword,
       confirmPassword,
       validatenewpass,
@@ -214,14 +221,24 @@ export default {
       // Khi người dùng nhấp vào biểu tượng "eye", thay đổi trạng thái hiển thị mật khẩu
       this.showPasswordConfirm = !this.showPasswordConfirm;
     },
+    isValidEmailFormat(email) {
+      // Sử dụng biểu thức chính quy để kiểm tra định dạng email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    },
     validateInputs() {
       let isValid = true;
       // Kiểm tra điều kiện cho tên đăng nhập
       if (this.emailtext.trim() === "") {
         isValid = false;
         this.validateemail = true;
-      } else if (this.emailtext !== "") {
+      } else if (!this.isValidEmailFormat(this.emailtext)) {
+        isValid = false;
+        this.checkformatemail = true;
         this.validateemail = false;
+      } else {
+        this.validateemail = false;
+        this.checkformatemail = false;
       }
       return isValid;
     },
@@ -290,6 +307,7 @@ export default {
       try {
         if (this.validateInputs()) {
           this.isSendEmail = false;
+          this.checkformatemail = false;
           this.isCodeVerify = true;
           this.sendEmailCode({
             emailInput: this.emailtext,

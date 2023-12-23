@@ -15,7 +15,7 @@
           </li>
           <li>
             <i class="bx bx-envelope"></i>
-            <p>thcshoangquyf@gmail.com</p>
+            <p>thcsnguyenvantroihq@gmail.com</p>
           </li>
         </ul>
       </li>

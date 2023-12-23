@@ -11,7 +11,7 @@
       <div
         :class="directiondiv ? 'page_content border_design' : 'page_content '"
       >
-        <HeaderContent text="Quản lý bảng điểm" :showform="authenClickInsert" />
+        <HeaderContent text="Quản lý bảng điểm" :showform="modeFormInsert" />
         <div class="search_table">
           <div class="search_filter">
             <div class="dropdown_wrapper">
@@ -176,7 +176,7 @@
                 <div class="excel" @click="exportExcelPoint"></div>
               </div>
               <div class="wrapper__i">
-                <div class="filter"></div>
+                <div class="filter" @click="reloadPage()"></div>
               </div>
             </div>
           </div>
@@ -460,6 +460,9 @@ export default {
     },
   },
   methods: {
+    reloadPage() {
+      window.location.reload();
+    },
     formattedDate(data) {
       try {
         return format(new Date(data), "dd/MM/yyyy");

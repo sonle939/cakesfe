@@ -7,7 +7,7 @@
         <img src="../../assets/logosvg1.svg" alt="" class="logo" />
         <h1>Khám phá tri thức cùng chúng tôi - Đăng kí ngay để bắt đầu!</h1>
         <p>
-          Nếu bạn đã có tài khoản bạn có thể
+          Nếu bạn đã đổi mật khẩu thành công thì hãy đăng nhập tại đây 
           <router-link class="color_signin" to="/">Đăng nhập</router-link>
         </p>
         <img src="../../assets/qr-login-34.png" alt="" class="img_qr" />

@@ -165,7 +165,7 @@
                 <div class="excel" @click="exportExcelTimetable"></div>
               </div>
               <div class="wrapper__i">
-                <div class="filter"></div>
+                <div @click="reloadPage()" class="filter"></div>
               </div>
               <div class="wrapper__i">
                 <div class="setting"></div>
@@ -400,6 +400,9 @@ export default {
     ]),
   },
   methods: {
+    reloadPage() {
+      window.location.reload();
+    },
     toggleDropdown() {
       this.isOpen = !this.isOpen;
     },

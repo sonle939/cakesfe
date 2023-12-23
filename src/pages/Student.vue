@@ -76,7 +76,7 @@
                 <div class="excel" @click="exportExcelStudent"></div>
               </div>
               <div class="wrapper__i">
-                <div class="filter" @click="clearFilterCondition()"></div>
+                <div class="filter" @click="reloadPage()"></div>
               </div>
               <div class="wrapper__i">
                 <div class="setting"></div>
@@ -321,6 +321,9 @@ export default {
     VButton,
   },
   methods: {
+    reloadPage() {
+      window.location.reload();
+    },
     getfilterEmployeeCode(value) {
       try {
         if (value.match(/^[0-9]+$/) || this.regex.test(value)) {

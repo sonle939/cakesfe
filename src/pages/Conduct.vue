@@ -150,7 +150,7 @@
                 <div class="excel" @click="exportExcelConduct"></div>
               </div>
               <div class="wrapper__i">
-                <div class="filter" @click="clearFilterCondition()"></div>
+                <div class="filter" @click="reloadPage()"></div>
               </div>
               <div class="wrapper__i">
                 <div class="setting"></div>
@@ -350,6 +350,9 @@ export default {
     VButton,
   },
   methods: {
+    reloadPage() {
+      window.location.reload();
+    },
     async loadAdminAndTeacher() {
       const userDataString = sessionStorage.getItem("idloginteacherData");
       const userDataString1 = sessionStorage.getItem("roleData");

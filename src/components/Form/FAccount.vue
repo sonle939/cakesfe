@@ -233,8 +233,13 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_ACCOUNT" />
         <div class="btn_wp">
-          <VButton text="Cất"  @click="build = true" class="btn_phu" />
-          <VButton type="submit"  @click="build = false" class="ml-8" text="Cất và thêm" />
+          <VButton text="Cất" @click="build = true" class="btn_phu" />
+          <VButton
+            type="submit"
+            @click="build = false"
+            class="ml-8"
+            text="Cất và thêm"
+          />
         </div>
       </div>
     </form>
@@ -458,7 +463,7 @@
       <div class="info_btn">
         <VButton text="Hủy" class="btn_phu" @click="SHOW_FORM_ACCOUNT" />
         <div class="btn_wp">
-          <VButton text="Cập nhật" @click="this.toastUpdate();" />
+          <VButton text="Cập nhật" @click="this.toastUpdate()" />
         </div>
       </div>
     </form>
@@ -729,6 +734,18 @@ export default {
             isValid = false;
             this.error.push("Mã tài khoản nhập bị trùng");
             break;
+          case this.account.findIndex(
+            (ele) => ele.StudentId === this.formData.StudentId
+          ) !== -1:
+            isValid = false;
+            this.error.push("Mỗi người chỉ có một tài khoản");
+            break;
+          case this.account.findIndex(
+            (ele) => ele.TeacherId === this.formData.TeacherId
+          ) !== -1:
+            isValid = false;
+            this.error.push("Mỗi người chỉ có một tài khoản");
+            break;
           case this.formData.AccountCode.trim() === "":
             isValid = false;
             this.error.push("Vui lòng nhập mã tài khoản");
@@ -806,9 +823,9 @@ export default {
           this.selectedOption = null;
           this.selectedOptionstudent = null;
           this.selectedOptionteacher = null;
-          if(this.build === true){
-              this.SHOW_FORM_ACCOUNT();
-              this.formData = { AccountCode: this.accountmaxcode };
+          if (this.build === true) {
+            this.SHOW_FORM_ACCOUNT();
+            this.formData = { AccountCode: this.accountmaxcode };
           }
           this.checkForm = false;
           return false;

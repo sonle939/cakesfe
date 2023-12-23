@@ -79,7 +79,7 @@
                 <div class="excel" @click="exportExcelAssignment"></div>
               </div>
               <div class="wrapper__i">
-                <div class="filter" @click="getAssignment()"></div>
+                <div class="filter" @click="reloadPage()"></div>
               </div>
               <div class="wrapper__i">
                 <div class="setting"></div>
@@ -248,6 +248,9 @@ export default {
     ]),
   },
   methods: {
+    reloadPage() {
+      window.location.reload();
+    },
     toggleDropdown() {
       this.isOpen = !this.isOpen;
     },

@@ -10,7 +10,8 @@
         </h1>
         <p>
           Nếu bạn muốn sử dụng phần mềm trên điện thoại hãy quét mã
-          <router-link class="color_signin" to="/forgot">Tại đây</router-link>
+          <!-- <router-link class="color_signin" to="/forgot">Tại đây</router-link> -->
+          <b class="color_signin">Tại đây</b>
         </p>
         <img src="../../assets/qr-login-34.png" alt="" class="img_qr" />
       </div>

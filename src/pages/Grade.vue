@@ -47,7 +47,7 @@
               <div class="wrapper__i">
                 <div
                   class="filter"
-                  @click="getGrade()"
+                  @click="reloadPage()"
                   style="height: 20px"
                 ></div>
               </div>
@@ -205,6 +205,9 @@ export default {
     ]),
   },
   methods: {
+    reloadPage() {
+      window.location.reload();
+    },
     async messageDel(data) {
       try {
         await this.deletegrade(data.GradeId);

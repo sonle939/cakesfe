@@ -46,7 +46,7 @@
               <div class="wrapper__i">
                 <div
                   class="filter"
-                  @click="getsemester()"
+                  @click="reloadPage()"
                   style="height: 20px"
                 ></div>
               </div>
@@ -204,6 +204,9 @@ export default {
     ]),
   },
   methods: {
+    reloadPage() {
+      window.location.reload();
+    },
     async messageDel(data) {
       try {
         await this.deletesemester(data.SemesterId);

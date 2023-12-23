@@ -19,25 +19,32 @@
         <div class="dot dot3"></div>
         <div class="dot dot4"></div>
         <div class="banner_logo1">
-          <img src="../assets/image1.png" alt="" />
+          <img
+            src="../assets/hinhanhtruong.jpg"
+            alt=""
+            style="border-radius: 50%"
+          />
         </div>
       </div>
-      <img class="image_fix image_fix_left" src="../assets/image2.png" />
-      <img class="image_fix" src="../assets/image3.png" />
+      <img class="image_fix image_fix_left" src="../assets/anhtruong5.jpg" />
+      <img class="image_fix" src="../assets/anhtruong3.jpg" />
       <div class="home_slogan">
         <h1>
           Nơi học hành trở nên tuyệt vời - Nâng cao bản thân thách thức giới
           hạn!
         </h1>
         <p>
-          Trường học của chúng tôi là nơi thú vị để học, giúp bạn nâng cao bản
-          thân và vượt qua mọi giới hạn. Chúng tôi luôn đồng hành cùng học viên
-          trên hành trình phát triển cá nhân.
+          Trường Trung học cơ sở Nguyễn Văn Trỗi là nơi thú vị để học, giúp bạn
+          nâng cao bản thân và vượt qua mọi giới hạn. Nhà luôn đồng hành cùng
+          học sinh trên hành trình phát triển bản thân.
         </p>
         <button class="btn-17">
           <span class="text-container">
-            <span class="text" style="color: white !important"
-              >Khám phá ngay</span
+            <a
+              href="https://www.facebook.com/thcsnguyenvantroi.hq"
+              class="text"
+              style="color: white !important"
+              >Khám phá ngay</a
             >
           </span>
         </button>
@@ -86,9 +93,9 @@
           <i class="fa fa-lightbulb-o" aria-hidden="true"></i>
         </div>
         <div class="image_one">
-          <img src="../assets/image7.jpg" alt="" />
+          <img src="../assets/giaovien.jpg" alt="" style="object-fit: fill" />
         </div>
-        <img src="../assets/image6.jpg" class="image_two" />
+        <img src="../assets/hieutruong.jpg" class="image_two" />
         <img src="../assets/about-2-shape-2.png" class="image_three" />
         <img src="../assets/about-2-shape-3.png" class="image_four" />
         <img src="../assets/about-2-shape-4.png" class="image_five" />
@@ -118,11 +125,12 @@
           </svg>
         </span>
         <h3>
-          Đội ngũ giáo viên chúng tôi là những người nhiệt huyết và kinh nghiệm
-          hỗ trợ cho sự phát triển của học sinh.
+          Đội ngũ giáo viên trường Trung học cơ sở Nguyễn Văn Trỗi là những
+          người nhiệt huyết và kinh nghiệm hỗ trợ cho sự phát triển của học
+          sinh.
         </h3>
         <p class="ad_desone">
-          Với sự sáng tạo và tâm huyết, giáo viên của chúng tôi không chỉ là
+          Với sự sáng tạo và tâm huyết, giáo viên của nhà trường không chỉ là
           người hướng dẫn mà còn là nguồn động viên, tạo điều kiện cho môi
           trường học tập thú vị và đầy cảm hứng.
         </p>
@@ -141,9 +149,9 @@
           <b>Lớp học sôi động</b>
           <i class="fa fa-graduation-cap" aria-hidden="true"></i>
           <p>
-            Chúng tôi hân hạnh chia sẻ không gian học tập độc đáo này, nơi mà sự
-            sáng tạo và ý kiến đóng góp được đánh giá cao, khuyến khích mỗi học
-            viên phát triển toàn diện.
+            Nhà trường hân hạnh chia sẻ không gian học tập độc đáo này, nơi mà
+            sự sáng tạo và ý kiến đóng góp được đánh giá cao, khuyến khích mỗi
+            học viên phát triển toàn diện.
           </p>
         </div>
         <div class="adward_list">

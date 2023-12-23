@@ -401,6 +401,13 @@ textarea:focus {
   font-size: 20px;
   margin-top: 20px;
 }
+.pointavgyear p {
+  font-size: 20px;
+  margin-top: 10px;
+  font-weight: 700;
+  color: #041434;
+  letter-spacing: 0.2px;
+}
 .point_conduct {
   margin-top: 60px;
 }

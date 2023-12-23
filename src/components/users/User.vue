@@ -31,7 +31,7 @@
       >
         <template v-if="activeTab === index">
           <div v-if="tab.type === 'home'">
-              <HomeUserVue/>
+            <HomeUserVue />
           </div>
           <div v-else-if="tab.type === 'table'">
             <div class="info_wrapper">
@@ -237,6 +237,7 @@
                     <div class="pointavgyear">
                       <h3>Điểm trung bình cả năm {{ schoolYear }}</h3>
                       <span> {{ averageOverallScore(schoolYear) }}</span>
+                      <p>Danh Hiệu: {{ studentType(schoolYear) }}</p>
                     </div>
                   </div>
                 </div>
@@ -475,7 +476,7 @@ import VRadio from "../Input/VRadio.vue";
 import VButton from "../Button/VButton.vue";
 import { createToast } from "mosha-vue-toastify";
 import { v4 as uuidv4 } from "uuid";
-import HomeUserVue from '../HomeUser.vue';
+import HomeUserVue from "../HomeUser.vue";
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -656,6 +657,18 @@ export default {
 
       return averageScore.toFixed(2);
     },
+    studentType(schoolYear) {
+      const averageScore = this.averageOverallScore(schoolYear);
+      if (averageScore >= 8.0) {
+        return "Học sinh giỏi";
+      } else if (averageScore >= 6.5 && averageScore < 8.0) {
+        return "Học sinh khá";
+      } else if (averageScore >= 5.0 && averageScore < 6.5) {
+        return "Học sinh trung bình";
+      } else {
+        return "Không xác định";
+      }
+    },
     filteredSubjects(schoolYear) {
       // Filter subjects based on the selected school year
       return this.pointStudentId.filter(
@@ -769,7 +782,7 @@ export default {
     Navbar,
     VRadio,
     VButton,
-    HomeUserVue
+    HomeUserVue,
   },
   beforeUpdate() {
     this.maxId;

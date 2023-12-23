@@ -124,22 +124,15 @@
               v-model="formData.PointCode"
             />
           </label>
-          <label class="slabel" @click="toggleDropdownsubject">
+          <label class="slabel">
             Thông tin môn học
             <div class="dropdown" style="margin-top: 8px; width: 200px">
               <input
                 type="text"
-                v-model="selectedOptionsubject"
+                v-model="teaadmin.SubjectName"
                 placeholder="Chọn giá trị lọc"
+                disabled
               />
-              <i
-                @click="toggleDropdownsubject"
-                :class="
-                  isOpenssubject
-                    ? 'bx bx-chevron-down active'
-                    : 'bx bx-chevron-down'
-                "
-              ></i>
               <div
                 class="overlaylist"
                 v-show="isOpenssubject"
@@ -681,6 +674,7 @@ export default {
     const checkForm = ref(false);
     const error = ref([]);
     const build = ref(false);
+    const teaadmin = ref([]);
     const formData = ref({
       PointCode: "",
       StudentId: "",
@@ -792,6 +786,7 @@ export default {
     };
     return {
       formData,
+      teaadmin,
       checkForm,
       error,
       build,
@@ -907,6 +902,20 @@ export default {
     },
   },
   methods: {
+    async loadAdminAndTeacher() {
+      const userDataString = sessionStorage.getItem("idloginteacherData");
+      const userDataString1 = sessionStorage.getItem("roleData");
+      console.log(userDataString);
+      console.log(userDataString1);
+
+      if (userDataString) {
+        try {
+          this.teaadmin = JSON.parse(userDataString);
+        } catch (error) {
+          console.error("Lỗi khi chuyển đổi dữ liệu từ sessionStorage:", error);
+        }
+      }
+    },
     calculateResultUpdate() {
       // Lấy giá trị từ getByIdpoint
       const { ĐĐGTX1, ĐĐGTX2, ĐĐGTX3, ĐĐGTX4, ĐĐGGK, ĐĐGCK } =
@@ -1104,10 +1113,6 @@ export default {
             isValid = false;
             this.error.push("Vui lòng chọn học kỳ");
             break;
-          case this.selectedOptionsubject === "":
-            isValid = false;
-            this.error.push("Vui lòng chọn môn học");
-            break;
           case this.selectedOptionstudent === "":
             isValid = false;
             this.error.push("Vui lòng chọn học sinh");
@@ -1150,7 +1155,7 @@ export default {
         switch (true) {
           case this.checkCodePoint(this.getByIdpoint.PointCode):
             isValid = false;
-            this.error.push("Mã học sinh bị trùng");
+            this.error.push("Mã điểm bị trùng");
             break;
           case this.getByIdpoint.PointCode.trim() === "":
             isValid = false;
@@ -1172,7 +1177,7 @@ export default {
             PointId: uuidv4(),
             PointCode: this.formData.PointCode,
             StudentId: this.formData.StudentId,
-            SubjectId: this.formData.SubjectId,
+            SubjectId: this.teaadmin.SubjectId,
             SemesterId: this.formData.SemesterId,
             SchoolYearId: this.formData.SchoolYearId,
             ĐĐGTX1: this.formData.ĐĐGTX1,
@@ -1243,6 +1248,19 @@ export default {
     this.getschoolyear();
     this.getStudentAll();
     this.getMaxCodepoint();
+    this.loadAdminAndTeacher();
+  },
+  watch: {
+    idloginteacher(newVal) {
+      if (newVal && newVal.length !== null) {
+        const idloginteacherData = newVal;
+        sessionStorage.setItem(
+          "idloginteacherData",
+          JSON.stringify(idloginteacherData)
+        );
+      }
+      this.loadAdminAndTeacher();
+    },
   },
   components: {
     VButton,

@@ -161,11 +161,11 @@
                 </div>
               </div>
             </div>
-            <div class="filter_item">
+            <!-- <div class="filter_item">
               <div class="wrapper__i">
                 <div class="excel"></div>
               </div>
-            </div>
+            </div> -->
           </div>
           <div
             :class="

@@ -13,7 +13,7 @@
       <img src="../assets/logobgrblack.png" alt="" v-else class="logo_black" />
     </div>
     <div class="navbar_right">
-      <label
+      <!-- <label
         :class="
           backgroundWeb
             ? 'background-white navbar_right label '
@@ -22,7 +22,7 @@
       >
         <i class="bx bx-search-alt"></i>
         <input type="text" placeholder="Tìm kiếm thông tin..." />
-      </label>
+      </label> -->
       <div class="icon_list">
         <div class="icon_item">
           <i class="bx bx-info-circle"></i>
@@ -239,10 +239,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions([
-      "updateIteminform",
-      "getStudentIDinform",
-    ]),
+    ...mapActions(["updateIteminform", "getStudentIDinform"]),
     ...mapMutations(["HANDLEBACKGROUND"]),
     onSubmitUpdate() {
       try {
